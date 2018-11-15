@@ -58,10 +58,7 @@ view model =
 
 
 viewApp =
-    El.c
-        [ El.fw
-        , El.fh
-        ]
+    El.c [ El.fw, El.fh ]
         [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
         ]
 
