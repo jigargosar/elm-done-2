@@ -72,12 +72,13 @@ viewAppBar =
         , Font.color (Element.rgb 1 1 1)
         ]
         (Element.row
-            [ Element.width (Element.fill |> Element.maximum 980)
+            [ Element.width (Element.fill |> Element.maximum 960)
+            , Element.centerX
             , Element.paddingXY 8 8
             , Element.spacing 8
             ]
             [ viewLogo
-            , Element.el [ Element.centerX ] (Element.text "ELM Done 2")
+            , Element.el [{- Element.centerX -}] (Element.text "ELM Done 2")
             ]
         )
 
