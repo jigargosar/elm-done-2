@@ -1,18 +1,19 @@
-module Main exposing (..)
+module Main exposing (Flags, Model, Msg(..), init, main, update, view)
 
 import Browser
 import BrowserX exposing (WindowSize)
-import Html exposing (Html, text, div, h1, img)
+import Html exposing (Html, div, h1, img, text)
 import Html.Attributes exposing (src)
 import Json.Encode exposing (Value)
 import TimeX exposing (Millis)
 
 
+
 ---- MODEL ----
+
 
 type alias Flags =
     { now : Millis, windowSize : WindowSize, todos : Value, contexts : Value }
-
 
 
 type alias Model =
