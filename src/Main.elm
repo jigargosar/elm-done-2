@@ -55,14 +55,21 @@ view model =
         (Element.text "")
 
 
+viewAppBar =
+    Element.row
+        [ Element.width Element.fill ]
+        [ Element.el
+            [ Element.centerX ]
+            (Element.text "ELM Done 2")
+        ]
+
+
 viewApp =
     Element.column
         [ Element.width Element.fill
         , Element.height Element.fill
         ]
-        [ Element.el
-            [ Element.width Element.fill ]
-            (Element.text "ELM Done 2")
+        [ viewAppBar
         , Element.image
             [ Element.width (Element.fill |> Element.maximum 48)
             ]
