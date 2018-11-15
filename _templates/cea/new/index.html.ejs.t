@@ -14,7 +14,7 @@ to: public/index.html
   -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-  <title>Elm App</title>
+  <title><%= APP_TITLE %>></title>
 </head>
 <body>
 <noscript>
