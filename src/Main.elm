@@ -52,7 +52,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    El.rl
+    El.rootLayout
         [ Element.inFront viewApp
         ]
 
