@@ -49,20 +49,25 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Element.layout []
-        (Element.row
-            [ Element.width Element.fill
+    Element.layout
+        [ Element.inFront viewApp
+        ]
+        (Element.text "")
+
+
+viewApp =
+    Element.column
+        [ Element.width Element.fill
+        , Element.height Element.fill
+        ]
+        [ Element.el
+            [ Element.width Element.fill ]
+            (Element.text "ELM Done 2")
+        , Element.image
+            [ Element.width (Element.fill |> Element.maximum 48)
             ]
-            [ Element.image
-                [ Element.width (Element.fill |> Element.maximum 48)
-                ]
-                { src = "/logo.svg", description = "Logo" }
-            , Element.row
-                []
-                [ Element.text "ELM Done 2"
-                ]
-            ]
-        )
+            { src = "/logo.svg", description = "Logo" }
+        ]
 
 
 
