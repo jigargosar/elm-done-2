@@ -1,4 +1,4 @@
-module Todo exposing (Model)
+module Todo exposing (Model, decoder, encoder)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -6,16 +6,19 @@ import Json.Encode as E exposing (Value)
 import TimeX exposing (Millis)
 
 
+type alias ModelRecord =
+    { id : String
+    , title : String
+    , body : String
+    , done : Bool
+    , createdAt : Millis
+    , modifiedAt : Millis
+    , contextId : String
+    }
+
+
 type Model
-    = Model
-        { id : String
-        , title : String
-        , body : String
-        , done : Bool
-        , createdAt : Millis
-        , modifiedAt : Millis
-        , contextId : String
-        }
+    = Model ModelRecord
 
 
 type alias Encoder =
@@ -37,7 +40,7 @@ encoder (Model model) =
 
 decoder : Decoder Model
 decoder =
-    D.map6 Model
+    D.map7 ModelRecord
         (D.field "id" D.string)
         (D.field "title" D.string)
         (D.field "body" D.string)
@@ -45,3 +48,4 @@ decoder =
         (D.field "createdAt" D.int)
         (D.field "modifiedAt" D.int)
         (D.field "contextId" D.string)
+        |> D.map Model
