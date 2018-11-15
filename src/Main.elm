@@ -72,7 +72,7 @@ viewAppBar =
         , Font.color (Element.rgb 1 1 1)
         ]
         (Element.row
-            [ Element.width Element.fill
+            [ Element.width (Element.fill |> Element.maximum 980)
             , Element.paddingXY 8 8
             , Element.spacing 8
             ]
