@@ -45,8 +45,3 @@ decoder =
         (D.field "createdAt" D.int)
         (D.field "modifiedAt" D.int)
         (D.field "contextId" D.string)
-
-
-
---type Store
---    = Store { lookup : Dict String Todo }
