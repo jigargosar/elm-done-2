@@ -56,12 +56,21 @@ view model =
 
 
 viewAppBar =
-    Element.row
-        [ Element.width Element.fill ]
-        [ Element.el
-            [ Element.centerX ]
-            (Element.text "ELM Done 2")
+    Element.el
+        [ Element.width Element.fill
+        , Background.color (Element.rgb 0 0 0)
+        , Font.color (Element.rgb 1 1 1)
         ]
+        (Element.row
+            [ Element.width Element.fill, Element.paddingXY 8 8 ]
+            [ Element.el
+                []
+                (Element.text "Logo")
+            , Element.el
+                [ Element.centerX, Element.centerY, Element.height Element.fill ]
+                (Element.text "ELM Done 2")
+            ]
+        )
 
 
 viewApp =
