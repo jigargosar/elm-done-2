@@ -3,6 +3,8 @@ module TodoStore exposing (Model)
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
+import Random
+import RandomId
 import TimeX exposing (Millis)
 import Todo
 
@@ -45,6 +47,14 @@ type alias TodoBuilder =
     }
 
 
+setId maybeNow model id =
+    { model | idNow = IdNow (Just id) maybeNow }
+
+
+setNow maybeId model now =
+    { model | idNow = IdNow maybeId (Just now) }
+
+
 type Msg
     = New TodoBuilder
 
@@ -54,11 +64,13 @@ update message model =
     case message of
         New builder ->
             case builder.idNow of
-                IdNow Nothing _ ->
-                    ( model, Cmd.none )
+                IdNow Nothing maybeNow ->
+                    ( model
+                    , RandomId.gen (setId maybeNow builder >> New)
+                    )
 
-                IdNow _ Nothing ->
-                    ( model, Cmd.none )
+                IdNow maybeId Nothing ->
+                    ( model, TimeX.now (setNow maybeId builder >> New) )
 
                 IdNow (Just id) (Just now) ->
                     ( model, Cmd.none )
