@@ -32,3 +32,33 @@ decoder =
     D.map ModelRecord
         (D.field "lookup" <| D.dict Todo.decoder)
         |> D.map Model
+
+
+type IdNow
+    = IdNow (Maybe String) (Maybe Millis)
+
+
+type alias TodoBuilder =
+    { idNow : IdNow
+    , content : String
+    , contextId : String
+    }
+
+
+type Msg
+    = New TodoBuilder
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update message model =
+    case message of
+        New builder ->
+            case builder.idNow of
+                ( Nothing, _ ) ->
+                    ( model, Cmd.none )
+
+                ( _, Nothing ) ->
+                    ( model, Cmd.none )
+
+                ( Just id, Just now ) ->
+                    ( model, Cmd.none )
