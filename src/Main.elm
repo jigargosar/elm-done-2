@@ -3,6 +3,11 @@ module Main exposing (Flags, Model, Msg(..), init, main, update, view)
 import Browser
 import BrowserX exposing (WindowSize)
 import Element
+import Element.Background as Background
+import Element.Border as Border
+import Element.Font as Font
+import Element.Input as Input
+import Element.Region as Region
 import Html exposing (Html)
 import Json.Encode exposing (Value)
 import TimeX exposing (Millis)
@@ -45,9 +50,17 @@ update msg model =
 view : Model -> Html Msg
 view model =
     Element.layout []
-        (Element.row []
-            [ Element.image [] { src = "/logo.svg", description = "Logo" }
-            , Element.row [] [ Element.text "Your Elm App is working!" ]
+        (Element.row
+            [ Element.width Element.fill
+            ]
+            [ Element.image
+                [ Element.width (Element.fill |> Element.maximum 48)
+                ]
+                { src = "/logo.svg", description = "Logo" }
+            , Element.row
+                []
+                [ Element.text "Your Elm App is working!"
+                ]
             ]
         )
 
