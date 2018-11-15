@@ -62,7 +62,7 @@ viewApp =
         [ El.fw
         , El.fh
         ]
-        [ UI.appBar { title = "ELM APP 2" }
+        [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
         ]
 
 
