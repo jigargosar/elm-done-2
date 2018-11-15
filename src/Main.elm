@@ -77,12 +77,7 @@ viewAppBar =
             , Element.spacing 8
             ]
             [ viewLogo
-            , Element.el
-                []
-                (Element.text "Logo")
-            , Element.el
-                [ Element.centerX ]
-                (Element.text "ELM Done 2")
+            , Element.el [ Element.centerX ] (Element.text "ELM Done 2")
             ]
         )
 
