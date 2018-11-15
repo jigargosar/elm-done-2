@@ -2,7 +2,7 @@
 inject: true
 to: package.json
 before: dependencies
-skip_if: "prettier": {
+skip_if: <%= `prettier.* {` %>
 ---
   "prettier": {
     "trailingComma": "all",
@@ -22,4 +22,4 @@ skip_if: "prettier": {
       "prettier --config package.json --write",
       "git add"
     ]
-  }
+  },
