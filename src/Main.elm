@@ -58,6 +58,13 @@ view model =
         (Element.text "")
 
 
+viewLogo =
+    Element.image
+        [ Element.width (Element.fill |> Element.maximum 24)
+        ]
+        { src = "/logo.svg", description = "Logo" }
+
+
 viewAppBar =
     Element.el
         [ Element.width Element.fill
@@ -65,12 +72,16 @@ viewAppBar =
         , Font.color (Element.rgb 1 1 1)
         ]
         (Element.row
-            [ Element.width Element.fill, Element.paddingXY 8 8 ]
-            [ Element.el
+            [ Element.width Element.fill
+            , Element.paddingXY 8 8
+            , Element.spacing 8
+            ]
+            [ viewLogo
+            , Element.el
                 []
                 (Element.text "Logo")
             , Element.el
-                [ Element.centerX, Element.centerY, Element.height Element.fill ]
+                [ Element.centerX ]
                 (Element.text "ELM Done 2")
             ]
         )
@@ -82,10 +93,7 @@ viewApp =
         , Element.height Element.fill
         ]
         [ viewAppBar
-        , Element.image
-            [ Element.width (Element.fill |> Element.maximum 48)
-            ]
-            { src = "/logo.svg", description = "Logo" }
+        , viewLogo
         ]
 
 
