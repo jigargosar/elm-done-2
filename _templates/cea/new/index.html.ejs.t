@@ -14,7 +14,7 @@ to: public/index.html
   -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-  <title><%= appTitle %>></title>
+  <title><%= appTitle %></title>
 </head>
 <body>
 <noscript>

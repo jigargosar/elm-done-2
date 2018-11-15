@@ -2,8 +2,8 @@
 to: public/manifest.json
 ---
 {
-  "short_name": "ED",
-  "name": "ED",
+  "short_name": "<%= appTitle %>",
+  "name": "<%= appTitle %>",
   "icons": [
     {
       "src": "favicon.ico",
