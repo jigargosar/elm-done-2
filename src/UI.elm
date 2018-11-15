@@ -1,6 +1,7 @@
 module UI exposing (appBar, viewLogo)
 
 import El exposing (..)
+import Element exposing (Element)
 
 
 viewLogo =
@@ -10,7 +11,8 @@ viewLogo =
         { src = "/logo.svg", description = "Logo" }
 
 
-appBar =
+appBar : { title : String } -> Element msg
+appBar { title } =
     el
         [ fw
         , bcBlack
@@ -23,6 +25,6 @@ appBar =
             , s2
             ]
             [ viewLogo
-            , t "ELM Done 2"
+            , t title
             ]
         )
