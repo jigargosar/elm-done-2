@@ -54,11 +54,11 @@ update message model =
     case message of
         New builder ->
             case builder.idNow of
-                ( Nothing, _ ) ->
+                IdNow Nothing _ ->
                     ( model, Cmd.none )
 
-                ( _, Nothing ) ->
+                IdNow _ Nothing ->
                     ( model, Cmd.none )
 
-                ( Just id, Just now ) ->
+                IdNow (Just id) (Just now) ->
                     ( model, Cmd.none )
