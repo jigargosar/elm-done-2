@@ -9,6 +9,7 @@ type Todo
         { id : String
         , title : String
         , body : String
+        , done : Bool
         , createdAt : Millis
         , modifiedAt : Millis
         }
