@@ -59,7 +59,7 @@ view model =
                 { src = "/logo.svg", description = "Logo" }
             , Element.row
                 []
-                [ Element.text "Your Elm App is working!"
+                [ Element.text "ELM Done 2"
                 ]
             ]
         )
