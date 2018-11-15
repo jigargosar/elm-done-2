@@ -1,0 +1,24 @@
+{
+  "name": "elm-done-2",
+  "version": "0.0.1",
+  "description": "This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jigar Gosar <jigar.gosar@gmail.com> (https://jigargosar.com)",
+  "license": "MIT",
+  "dependencies": {
+    "ramda": "^0.25.0",
+    "tachyons": "^4.11.1"
+  },
+  "devDependencies": {
+    "husky": "^1.1.4",
+    "lint-staged": "^8.0.4",
+    "prettier": "^1.15.2"
+  }
+}
