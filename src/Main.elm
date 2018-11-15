@@ -2,6 +2,7 @@ module Main exposing (Flags, Model, Msg(..), init, main, update, view)
 
 import Browser
 import BrowserX exposing (WindowSize)
+import El
 import Element
 import Element.Background as Background
 import Element.Border as Border
@@ -12,6 +13,7 @@ import Html exposing (Html)
 import Json.Encode exposing (Value)
 import Theme
 import TimeX exposing (Millis)
+import UI
 
 
 
@@ -50,46 +52,17 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Element.layout
-        [ Theme.baseFontFamily
-        , Theme.baseFontSize
-        , Element.inFront viewApp
+    El.rl
+        [ Element.inFront viewApp
         ]
-        (Element.text "")
-
-
-viewLogo =
-    Element.image
-        [ Element.width (Element.fill |> Element.maximum 24)
-        ]
-        { src = "/logo.svg", description = "Logo" }
-
-
-viewAppBar =
-    Element.el
-        [ Element.width Element.fill
-        , Background.color (Element.rgb 0 0 0)
-        , Font.color (Element.rgb 1 1 1)
-        ]
-        (Element.row
-            [ Element.width (Element.fill |> Element.maximum 960)
-            , Element.centerX
-            , Element.paddingXY 8 8
-            , Element.spacing 8
-            ]
-            [ viewLogo
-            , Element.el [{- Element.centerX -}] (Element.text "ELM Done 2")
-            ]
-        )
 
 
 viewApp =
-    Element.column
-        [ Element.width Element.fill
-        , Element.height Element.fill
+    El.c
+        [ El.fw
+        , El.fh
         ]
-        [ viewAppBar
-        , viewLogo
+        [ UI.appBar
         ]
 
 
