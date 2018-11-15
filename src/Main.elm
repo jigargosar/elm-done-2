@@ -10,6 +10,7 @@ import Element.Input as Input
 import Element.Region as Region
 import Html exposing (Html)
 import Json.Encode exposing (Value)
+import Theme
 import TimeX exposing (Millis)
 
 
@@ -50,7 +51,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     Element.layout
-        [ Element.inFront viewApp
+        [ Theme.baseFontFamily
+        , Theme.baseFontSize
+        , Element.inFront viewApp
         ]
         (Element.text "")
 
