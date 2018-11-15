@@ -1,7 +1,7 @@
 module Todo exposing (Model)
 
 import Dict exposing (Dict)
-import Json.Decode as D
+import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import TimeX exposing (Millis)
 
@@ -14,6 +14,7 @@ type Model
         , done : Bool
         , createdAt : Millis
         , modifiedAt : Millis
+        , contextId : String
         }
 
 
@@ -30,7 +31,20 @@ encoder (Model model) =
         , ( "done", E.bool model.done )
         , ( "createdAt", E.int model.createdAt )
         , ( "modifiedAt", E.int model.modifiedAt )
+        , ( "contextId", E.string model.contextId )
         ]
+
+
+decoder : Decoder Model
+decoder =
+    D.map6 Model
+        (D.field "id" D.string)
+        (D.field "title" D.string)
+        (D.field "body" D.string)
+        (D.field "done" D.bool)
+        (D.field "createdAt" D.int)
+        (D.field "modifiedAt" D.int)
+        (D.field "contextId" D.string)
 
 
 
