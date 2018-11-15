@@ -11,7 +11,7 @@ viewLogo =
 
 
 appBar =
-    e
+    el
         [ fw
         , bcBlack
         , fcWhite

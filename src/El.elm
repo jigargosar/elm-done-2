@@ -5,7 +5,7 @@ module El exposing
     , c
     , cx
     , cy
-    , e
+    , el
     , f
     , fc
     , fcWhite
@@ -108,8 +108,8 @@ fh =
     height fill
 
 
-e =
-    el
+el =
+    Element.el
 
 
 s =
