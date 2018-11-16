@@ -8,7 +8,7 @@ module TodoList exposing
 
 import BasicsX exposing (..)
 import El exposing (..)
-import Element exposing (Element, el)
+import Element exposing (Element, el, fromRgb, fromRgb255, rgb)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -17,6 +17,7 @@ import Element.Region as Region
 import HotKey
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
+import MaterialColor exposing (blue50)
 import Todo
 import TodoStore as TS
 import UpdateX exposing (..)
@@ -116,16 +117,20 @@ viewInput model =
 
 
 viewTodoList model =
-    c [] (List.map viewTodo <| TS.list model.todoStore)
+    c [ fw ] (List.map viewTodo <| TS.list model.todoStore)
+
+
+mcToEc { red, green, blue } =
+    Element.rgb255 red green blue
 
 
 viewTodo todo =
-    r [ pxy u3 u2 ]
-        [ Input.checkbox []
+    r [ fw, bc <| mcToEc blue50 ]
+        [ Input.checkbox [ pxy u3 u2, sw ]
             { label = lh "done"
             , icon = \checked -> el [] (t "X")
             , checked = Todo.done todo
             , onChange = OnDoneChanged
             }
-        , t <| Todo.title todo
+        , el [ pxy u3 u2 ] (t <| Todo.title todo)
         ]

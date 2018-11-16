@@ -43,6 +43,7 @@ module El exposing
     , s1
     , s2
     , s3
+    , sw
     , t
     , u1
     , u2
@@ -134,6 +135,10 @@ f =
 
 fw =
     width fill
+
+
+sw =
+    width shrink
 
 
 fwx x =
