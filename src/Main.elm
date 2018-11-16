@@ -80,7 +80,7 @@ viewContent model =
 viewInput model =
     el [ p4 ]
         (Input.text
-            [ Border.rounded u2, onKeyDown [ HotKey.mapEnter Submit ] ]
+            [ Border.rounded u2, onKeyDown <| HotKey.keyMap [ HotKey.mapEnter Submit ] ]
             { onChange = InputChanged
             , text = model.inputText
             , placeholder = Just <| Input.placeholder [] (t "Title...")
