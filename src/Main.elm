@@ -16,6 +16,7 @@ import Json.Encode as E exposing (Value)
 import Theme
 import TimeX exposing (Millis)
 import Todo
+import TodoList
 import TodoStore
 import UI
 import UpdateX exposing (..)
@@ -32,6 +33,7 @@ type alias Flags =
 type alias Model =
     { inputText : String
     , todoStore : TodoStore.Model
+    , todoList : TodoList.Model
     }
 
 
@@ -40,8 +42,10 @@ init flags =
     pure
         { inputText = ""
         , todoStore = TodoStore.empty
+        , todoList = TodoList.empty
         }
         |> andThen (updateTodoStore <| TodoStore.Load flags.todos)
+        |> andThen (updateTodoList <| TodoList.LoadTodoStore flags.todos)
 
 
 
@@ -52,6 +56,7 @@ type Msg
     = InputChanged String
     | Submit
     | TodoStoreMsg TodoStore.Msg
+    | TodoListMsg TodoList.Msg
 
 
 
@@ -79,6 +84,9 @@ updateF message =
         TodoStoreMsg msg ->
             andThen (updateTodoStore msg)
 
+        TodoListMsg msg ->
+            andThen (updateTodoList msg)
+
 
 updateTodoStore msg model =
     let
@@ -86,6 +94,14 @@ updateTodoStore msg model =
             TodoStore.update msg model.todoStore
     in
     ( { model | todoStore = todoStore }, Cmd.map TodoStoreMsg cmd )
+
+
+updateTodoList msg model =
+    let
+        ( todoList, cmd ) =
+            TodoList.update msg model.todoList
+    in
+    ( { model | todoList = todoList }, Cmd.map TodoListMsg cmd )
 
 
 

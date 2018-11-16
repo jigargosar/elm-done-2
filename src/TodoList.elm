@@ -1,7 +1,7 @@
 module TodoList exposing
     ( Model
     , Msg(..)
-    , init
+    , empty
     , update
     )
 
@@ -28,17 +28,15 @@ type Msg
     = InputChanged String
     | Submit
     | TodoStoreMsg TodoStore.Msg
+    | LoadTodoStore Value
 
 
-init : Value -> ( Model, Cmd Msg )
-init encodedTodoStore =
-    pure
-        (Model
-            { inputText = ""
-            , todoStore = TodoStore.empty
-            }
-        )
-        |> andThen (updateTodoStore <| TodoStore.Load encodedTodoStore)
+empty : Model
+empty =
+    Model
+        { inputText = ""
+        , todoStore = TodoStore.empty
+        }
 
 
 
@@ -64,7 +62,10 @@ updateF message =
             andThen (\(Model model) -> updateTodoStore (TodoStore.new model.inputText "") (Model model))
 
         TodoStoreMsg msg ->
-            andThen (updateTodoStore msg)
+            andThen <| updateTodoStore msg
+
+        LoadTodoStore value ->
+            andThen <| updateTodoStore (TodoStore.Load value)
 
 
 updateTodoStore msg (Model model) =
