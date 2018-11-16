@@ -1,4 +1,4 @@
-module HotKey exposing (Event, SoftKey(..), decoder, keyMap, mapDecoder, onKeyDown)
+module HotKey exposing (Event, SoftKey(..), decoder, enter, esc, initEvent, keyMap, mapDecoder, mapEnter, mapEsc, onKeyDown, singletonBool)
 
 import BasicsX exposing (..)
 import Html.Events
@@ -64,6 +64,14 @@ enter =
 
 esc =
     ( [], "Escape" )
+
+
+mapEnter tag =
+    ( enter, tag )
+
+
+mapEsc tag =
+    ( esc, tag )
 
 
 onKeyDown handler =
