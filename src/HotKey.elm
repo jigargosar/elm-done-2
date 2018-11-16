@@ -58,6 +58,14 @@ keyMap mappings =
             )
 
 
+enter =
+    ( [], "Enter" )
+
+
+esc =
+    ( [], "Escape" )
+
+
 onKeyDown handler =
     Html.Events.on "keydown"
         (D.map
