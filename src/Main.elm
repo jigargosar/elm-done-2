@@ -76,7 +76,14 @@ updateF message =
             identity
 
         TodoStoreMsg msg ->
-            identity
+            andThen
+                (\model ->
+                    let
+                        ( todoStore, cmd ) =
+                            TodoStore.update msg model.todoStore
+                    in
+                    ( { model | todoStore = todoStore }, Cmd.map TodoStoreMsg cmd )
+                )
 
 
 

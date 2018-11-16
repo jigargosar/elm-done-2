@@ -1,4 +1,4 @@
-module TodoStore exposing (Model, Msg(..), empty)
+module TodoStore exposing (Model, Msg(..), empty, update)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
