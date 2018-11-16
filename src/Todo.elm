@@ -1,4 +1,4 @@
-module Todo exposing (Id, Model, decoder, encoder, idString, init, title)
+module Todo exposing (Id, Model, decoder, done, encoder, idString, init, title)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -29,8 +29,20 @@ init model =
     Model model
 
 
-idString (Model model) =
-    model.id
+unWrap (Model model) =
+    model
+
+
+idString =
+    unWrap >> .id
+
+
+title =
+    unWrap >> .title
+
+
+done =
+    unWrap >> .done
 
 
 type alias Encoder =
@@ -61,7 +73,3 @@ decoder =
         (D.field "modifiedAt" D.int)
         (D.field "contextId" D.string)
         |> D.map Model
-
-
-title (Model model) =
-    model.title

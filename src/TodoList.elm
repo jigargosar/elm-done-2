@@ -38,7 +38,8 @@ unWrap (Model model) =
 
 type Msg
     = ---- INJECT MSG BELOW ----
-      InputChanged String
+      OnDoneChanged Bool
+    | InputChanged String
     | Submit
     | TSMsg TS.Msg
     | LoadTS Value
@@ -69,6 +70,9 @@ updateF : Msg -> ReturnF
 updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
+        OnDoneChanged bool ->
+            identity
+
         InputChanged value ->
             mapModel (setInputText value)
 
@@ -117,5 +121,11 @@ viewTodoList model =
 
 viewTodo todo =
     r [ pxy u3 u2 ]
-        [ t <| Todo.title todo
+        [ Input.checkbox []
+            { label = lh "done"
+            , icon = \checked -> el [] (t "X")
+            , checked = Todo.done todo
+            , onChange = OnDoneChanged
+            }
+        , t <| Todo.title todo
         ]
