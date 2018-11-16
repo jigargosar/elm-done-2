@@ -45,11 +45,20 @@ type alias TodoBuilder =
     }
 
 
-setId model id =
+type alias HasMaybeIdNow x =
+    { x
+        | id : Maybe String
+        , now : Maybe Millis
+    }
+
+
+setJustId : HasMaybeIdNow x -> String -> HasMaybeIdNow x
+setJustId model id =
     { model | id = Just id }
 
 
-setNow model now =
+setJustNow : HasMaybeIdNow x -> Millis -> HasMaybeIdNow x
+setJustNow model now =
     { model | now = Just now }
 
 
@@ -68,10 +77,10 @@ updateF message =
         New builder ->
             case ( builder.id, builder.now ) of
                 ( Nothing, _ ) ->
-                    addCmd <| RandomId.gen (New << setId builder)
+                    addCmd <| RandomId.gen (New << setJustId builder)
 
                 ( _, Nothing ) ->
-                    addCmd <| TimeX.now (New << setNow builder)
+                    addCmd <| TimeX.now (New << setJustNow builder)
 
                 ( Just id, Just now ) ->
                     let
