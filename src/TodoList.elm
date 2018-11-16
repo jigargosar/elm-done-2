@@ -64,16 +64,29 @@ updateF : Msg -> ReturnF
 updateF message =
     case message of
         InputChanged value ->
-            mapModel (\(Model model) -> Model { model | inputText = value })
+            mapModel (\model -> { model | inputText = value })
 
         Submit ->
-            andThen (\(Model model) -> updateTodoStore (TodoStore.new model.inputText "") (Model model))
+            andThenF (\model -> updateTodoStore (TodoStore.new model.inputText ""))
+                >> mapModel (\model -> { model | inputText = "" })
 
         TodoStoreMsg msg ->
             andThen <| updateTodoStore msg
 
         LoadTodoStore value ->
             andThen <| updateTodoStore (TodoStore.Load value)
+
+
+unWrap (Model model) =
+    model
+
+
+mapModel f =
+    UpdateX.mapModel (unWrap >> f >> Model)
+
+
+andThenF f =
+    UpdateX.andThenF (unWrap >> f)
 
 
 updateTodoStore msg (Model model) =
@@ -103,7 +116,6 @@ viewInput model =
             { onChange = InputChanged
             , text = model.inputText
             , placeholder = ipp [] (t "Title...")
-
             , label = la [] (t "Task Title")
             }
         )

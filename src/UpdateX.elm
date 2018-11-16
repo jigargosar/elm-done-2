@@ -1,4 +1,4 @@
-module UpdateX exposing (addCmd, andThen, effect, mapModel, pure)
+module UpdateX exposing (addCmd, andThen, andThenF, effect, mapModel, pure)
 
 
 pure m =
@@ -23,3 +23,7 @@ andThen f ( m1, c1 ) =
             f m1
     in
     ( m2, Cmd.batch [ c1, c2 ] )
+
+
+andThenF f =
+    andThen (\m -> pure m |> andThen (f m))
