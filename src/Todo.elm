@@ -1,9 +1,13 @@
-module Todo exposing (Model, decoder, encoder)
+module Todo exposing (Id, Model, decoder, encoder, init)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import TimeX exposing (Millis)
+
+
+type alias Id =
+    String
 
 
 type alias ModelRecord =
@@ -19,6 +23,10 @@ type alias ModelRecord =
 
 type Model
     = Model ModelRecord
+
+
+init model =
+    Model model
 
 
 type alias Encoder =

@@ -3,6 +3,7 @@ module TodoStore exposing (Model)
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
+import Port
 import Random
 import RandomId
 import TimeX exposing (Millis)
@@ -42,7 +43,7 @@ type IdNow
 
 type alias TodoBuilder =
     { idNow : IdNow
-    , content : String
+    , title : String
     , contextId : String
     }
 
@@ -73,4 +74,39 @@ update message model =
                     ( model, TimeX.now (setNow maybeId builder >> New) )
 
                 IdNow (Just id) (Just now) ->
-                    ( model, Cmd.none )
+                    let
+                        todo : Todo.Model
+                        todo =
+                            Todo.init
+                                { id = id
+                                , createdAt = now
+                                , modifiedAt = now
+                                , title = builder.title
+                                , body = ""
+                                , done = False
+                                , contextId = builder.contextId
+                                }
+                    in
+                    upsertAndCache id todo model
+
+
+pure m =
+    ( m, Cmd.none )
+
+
+upsertAndCache : Todo.Id -> Todo.Model -> Model -> ( Model, Cmd Msg )
+upsertAndCache id todo (Model model) =
+    pure (Model { model | lookup = Dict.insert id todo model.lookup })
+        |> effect (Port.cacheTodoStore << encoder)
+
+
+effect f ( m, c ) =
+    ( m, Cmd.batch [ c, f m ] )
+
+
+andThen f ( m1, c1 ) =
+    let
+        ( m2, c2 ) =
+            f m1
+    in
+    ( m2, Cmd.batch [ c1, c2 ] )
