@@ -59,17 +59,29 @@ view model =
 
 
 viewRootLayer model =
-    c [ fw, fh ]
+    c [ fw, Element.clip, Element.scrollbars ]
         [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
-        , el [ p3 ]
-            (Input.text []
-                { onChange = InputChanged
-                , text = model.inputText
-                , placeholder = Nothing
-                , label = Input.labelAbove [] (t "Lablaaee")
-                }
-            )
+        , el [ fw, Element.clip, Element.scrollbars ] (viewContent model)
         ]
+
+
+viewContent model =
+    c [ fw, Element.clip, Element.scrollbars ]
+        [ viewInput model
+        , viewInput model
+        , viewInput model
+        ]
+
+
+viewInput model =
+    el [ p4 ]
+        (Input.text [ p3 ]
+            { onChange = InputChanged
+            , text = model.inputText
+            , placeholder = Nothing
+            , label = Input.labelAbove [] (t "Lablaaee")
+            }
+        )
 
 
 
