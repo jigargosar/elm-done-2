@@ -18,10 +18,6 @@ import TodoStore
 import UI
 
 
-el =
-    Element.el
-
-
 
 ---- MODEL ----
 
@@ -45,6 +41,7 @@ init flags =
 
 type Msg
     = InputChanged String
+    | Submit
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -52,6 +49,9 @@ update message model =
     case message of
         InputChanged value ->
             ( { model | inputText = value }, Cmd.none )
+
+        Submit ->
+            ( model, Cmd.none )
 
 
 
@@ -80,7 +80,7 @@ viewContent model =
 viewInput model =
     el [ p4 ]
         (Input.text
-            [ Border.rounded u2 ]
+            [ Border.rounded u2, onKeyDown [ HotKey.mapEnter Submit ] ]
             { onChange = InputChanged
             , text = model.inputText
             , placeholder = Just <| Input.placeholder [] (t "Title...")

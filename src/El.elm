@@ -1,4 +1,4 @@
-module El exposing (bc, bcBlack, black, c, cx, cy, el, f, fb, fc, fcWhite, fh, fl, fw, fwx, fxb, fxl, h, img, l, p, p1, p2, p3, p4, pxy, r, s, s1, s2, s3, t, u1, u2, u3, u4, w, white)
+module El exposing (bc, bcBlack, black, c, cx, cy, f, fb, fc, fcWhite, fh, fl, fw, fwx, fxb, fxl, h, img, l, onKeyDown, p, p1, p2, p3, p4, pxy, r, s, s1, s2, s3, t, u1, u2, u3, u4, w, white)
 
 import Element exposing (..)
 import Element.Background as Background
@@ -6,6 +6,7 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
 import Element.Region as Region
+import Html.Events
 import Theme
 
 
@@ -71,10 +72,6 @@ fwx x =
 
 fh =
     height fill
-
-
-el =
-    Element.el
 
 
 s =
@@ -167,3 +164,12 @@ p3 =
 
 p4 =
     p u4
+
+
+
+-- Html Attributes
+
+
+onKeyDown decoder =
+    Html.Events.on "keyDown" decoder
+        |> htmlAttribute
