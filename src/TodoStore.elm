@@ -90,18 +90,26 @@ update message model =
                     upsertAndCache todo model
 
 
-pure m =
-    ( m, Cmd.none )
-
-
 upsertAndCache : Todo.Model -> Model -> ( Model, Cmd Msg )
 upsertAndCache todo (Model model) =
     pure (Model { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
         |> effect (Port.cacheTodoStore << encoder)
 
 
+pure m =
+    ( m, Cmd.none )
+
+
 effect f ( m, c ) =
-    ( m, Cmd.batch [ c, f m ] )
+    ( m, c ) |> addCmd (f m)
+
+
+addCmd c2 ( m, c ) =
+    ( m, Cmd.batch [ c, c2 ] )
+
+
+mapModel =
+    Tuple.mapFirst
 
 
 andThen f ( m1, c1 ) =
