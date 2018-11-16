@@ -31,16 +31,14 @@ type alias Flags =
 
 
 type alias Model =
-    { inputText : String
-    , todoList : TodoList.Model
+    { todoList : TodoList.Model
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     pure
-        { inputText = ""
-        , todoList = TodoList.empty
+        { todoList = TodoList.empty
         }
         |> andThen (updateTodoList <| TodoList.LoadTodoStore flags.todos)
 
@@ -50,11 +48,8 @@ init flags =
 
 
 type Msg
-    = TodoListMsg TodoList.Msg
-
-
-
----- INJECT MSG ABOVE ----
+    = ---- INJECT MSG BELOW ----
+      TodoListMsg TodoList.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -69,6 +64,7 @@ type alias ReturnF =
 updateF : Msg -> ReturnF
 updateF message =
     case message of
+        ---- INJECT UPDATE CASE BELOW ----
         TodoListMsg msg ->
             andThen (updateTodoList msg)
 
@@ -82,7 +78,6 @@ updateTodoList msg model =
 
 
 
----- INJECT UPDATE CASE ABOVE ----
 ---- VIEW ----
 
 
