@@ -49,7 +49,7 @@ init flags =
 
 type Msg
     = ---- INJECT MSG BELOW ----
-      TodoListMsg TodoList.Msg
+      TLMsg TodoList.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -65,7 +65,7 @@ updateF : Msg -> ReturnF
 updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
-        TodoListMsg msg ->
+        TLMsg msg ->
             andThen (updateTodoList msg)
 
 
@@ -75,7 +75,7 @@ updateTodoList msg model =
         ( todoList, cmd ) =
             TodoList.update msg model.todoList
     in
-    ( { model | todoList = todoList }, Cmd.map TodoListMsg cmd )
+    ( { model | todoList = todoList }, Cmd.map TLMsg cmd )
 
 
 
@@ -88,7 +88,7 @@ view model =
         [ inFront <|
             UI.layout
                 { appBar = UI.appBar { title = UI.title2 "ELM" "DONE2" }
-                , content = TodoList.view model.todoList |> eMap TodoListMsg
+                , content = TodoList.view model.todoList |> eMap TLMsg
                 }
         ]
 
