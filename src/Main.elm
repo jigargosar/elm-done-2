@@ -59,13 +59,13 @@ update message model =
 
 view : Model -> Html Msg
 view model =
-    UI.rootLayout [ Element.inFront <| viewRootLayer model ]
+    UI.rootLayout [ inFront <| viewRootLayer model ]
 
 
 viewRootLayer model =
-    c [ fw, Element.clip, Element.scrollbarY ]
+    c [ fw, clip, scrollbarY ]
         [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
-        , el [ fw, Element.clip, Element.scrollbarY ] (viewContent model)
+        , el [ fw, clip, scrollbarY ] (viewContent model)
         ]
 
 
