@@ -32,6 +32,10 @@ type Model
     = Model ModelRecord
 
 
+unWrap (Model model) =
+    model
+
+
 type Msg
     = ---- INJECT MSG BELOW ----
       InputChanged String
@@ -77,10 +81,6 @@ updateF message =
 
         LoadTodoStore value ->
             andThen <| updateTodoStore (TodoStore.Load value)
-
-
-unWrap (Model model) =
-    model
 
 
 updateTodoStore msg (Model model) =

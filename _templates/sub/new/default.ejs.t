@@ -25,6 +25,9 @@ type alias ModelRecord =
 type Model
     = Model ModelRecord
 
+unWrap (Model model) =
+    model
+
 
 type Msg
     = ---- INJECT MSG BELOW ----
