@@ -47,6 +47,10 @@ empty =
         }
 
 
+setInputText val (Model model) =
+    Model { model | inputText = val }
+
+
 
 ---- INJECT MSG ABOVE ----
 
@@ -64,11 +68,11 @@ updateF : Msg -> ReturnF
 updateF message =
     case message of
         InputChanged value ->
-            mapModel (\model -> { model | inputText = value })
+            mapModel (setInputText value)
 
         Submit ->
             andThenF (\model -> updateTodoStore (TodoStore.new model.inputText ""))
-                >> mapModel (\model -> { model | inputText = "" })
+                >> mapModel (setInputText "")
 
         TodoStoreMsg msg ->
             andThen <| updateTodoStore msg
@@ -79,10 +83,6 @@ updateF message =
 
 unWrap (Model model) =
     model
-
-
-mapModel f =
-    UpdateX.mapModel (unWrap >> f >> Model)
 
 
 andThenF f =
