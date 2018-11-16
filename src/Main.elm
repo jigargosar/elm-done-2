@@ -92,7 +92,7 @@ view model =
         [ inFront <|
             UI.layout
                 { appBar = UI.appBar { title = UI.title2 "ELM" "DONE2" }
-                , content = TodoList.view model.todoList |> Element.map TodoListMsg
+                , content = TodoList.view model.todoList |> eMap TodoListMsg
                 }
         ]
 
