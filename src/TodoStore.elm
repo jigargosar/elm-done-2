@@ -1,4 +1,4 @@
-module TodoStore exposing (Model, Msg(..), empty, update)
+module TodoStore exposing (Model, Msg, empty, new, update)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -70,6 +70,10 @@ setJustNow model now =
 
 type Msg
     = New TodoBuilder
+
+
+new title contextId =
+    New <| TodoBuilder Nothing Nothing title contextId
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

@@ -73,17 +73,18 @@ updateF message =
             mapModel (\model -> { model | inputText = value })
 
         Submit ->
-            identity
+            andThen (\model -> updateTodoStore (TodoStore.new model.inputText "") model)
 
         TodoStoreMsg msg ->
-            andThen
-                (\model ->
-                    let
-                        ( todoStore, cmd ) =
-                            TodoStore.update msg model.todoStore
-                    in
-                    ( { model | todoStore = todoStore }, Cmd.map TodoStoreMsg cmd )
-                )
+            andThen (updateTodoStore msg)
+
+
+updateTodoStore msg model =
+    let
+        ( todoStore, cmd ) =
+            TodoStore.update msg model.todoStore
+    in
+    ( { model | todoStore = todoStore }, Cmd.map TodoStoreMsg cmd )
 
 
 
