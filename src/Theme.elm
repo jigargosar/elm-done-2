@@ -31,4 +31,4 @@ baseFontSize =
 
 
 maxWidth =
-    680
+    480
