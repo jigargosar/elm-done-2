@@ -116,4 +116,6 @@ viewTodoList model =
 
 
 viewTodo todo =
-    el [ pxy u3 u2 ] (t <| Todo.title todo)
+    r [ pxy u3 u2 ]
+        [ t <| Todo.title todo
+        ]
