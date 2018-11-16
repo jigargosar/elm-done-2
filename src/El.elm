@@ -27,6 +27,7 @@ module El exposing
     , ipp
     , l
     , la
+    , lh
     , onEnterDown
     , onEscDown
     , onKeyDown
@@ -194,6 +195,10 @@ ipp attrs e =
 
 la =
     Input.labelAbove
+
+
+lh =
+    Input.labelHidden
 
 
 
