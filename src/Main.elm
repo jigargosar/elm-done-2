@@ -69,6 +69,7 @@ updateF message =
             andThen (updateTodoList msg)
 
 
+updateTodoList : TodoList.Msg -> Model -> ( Model, Cmd Msg )
 updateTodoList msg model =
     let
         ( todoList, cmd ) =
