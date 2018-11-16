@@ -1,4 +1,4 @@
-module HotKey exposing (Event, SoftKey(..), decoder, enter, esc, initEvent, keyMappings, mapDecoder, mapEnter, mapEsc, onKeyDown, singletonBool)
+module HotKey exposing (Event, SoftKey(..), bind, decoder, enter, esc, initEvent, mapDecoder, mapEnter, mapEsc, onKeyDown, singletonBool)
 
 import BasicsX exposing (..)
 import Html.Events
@@ -48,8 +48,8 @@ mapDecoder tagger =
     D.map tagger decoder
 
 
-keyMappings : List ( Event, msg ) -> Decoder msg
-keyMappings mappings =
+bind : List ( Event, msg ) -> Decoder msg
+bind mappings =
     decoder
         |> D.andThen
             (firstEq
