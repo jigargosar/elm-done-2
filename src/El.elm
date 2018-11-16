@@ -1,4 +1,4 @@
-module El exposing (bc, bcBlack, black, br, br2, c, cx, cy, eMap, eMapA, f, fb, fc, fcWhite, fh, fl, fromH, fromHA, fw, fwx, fxb, fxl, h, img, ip, ipp, l, la, onEnterDown, onEscDown, onKeyDown, onKeyDownBindAll, p, p1, p2, p3, p4, pxy, r, s, s1, s2, s3, t, u1, u2, u3, u4, w, white)
+module El exposing (bc, bcBlack, black, br, br2, c, cx, cy, eMap, eMapA, f, fHA, fb, fc, fcWhite, fh, fl, fromH, fw, fwx, fxb, fxl, h, img, ip, ipp, l, la, onEnterDown, onEscDown, onKeyDown, onKeyDownBindAll, p, p1, p2, p3, p4, pxy, r, s, s1, s2, s3, t, u1, u2, u3, u4, w, white)
 
 import Element exposing (..)
 import Element.Background as Background
@@ -6,6 +6,7 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
 import Element.Region as Region
+import EventX
 import HotKey
 import Html.Events
 import Theme
@@ -19,7 +20,7 @@ fromH =
     Element.html
 
 
-fromHA =
+fHA =
     Element.htmlAttribute
 
 
@@ -216,18 +217,17 @@ br2 =
 -- Html Attributes
 
 
-onKeyDown decoder =
-    Html.Events.on "keydown" decoder
-        |> htmlAttribute
+onKeyDown =
+    EventX.onKeyDown >> fHA
 
 
 onEscDown =
-    HotKey.onEscDown >> htmlAttribute
+    HotKey.onEscDown >> fHA
 
 
 onEnterDown =
-    HotKey.onEnterDown >> htmlAttribute
+    HotKey.onEnterDown >> fHA
 
 
 onKeyDownBindAll =
-    HotKey.onKeyDownBindAll >> htmlAttribute
+    HotKey.onKeyDownBindAll >> fHA

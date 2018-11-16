@@ -17,6 +17,7 @@ module HotKey exposing
     )
 
 import BasicsX exposing (..)
+import EventX
 import Html
 import Html.Events
 import Json.Decode as D exposing (Decoder)
@@ -106,26 +107,22 @@ bindEsc =
 
 onKeyDown : (Event -> msg) -> Html.Attribute msg
 onKeyDown handler =
-    onKeyDown_
+    EventX.onKeyDown
         (D.map
             handler
             decoder
         )
 
 
-onKeyDown_ =
-    Html.Events.on "keydown"
-
-
 onKeyDownBindAll =
-    onKeyDown_ << bindAll
+    EventX.onKeyDown << bindAll
 
 
 onEscDown : msg -> Html.Attribute msg
 onEscDown =
-    onKeyDown_ << bindEsc
+    EventX.onKeyDown << bindEsc
 
 
 onEnterDown : msg -> Html.Attribute msg
 onEnterDown =
-    onKeyDown_ << bindEnter
+    EventX.onKeyDown << bindEnter
