@@ -65,12 +65,12 @@ view model =
 viewRootLayer model =
     c [ fw, clip, scrollbarY ]
         [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
-        , el [ fw, clip, scrollbarY ] (viewContent model)
+        , el [ fw, clip, scrollbarY ] (el [ fw, cx, fwx Theme.maxWidth ] (viewContent model))
         ]
 
 
 viewContent model =
-    c [ fw, cx, fwx Theme.maxWidth ]
+    c [ fw ]
         [ viewInput model
         , viewInput model
         , viewInput model
