@@ -46,4 +46,4 @@ updateF message =
 
 view : Model -> Element Msg
 view model =
-  el [] (t <| "Hello" ++ <%= module %>)
+  el [] (t <| "Hello " ++ "<%= module %>")
