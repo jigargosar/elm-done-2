@@ -11,6 +11,9 @@ module BasicsX exposing
     , defaultEmptyStringTo
     , eq0
     , eqs
+    , find
+    , findIn
+    , firstEq
     , flip
     , ifElse
     , isWhitespaceOrEmptyString
@@ -28,6 +31,20 @@ module BasicsX exposing
     , unwrapMaybe
     , when
     )
+
+
+firstEq val =
+    eqs val << Tuple.first
+
+
+find : Pred a -> List a -> Maybe a
+find pred =
+    List.filter pred >> List.head
+
+
+findIn : List a -> Pred a -> Maybe a
+findIn =
+    flip find
 
 
 type alias Pred a =

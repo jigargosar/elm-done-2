@@ -1,5 +1,6 @@
 module HotKey exposing (Event, SoftKey(..), decoder, mapDecoder, onKeyDown)
 
+import BasicsX exposing (..)
 import Html.Events
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E
@@ -47,9 +48,14 @@ mapDecoder tagger =
     D.map tagger decoder
 
 
-
---keyMap: List (Event, msg) ->
---keyMap mappings =
+keyMap : List ( Event, msg ) -> Decoder msg
+keyMap mappings =
+    decoder
+        |> D.andThen
+            (firstEq
+                >> findIn mappings
+                >> unwrapMaybe (D.fail "No Handler found") (Tuple.second >> D.succeed)
+            )
 
 
 onKeyDown handler =
