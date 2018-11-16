@@ -1,4 +1,19 @@
-module HotKey exposing (Event, SoftKey(..), bindAll, bindEnter, bindEsc, decoder, enter, esc, initEvent, mapDecoder, onKeyDown, singletonBool)
+module HotKey exposing
+    ( Event
+    , SoftKey(..)
+    , bindAll
+    , bindEnter
+    , bindEsc
+    , decoder
+    , enter
+    , esc
+    , initEvent
+    , mapDecoder
+    , onEnterDown
+    , onEscDown
+    , onKeyDown
+    , singletonBool
+    )
 
 import BasicsX exposing (..)
 import Html
@@ -97,6 +112,11 @@ onKeyDown handler =
         )
 
 
-onEsc : msg -> Html.Attribute msg
-onEsc =
+onEscDown : msg -> Html.Attribute msg
+onEscDown =
+    Html.Events.on "keydown" << bindEsc
+
+
+onEnterDown : msg -> Html.Attribute msg
+onEnterDown =
     Html.Events.on "keydown" << bindEnter
