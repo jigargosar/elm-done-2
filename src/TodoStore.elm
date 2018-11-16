@@ -71,7 +71,11 @@ update message =
     updateF message << pure
 
 
-updateF : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+type alias ReturnF =
+    ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+
+
+updateF : Msg -> ReturnF
 updateF message =
     case message of
         New builder ->
@@ -99,7 +103,7 @@ updateF message =
                     upsertAndCache todo
 
 
-upsertAndCache : Todo.Model -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+upsertAndCache : Todo.Model -> ReturnF
 upsertAndCache todo =
     mapModel (\(Model model) -> Model { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
         >> effect (Port.cacheTodoStore << encoder)
