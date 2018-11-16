@@ -123,7 +123,7 @@ updateF message =
             andThen
                 (\_ ->
                     D.decodeValue decoder value
-                        |> unpackResult (\err -> ( empty, Port.error <| D.errorToString err )) pure
+                        |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
                 )
 
 
