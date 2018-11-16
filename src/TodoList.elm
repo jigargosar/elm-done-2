@@ -106,7 +106,7 @@ viewInput model =
             { onChange = InputChanged
             , text = model.inputText
             , placeholder = ipp [] (t "Title...")
-            , label = la [] (t "Task Title")
+            , label = lh "Task Title"
             }
         )
 
