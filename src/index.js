@@ -66,15 +66,18 @@ const app = Elm.Main.init({
 
 subscribe(
   {
-    warn: data => {
-      console.warn(data)
+    // warn: data => {
+    //   console.warn(data)
+    // },
+    error: data => {
+      console.error(data)
     },
     cacheTodoStore: todos => {
       storageSet('todos', todos)
     },
-    cacheContextStore: contexts => {
-      storageSet('contexts', contexts)
-    },
+    // cacheContextStore: contexts => {
+    //   storageSet('contexts', contexts)
+    // },
   },
   app,
 )
