@@ -61,17 +61,20 @@ type Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update message model =
+update message =
+    updateF message << pure
+
+
+updateF : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+updateF message =
     case message of
         New builder ->
             case builder.idNow of
                 IdNow Nothing maybeNow ->
-                    ( model
-                    , RandomId.gen (setId maybeNow builder >> New)
-                    )
+                    addCmd <| RandomId.gen (setId maybeNow builder >> New)
 
                 IdNow maybeId Nothing ->
-                    ( model, TimeX.now (setNow maybeId builder >> New) )
+                    addCmd <| TimeX.now (setNow maybeId builder >> New)
 
                 IdNow (Just id) (Just now) ->
                     let
@@ -87,7 +90,7 @@ update message model =
                                 , contextId = builder.contextId
                                 }
                     in
-                    upsertAndCache todo model
+                    andThen <| upsertAndCache todo
 
 
 upsertAndCache : Todo.Model -> Model -> ( Model, Cmd Msg )
