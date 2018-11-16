@@ -12,6 +12,7 @@ module HotKey exposing
     , onEnterDown
     , onEscDown
     , onKeyDown
+    , onKeyDownBindAll
     , singletonBool
     )
 
@@ -105,18 +106,26 @@ bindEsc =
 
 onKeyDown : (Event -> msg) -> Html.Attribute msg
 onKeyDown handler =
-    Html.Events.on "keydown"
+    onKeyDown_
         (D.map
             handler
             decoder
         )
 
 
+onKeyDown_ =
+    Html.Events.on "keydown"
+
+
+onKeyDownBindAll =
+    onKeyDown_ << bindAll
+
+
 onEscDown : msg -> Html.Attribute msg
 onEscDown =
-    Html.Events.on "keydown" << bindEsc
+    onKeyDown_ << bindEsc
 
 
 onEnterDown : msg -> Html.Attribute msg
 onEnterDown =
-    Html.Events.on "keydown" << bindEnter
+    onKeyDown_ << bindEnter
