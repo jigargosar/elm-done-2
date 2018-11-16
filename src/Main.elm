@@ -15,6 +15,7 @@ import Json.Decode as D
 import Json.Encode as E exposing (Value)
 import Theme
 import TimeX exposing (Millis)
+import Todo
 import TodoStore
 import UI
 import UpdateX exposing (..)
@@ -108,6 +109,7 @@ viewContent model =
         [ viewInput model
         , viewInput model
         , viewInput model
+        , viewTodoList model
         ]
 
 
@@ -121,6 +123,14 @@ viewInput model =
             , label = Input.labelAbove [] (t "Task Title")
             }
         )
+
+
+viewTodoList model =
+    c [] (List.map viewTodo <| TodoStore.list model.todoStore)
+
+
+viewTodo todo =
+    el [] (t <| Todo.title todo)
 
 
 

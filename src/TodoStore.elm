@@ -1,4 +1,4 @@
-module TodoStore exposing (Model, Msg, empty, new, update)
+module TodoStore exposing (Model, Msg, empty, list, new, update)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -117,3 +117,7 @@ upsertAndCache : Todo.Model -> ReturnF
 upsertAndCache todo =
     mapModel (\(Model model) -> Model { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
         >> effect (Port.cacheTodoStore << encoder)
+
+
+list (Model model) =
+    model.lookup |> Dict.values
