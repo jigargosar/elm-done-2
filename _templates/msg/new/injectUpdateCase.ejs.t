@@ -1,7 +1,7 @@
 ---
 inject: true
 to: <%= filePath %>
-before: INJECT UPDATE CASE ABOVE
+after: INJECT UPDATE CASE BELOW
 sh: elm-format --yes <%= filePath %>
 ---
         <%= msgDef %> ->

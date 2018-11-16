@@ -1,10 +1,10 @@
 ---
 inject: true
 to: <%= filePath %>
-before: INJECT MSG ABOVE
+after: INJECT MSG BELOW
 sh: elm-format --yes <%= filePath %>
 ---
-  | <%= msgDef %>
+   <%= msgDef %> |
 
 
 
