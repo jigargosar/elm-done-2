@@ -37,23 +37,20 @@ decoder =
         |> D.map Model
 
 
-type IdNow
-    = IdNow (Maybe String) (Maybe Millis)
-
-
 type alias TodoBuilder =
-    { idNow : IdNow
+    { id : Maybe String
+    , now : Maybe Millis
     , title : String
     , contextId : String
     }
 
 
-setId maybeNow model id =
-    { model | idNow = IdNow (Just id) maybeNow }
+setId model id =
+    { model | id = Just id }
 
 
-setNow maybeId model now =
-    { model | idNow = IdNow maybeId (Just now) }
+setNow model now =
+    { model | now = Just now }
 
 
 type Msg
@@ -69,14 +66,14 @@ updateF : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 updateF message =
     case message of
         New builder ->
-            case builder.idNow of
-                IdNow Nothing maybeNow ->
-                    addCmd <| RandomId.gen (setId maybeNow builder >> New)
+            case ( builder.id, builder.now ) of
+                ( Nothing, _ ) ->
+                    addCmd <| RandomId.gen (New << setId builder)
 
-                IdNow maybeId Nothing ->
-                    addCmd <| TimeX.now (setNow maybeId builder >> New)
+                ( _, Nothing ) ->
+                    addCmd <| TimeX.now (New << setNow builder)
 
-                IdNow (Just id) (Just now) ->
+                ( Just id, Just now ) ->
                     let
                         todo : Todo.Model
                         todo =
