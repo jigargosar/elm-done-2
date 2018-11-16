@@ -131,8 +131,13 @@ ip =
     Input.text
 
 
-ipp attrs =
-    Just << Input.placeholder attrs
+type alias Attributes msg =
+    List (Element.Attribute msg)
+
+
+ipp : Attributes msg -> Element msg -> Maybe (Input.Placeholder msg)
+ipp attrs e =
+    Just <| Input.placeholder attrs e
 
 
 la =
