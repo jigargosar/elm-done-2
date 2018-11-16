@@ -17,6 +17,7 @@ import Theme
 import TimeX exposing (Millis)
 import TodoStore
 import UI
+import UpdateX exposing (..)
 
 
 
@@ -49,6 +50,7 @@ init flags =
 type Msg
     = InputChanged String
     | Submit
+    | TodoStoreMsg TodoStore.Msg
 
 
 
@@ -56,17 +58,25 @@ type Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update message model =
+update message =
+    updateF message << pure
+
+
+type alias ReturnF =
+    ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+
+
+updateF : Msg -> ReturnF
+updateF message =
     case message of
         InputChanged value ->
-            ( { model | inputText = value }, Cmd.none )
+            mapModel (\model -> { model | inputText = value })
 
         Submit ->
-            let
-                _ =
-                    Debug.log "model" model
-            in
-            ( model, Cmd.none )
+            identity
+
+        TodoStoreMsg msg ->
+            identity
 
 
 
