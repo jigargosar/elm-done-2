@@ -1,7 +1,7 @@
-module HotKey exposing (Event, SoftKey(..), decoder, onKeyDown)
+module HotKey exposing (Event, SoftKey(..), decoder, mapDecoder, onKeyDown)
 
 import Html.Events
-import Json.Decode as D
+import Json.Decode as D exposing (Decoder)
 import Json.Encode as E
 
 
@@ -40,6 +40,16 @@ decoder =
         (D.field "ctrlKey" D.bool)
         (D.field "metaKey" D.bool)
         (D.field "key" D.string)
+
+
+mapDecoder : (Event -> msg) -> Decoder msg
+mapDecoder tagger =
+    D.map tagger decoder
+
+
+
+--keyMap: List (Event, msg) ->
+--keyMap mappings =
 
 
 onKeyDown handler =

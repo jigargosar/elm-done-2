@@ -9,6 +9,7 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
+import HotKey
 import Html exposing (Html)
 import Json.Encode exposing (Value)
 import Theme
@@ -82,8 +83,8 @@ viewInput model =
             [ Border.rounded u2 ]
             { onChange = InputChanged
             , text = model.inputText
-            , placeholder = Just <| Input.placeholder [] (t "Task Title...")
-            , label = Input.labelAbove [] (t "Lablaaee")
+            , placeholder = Just <| Input.placeholder [] (t "Title...")
+            , label = Input.labelAbove [] (t "Task Title")
             }
         )
 
