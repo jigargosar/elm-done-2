@@ -131,8 +131,8 @@ ip =
     Input.text
 
 
-ipp =
-    Just << Input.placeholder
+ipp attrs =
+    Just << Input.placeholder attrs
 
 
 la =
