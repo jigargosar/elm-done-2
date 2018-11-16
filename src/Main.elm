@@ -3,7 +3,7 @@ module Main exposing (Flags, Model, Msg(..), init, main, update, view)
 import Browser
 import BrowserX exposing (WindowSize)
 import El exposing (..)
-import Element exposing (..)
+import Element exposing (Element, el, inFront)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
