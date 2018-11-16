@@ -96,13 +96,13 @@ updateF message =
                                 , contextId = builder.contextId
                                 }
                     in
-                    andThen <| upsertAndCache todo
+                    upsertAndCache todo
 
 
-upsertAndCache : Todo.Model -> Model -> ( Model, Cmd Msg )
-upsertAndCache todo (Model model) =
-    pure (Model { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
-        |> effect (Port.cacheTodoStore << encoder)
+upsertAndCache : Todo.Model -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+upsertAndCache todo =
+    mapModel (\(Model model) -> Model { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
+        >> effect (Port.cacheTodoStore << encoder)
 
 
 pure m =
