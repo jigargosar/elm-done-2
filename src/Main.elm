@@ -51,6 +51,10 @@ update message model =
             ( { model | inputText = value }, Cmd.none )
 
         Submit ->
+            let
+                _ =
+                    Debug.log "model" model
+            in
             ( model, Cmd.none )
 
 
