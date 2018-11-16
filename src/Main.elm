@@ -61,12 +61,14 @@ view model =
 viewRootLayer model =
     c [ fw, fh ]
         [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
-        , Input.text []
-            { onChange = InputChanged
-            , text = model.inputText
-            , placeholder = Nothing
-            , label = Input.labelAbove [] (t "Lablaaee")
-            }
+        , el [ p3 ]
+            (Input.text []
+                { onChange = InputChanged
+                , text = model.inputText
+                , placeholder = Nothing
+                , label = Input.labelAbove [] (t "Lablaaee")
+                }
+            )
         ]
 
 
