@@ -8,7 +8,7 @@ module TodoList exposing
 
 import BasicsX exposing (..)
 import El exposing (..)
-import Element exposing (..)
+import Element exposing (Element, el)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
