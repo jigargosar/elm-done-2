@@ -1,4 +1,4 @@
-module TodoStore exposing (Model, Msg, decodeOrEmpty, empty, list, new, update)
+module TodoStore exposing (Model, Msg(..), decodeOrEmpty, empty, list, new, update)
 
 import BasicsX exposing (unpackResult)
 import Dict exposing (Dict)
@@ -26,9 +26,9 @@ empty =
     Model { lookup = Dict.empty }
 
 
-decodeOrEmpty : Value -> Model
+decodeOrEmpty : Value -> ( Model, Cmd msg )
 decodeOrEmpty =
-    D.decodeValue decoder >> Result.withDefault empty
+    D.decodeValue decoder >> unpackResult (\err -> ( empty, Port.error "ERROR" )) pure
 
 
 type alias Encoder =
@@ -76,6 +76,7 @@ setJustNow model now =
 
 type Msg
     = New TodoBuilder
+    | Load Value
 
 
 new title contextId =
@@ -117,6 +118,13 @@ updateF message =
                                 }
                     in
                     upsertAndCache todo
+
+        Load value ->
+            andThen
+                (\_ ->
+                    D.decodeValue decoder value
+                        |> unpackResult (\err -> ( empty, Port.error "ERROR" )) pure
+                )
 
 
 upsertAndCache : Todo.Model -> ReturnF

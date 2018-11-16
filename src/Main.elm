@@ -37,11 +37,11 @@ type alias Model =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { inputText = ""
-      , todoStore = TodoStore.decodeOrEmpty flags.todos
-      }
-    , Cmd.none
-    )
+    pure
+        { inputText = ""
+        , todoStore = TodoStore.empty
+        }
+        |> andThen (updateTodoStore <| TodoStore.Load flags.todos)
 
 
 
