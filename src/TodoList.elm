@@ -3,13 +3,21 @@ module TodoList exposing
     , Msg(..)
     , empty
     , update
+    , view
     )
 
 import BasicsX exposing (..)
 import El exposing (..)
 import Element exposing (..)
+import Element.Background as Background
+import Element.Border as Border
+import Element.Font as Font
+import Element.Input as Input exposing (Placeholder)
+import Element.Region as Region
+import HotKey
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
+import Todo
 import TodoStore
 import UpdateX exposing (..)
 
@@ -82,4 +90,27 @@ updateTodoStore msg (Model model) =
 
 view : Model -> Element Msg
 view (Model model) =
-    el [] (t <| "Hello " ++ "TodoList")
+    c [ fw ]
+        [ viewInput model
+        , viewTodoList model
+        ]
+
+
+viewInput model =
+    el [ p4 ]
+        (Input.text
+            [ Border.rounded u2, onKeyDown <| HotKey.bind [ ( HotKey.enter, Submit ) ] ]
+            { onChange = InputChanged
+            , text = model.inputText
+            , placeholder = Just <| Input.placeholder [] (t "Title...")
+            , label = Input.labelAbove [] (t "Task Title")
+            }
+        )
+
+
+viewTodoList model =
+    c [] (List.map viewTodo <| TodoStore.list model.todoStore)
+
+
+viewTodo todo =
+    el [] (t <| Todo.title todo)

@@ -115,36 +115,9 @@ view model =
         [ inFront <|
             UI.layout
                 { appBar = UI.appBar { title = UI.title2 "ELM" "DONE2" }
-                , content = viewContent model
+                , content = TodoList.view model.todoList |> Element.map TodoListMsg
                 }
         ]
-
-
-viewContent model =
-    c [ fw ]
-        [ viewInput model
-        , viewTodoList model
-        ]
-
-
-viewInput model =
-    el [ p4 ]
-        (Input.text
-            [ Border.rounded u2, onKeyDown <| HotKey.bind [ ( HotKey.enter, Submit ) ] ]
-            { onChange = InputChanged
-            , text = model.inputText
-            , placeholder = Just <| Input.placeholder [] (t "Title...")
-            , label = Input.labelAbove [] (t "Task Title")
-            }
-        )
-
-
-viewTodoList model =
-    c [] (List.map viewTodo <| TodoStore.list model.todoStore)
-
-
-viewTodo todo =
-    el [] (t <| Todo.title todo)
 
 
 
