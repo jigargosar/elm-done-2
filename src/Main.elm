@@ -59,14 +59,14 @@ view model =
 
 
 viewRootLayer model =
-    c [ fw, Element.clip, Element.scrollbars ]
+    c [ fw, Element.clipY, Element.scrollbars ]
         [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
-        , el [ fw, Element.clip, Element.scrollbars ] (viewContent model)
+        , el [ fw, Element.clipY, Element.scrollbars ] (viewContent model)
         ]
 
 
 viewContent model =
-    c [ fw, Element.clip, Element.scrollbars ]
+    c [ fw, cx, fwx Theme.maxWidth ]
         [ viewInput model
         , viewInput model
         , viewInput model
