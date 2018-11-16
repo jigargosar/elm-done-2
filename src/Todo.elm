@@ -1,4 +1,4 @@
-module Todo exposing (Id, Model, decoder, encoder, init)
+module Todo exposing (Id, Model, decoder, encoder, idString, init)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -27,6 +27,10 @@ type Model
 
 init model =
     Model model
+
+
+idString (Model model) =
+    model.id
 
 
 type alias Encoder =
