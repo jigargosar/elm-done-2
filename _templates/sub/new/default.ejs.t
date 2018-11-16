@@ -1,7 +1,7 @@
 ---
 inject: false
 to: src/<%= module.replace(".","/") %>.elm
-sh: elm-format --yes <%= src/<%= module.replace(".","/") %>.elm %>
+sh: elm-format --yes src/<%= module.replace(".","/") %>.elm
 ---
 module <%= module %> exposing (Model, Msg(..), update)
 
