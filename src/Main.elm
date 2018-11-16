@@ -29,12 +29,14 @@ type alias Flags =
 
 type alias Model =
     { inputText : String
+    , todoStore : TodoStore.Model
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { inputText = ""
+      , todoStore = TodoStore.empty
       }
     , Cmd.none
     )

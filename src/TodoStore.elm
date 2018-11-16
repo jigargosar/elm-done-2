@@ -1,4 +1,4 @@
-module TodoStore exposing (Model)
+module TodoStore exposing (Model, empty)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -17,6 +17,11 @@ type alias ModelRecord =
 
 type Model
     = Model ModelRecord
+
+
+empty : Model
+empty =
+    Model { lookup = Dict.empty }
 
 
 type alias Encoder =
