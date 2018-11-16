@@ -1,4 +1,4 @@
-module HotKey exposing (Event, SoftKey(..), decoder, mapDecoder, onKeyDown)
+module HotKey exposing (Event, SoftKey(..), decoder, keyMap, mapDecoder, onKeyDown)
 
 import BasicsX exposing (..)
 import Html.Events
