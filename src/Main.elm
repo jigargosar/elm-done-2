@@ -38,7 +38,7 @@ type alias Model =
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { inputText = ""
-      , todoStore = TodoStore.empty
+      , todoStore = TodoStore.decodeOrEmpty flags.todos
       }
     , Cmd.none
     )

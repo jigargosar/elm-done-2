@@ -1,5 +1,6 @@
-module TodoStore exposing (Model, Msg, empty, list, new, update)
+module TodoStore exposing (Model, Msg, decodeOrEmpty, empty, list, new, update)
 
+import BasicsX exposing (unpackResult)
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
@@ -23,6 +24,11 @@ type Model
 empty : Model
 empty =
     Model { lookup = Dict.empty }
+
+
+decodeOrEmpty : Value -> Model
+decodeOrEmpty =
+    D.decodeValue decoder >> Result.withDefault empty
 
 
 type alias Encoder =
