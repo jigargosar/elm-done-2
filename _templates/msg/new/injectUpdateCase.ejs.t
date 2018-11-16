@@ -5,7 +5,7 @@ after: INJECT UPDATE CASE BELOW
 sh: elm-format --yes <%= filePath %>
 ---
         <%= msgDef %> ->
-            ( model, Cmd.none )
+            identity
 
 
 

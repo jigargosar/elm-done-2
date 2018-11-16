@@ -10,7 +10,7 @@ import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import UpdateX exposing (..)
 import El exposing (..)
-import Element exposing (..)
+import Element exposing (Element, el)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -27,9 +27,8 @@ type Model
 
 
 type Msg
-    = NoOp
-
----- INJECT MSG ABOVE ----
+    = ---- INJECT MSG BELOW ----
+    NoOp
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message =
@@ -43,11 +42,11 @@ type alias ReturnF =
 updateF : Msg -> ReturnF
 updateF message =
     case message of
+    ---- INJECT UPDATE CASE BELOW ----
         NoOp ->
             identity
 
 
----- INJECT UPDATE CASE ABOVE ----
 
 view : Model -> Element Msg
 view model =
