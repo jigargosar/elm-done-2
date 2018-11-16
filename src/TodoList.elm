@@ -39,6 +39,10 @@ type Msg
     | LoadTodoStore Value
 
 
+
+---- INJECT MSG ABOVE ----
+
+
 empty : Model
 empty =
     Model
@@ -49,10 +53,6 @@ empty =
 
 setInputText val (Model model) =
     Model { model | inputText = val }
-
-
-
----- INJECT MSG ABOVE ----
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -81,6 +81,10 @@ updateF message =
             andThen <| updateTodoStore (TodoStore.Load value)
 
 
+
+---- INJECT UPDATE CASE ABOVE ----
+
+
 unWrap (Model model) =
     model
 
@@ -91,10 +95,6 @@ updateTodoStore msg (Model model) =
             TodoStore.update msg model.todoStore
     in
     ( Model { model | todoStore = todoStore }, Cmd.map TodoStoreMsg cmd )
-
-
-
----- INJECT UPDATE CASE ABOVE ----
 
 
 view : Model -> Element Msg
