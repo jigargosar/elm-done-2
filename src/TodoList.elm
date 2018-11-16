@@ -18,13 +18,13 @@ import HotKey
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import Todo
-import TodoStore
+import TodoStore as TS
 import UpdateX exposing (..)
 
 
 type alias ModelRecord =
     { inputText : String
-    , todoStore : TodoStore.Model
+    , todoStore : TS.Model
     }
 
 
@@ -40,7 +40,7 @@ type Msg
     = ---- INJECT MSG BELOW ----
       InputChanged String
     | Submit
-    | TSMsg TodoStore.Msg
+    | TSMsg TS.Msg
     | LoadTS Value
 
 
@@ -48,7 +48,7 @@ empty : Model
 empty =
     Model
         { inputText = ""
-        , todoStore = TodoStore.empty
+        , todoStore = TS.empty
         }
 
 
@@ -73,20 +73,20 @@ updateF message =
             mapModel (setInputText value)
 
         Submit ->
-            andThenF (unWrap >> (\model -> updateTodoStore (TodoStore.new model.inputText "")))
+            andThenF (unWrap >> (\model -> updateTodoStore (TS.new model.inputText "")))
                 >> mapModel (setInputText "")
 
         TSMsg msg ->
             andThen <| updateTodoStore msg
 
         LoadTS value ->
-            andThen <| updateTodoStore (TodoStore.Load value)
+            andThen <| updateTodoStore (TS.Load value)
 
 
 updateTodoStore msg (Model model) =
     let
         ( todoStore, cmd ) =
-            TodoStore.update msg model.todoStore
+            TS.update msg model.todoStore
     in
     ( Model { model | todoStore = todoStore }, Cmd.map TSMsg cmd )
 
@@ -112,7 +112,7 @@ viewInput model =
 
 
 viewTodoList model =
-    c [] (List.map viewTodo <| TodoStore.list model.todoStore)
+    c [] (List.map viewTodo <| TS.list model.todoStore)
 
 
 viewTodo todo =
