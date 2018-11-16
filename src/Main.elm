@@ -11,7 +11,8 @@ import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
 import HotKey
 import Html exposing (Html)
-import Json.Encode exposing (Value)
+import Json.Decode as D
+import Json.Encode as E exposing (Value)
 import Theme
 import TimeX exposing (Millis)
 import TodoStore

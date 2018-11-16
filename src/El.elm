@@ -171,5 +171,5 @@ p4 =
 
 
 onKeyDown decoder =
-    Html.Events.on "keyDown" decoder
+    Html.Events.on "keydown" decoder
         |> htmlAttribute
