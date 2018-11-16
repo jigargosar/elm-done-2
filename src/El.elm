@@ -1,4 +1,55 @@
-module El exposing (bc, bcBlack, black, br, br2, c, cx, cy, eMap, eMapA, f, fHA, fb, fc, fcWhite, fh, fl, fromH, fw, fwx, fxb, fxl, h, img, ip, ipp, l, la, onEnterDown, onEscDown, onKeyDown, onKeyDownBindAll, p, p1, p2, p3, p4, pxy, r, s, s1, s2, s3, t, u1, u2, u3, u4, w, white)
+module El exposing
+    ( bc
+    , bcBlack
+    , black
+    , br
+    , br2
+    , c
+    , cx
+    , cy
+    , eMap
+    , eMapA
+    , f
+    , fHA
+    , fb
+    , fc
+    , fcWhite
+    , fh
+    , fl
+    , fromH
+    , fw
+    , fwx
+    , fxb
+    , fxl
+    , h
+    , img
+    , ip
+    , ipp
+    , l
+    , la
+    , onEnterDown
+    , onEscDown
+    , onKeyDown
+    , onKeyDownBindAll
+    , p
+    , p1
+    , p2
+    , p3
+    , p4
+    , pxy
+    , r
+    , s
+    , s1
+    , s2
+    , s3
+    , t
+    , u1
+    , u2
+    , u3
+    , u4
+    , w
+    , white
+    )
 
 import Element exposing (..)
 import Element.Background as Background
