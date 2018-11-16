@@ -40,8 +40,8 @@ type Msg
     = ---- INJECT MSG BELOW ----
       InputChanged String
     | Submit
-    | TodoStoreMsg TodoStore.Msg
-    | LoadTodoStore Value
+    | TSMsg TodoStore.Msg
+    | LoadTS Value
 
 
 empty : Model
@@ -76,10 +76,10 @@ updateF message =
             andThenF (unWrap >> (\model -> updateTodoStore (TodoStore.new model.inputText "")))
                 >> mapModel (setInputText "")
 
-        TodoStoreMsg msg ->
+        TSMsg msg ->
             andThen <| updateTodoStore msg
 
-        LoadTodoStore value ->
+        LoadTS value ->
             andThen <| updateTodoStore (TodoStore.Load value)
 
 
@@ -88,7 +88,7 @@ updateTodoStore msg (Model model) =
         ( todoStore, cmd ) =
             TodoStore.update msg model.todoStore
     in
-    ( Model { model | todoStore = todoStore }, Cmd.map TodoStoreMsg cmd )
+    ( Model { model | todoStore = todoStore }, Cmd.map TSMsg cmd )
 
 
 view : Model -> Element Msg

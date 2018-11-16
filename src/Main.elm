@@ -40,7 +40,7 @@ init flags =
     pure
         { todoList = TodoList.empty
         }
-        |> andThen (updateTodoList <| TodoList.LoadTodoStore flags.todos)
+        |> andThen (updateTodoList <| TodoList.LoadTS flags.todos)
 
 
 
