@@ -33,14 +33,11 @@ type Model
 
 
 type Msg
-    = InputChanged String
+    = ---- INJECT MSG BELOW ----
+      InputChanged String
     | Submit
     | TodoStoreMsg TodoStore.Msg
     | LoadTodoStore Value
-
-
-
----- INJECT MSG ABOVE ----
 
 
 empty : Model
@@ -67,6 +64,7 @@ type alias ReturnF =
 updateF : Msg -> ReturnF
 updateF message =
     case message of
+        ---- INJECT UPDATE CASE BELOW ----
         InputChanged value ->
             mapModel (setInputText value)
 
@@ -79,10 +77,6 @@ updateF message =
 
         LoadTodoStore value ->
             andThen <| updateTodoStore (TodoStore.Load value)
-
-
-
----- INJECT UPDATE CASE ABOVE ----
 
 
 unWrap (Model model) =
