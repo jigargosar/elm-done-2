@@ -98,12 +98,12 @@ view (Model model) =
 
 viewInput model =
     el [ p4 ]
-        (Input.text
+        (ip
             [ br2, onEnterDown Submit ]
             { onChange = InputChanged
             , text = model.inputText
-            , placeholder = Just <| Input.placeholder [] (t "Title...")
-            , label = Input.labelAbove [] (t "Task Title")
+            , placeholder = ipp [] (t "Title...")
+            , label = la [] (t "Task Title")
             }
         )
 
