@@ -1,11 +1,22 @@
-module UI exposing (appBar, title2, viewLogo)
+module UI exposing (appBar, logo, rootLayout, title2)
 
 import El exposing (..)
 import Element exposing (Element)
 import Element.Font
+import Theme
 
 
-viewLogo =
+rootLayout attrs =
+    l
+        ([ Theme.baseFontFamily
+         , Theme.baseFontSize
+         ]
+            ++ attrs
+        )
+        (t "")
+
+
+logo =
     El.img
         [ El.fwx 24
         ]
@@ -25,7 +36,7 @@ appBar { title } =
             , p2
             , s2
             ]
-            [ viewLogo
+            [ logo
             , title
             ]
         )

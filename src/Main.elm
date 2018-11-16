@@ -2,7 +2,7 @@ module Main exposing (Flags, Model, Msg(..), init, main, update, view)
 
 import Browser
 import BrowserX exposing (WindowSize)
-import El
+import El exposing (..)
 import Element
 import Element.Background as Background
 import Element.Border as Border
@@ -53,11 +53,11 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    El.rootLayout [ Element.inFront viewApp ]
+    UI.rootLayout [ Element.inFront viewApp ]
 
 
 viewApp =
-    El.c [ El.fw, El.fh ]
+    c [ fw, fh ]
         [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
         ]
 
