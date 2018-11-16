@@ -7,7 +7,7 @@ import Element
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
-import Element.Input as Input
+import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
 import Html exposing (Html)
 import Json.Encode exposing (Value)
@@ -26,12 +26,12 @@ type alias Flags =
 
 
 type alias Model =
-    {}
+    { inputText : String }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( {}, Cmd.none )
+    ( { inputText = "" }, Cmd.none )
 
 
 
@@ -39,12 +39,14 @@ init flags =
 
 
 type Msg
-    = NoOp
+    = InputChanged String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    ( model, Cmd.none )
+update message model =
+    case message of
+        InputChanged value ->
+            ( { model | inputText = value }, Cmd.none )
 
 
 
@@ -53,12 +55,18 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    UI.rootLayout [ Element.inFront viewApp ]
+    UI.rootLayout [ Element.inFront <| viewRootLayer model ]
 
 
-viewApp =
+viewRootLayer model =
     c [ fw, fh ]
         [ UI.appBar { title = UI.title2 "ELM" "DONE2" }
+        , Input.text []
+            { onChange = InputChanged
+            , text = model.inputText
+            , placeholder = Nothing
+            , label = Input.labelAbove [] (t "Lablaaee")
+            }
         ]
 
 

@@ -1,4 +1,4 @@
-module Theme exposing (baseFontFamily, baseFontSize)
+module Theme exposing (baseFontFamily, baseFontSize, maxWidth)
 
 import Element
 import Element.Background as Background
@@ -28,3 +28,7 @@ baseFontFamily =
 
 baseFontSize =
     Font.size 16
+
+
+maxWidth =
+    680

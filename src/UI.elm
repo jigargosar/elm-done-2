@@ -31,7 +31,7 @@ appBar { title } =
         , fcWhite
         ]
         (r
-            [ fwx 680
+            [ fwx Theme.maxWidth
             , cx
             , p2
             , s2
