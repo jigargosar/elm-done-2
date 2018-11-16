@@ -1,7 +1,7 @@
 module UI exposing (appBar, layout, logo, rootLayer, title2)
 
 import El exposing (..)
-import Element exposing (Element, clip, scrollbarY)
+import Element exposing (Element, clip, el, scrollbarY)
 import Element.Font
 import Theme
 
