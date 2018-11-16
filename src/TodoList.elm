@@ -99,7 +99,7 @@ view (Model model) =
 viewInput model =
     el [ p4 ]
         (Input.text
-            [ Border.rounded u2, onKeyDown <| HotKey.bindEnter Submit ]
+            [ Border.rounded u2, onEnterDown Submit ]
             { onChange = InputChanged
             , text = model.inputText
             , placeholder = Just <| Input.placeholder [] (t "Title...")

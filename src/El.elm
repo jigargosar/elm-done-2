@@ -1,4 +1,4 @@
-module El exposing (bc, bcBlack, black, c, cx, cy, f, fb, fc, fcWhite, fh, fl, fw, fwx, fxb, fxl, h, img, l, onKeyDown, p, p1, p2, p3, p4, pxy, r, s, s1, s2, s3, t, u1, u2, u3, u4, w, white)
+module El exposing (bc, bcBlack, black, c, cx, cy, f, fb, fc, fcWhite, fh, fl, fw, fwx, fxb, fxl, h, img, l, onEnterDown, onEscDown, onKeyDown, p, p1, p2, p3, p4, pxy, r, s, s1, s2, s3, t, u1, u2, u3, u4, w, white)
 
 import Element exposing (..)
 import Element.Background as Background
@@ -6,6 +6,7 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
 import Element.Region as Region
+import HotKey
 import Html.Events
 import Theme
 
@@ -173,3 +174,11 @@ p4 =
 onKeyDown decoder =
     Html.Events.on "keydown" decoder
         |> htmlAttribute
+
+
+onEscDown =
+    HotKey.onEscDown >> htmlAttribute
+
+
+onEnterDown =
+    HotKey.onEnterDown >> htmlAttribute
