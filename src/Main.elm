@@ -32,7 +32,6 @@ type alias Flags =
 
 type alias Model =
     { inputText : String
-    , todoStore : TodoStore.Model
     , todoList : TodoList.Model
     }
 
@@ -41,10 +40,8 @@ init : Flags -> ( Model, Cmd Msg )
 init flags =
     pure
         { inputText = ""
-        , todoStore = TodoStore.empty
         , todoList = TodoList.empty
         }
-        |> andThen (updateTodoStore <| TodoStore.Load flags.todos)
         |> andThen (updateTodoList <| TodoList.LoadTodoStore flags.todos)
 
 
@@ -53,10 +50,7 @@ init flags =
 
 
 type Msg
-    = InputChanged String
-    | Submit
-    | TodoStoreMsg TodoStore.Msg
-    | TodoListMsg TodoList.Msg
+    = TodoListMsg TodoList.Msg
 
 
 
@@ -75,25 +69,8 @@ type alias ReturnF =
 updateF : Msg -> ReturnF
 updateF message =
     case message of
-        InputChanged value ->
-            mapModel (\model -> { model | inputText = value })
-
-        Submit ->
-            andThen (\model -> updateTodoStore (TodoStore.new model.inputText "") model)
-
-        TodoStoreMsg msg ->
-            andThen (updateTodoStore msg)
-
         TodoListMsg msg ->
             andThen (updateTodoList msg)
-
-
-updateTodoStore msg model =
-    let
-        ( todoStore, cmd ) =
-            TodoStore.update msg model.todoStore
-    in
-    ( { model | todoStore = todoStore }, Cmd.map TodoStoreMsg cmd )
 
 
 updateTodoList msg model =
