@@ -1,8 +1,9 @@
 ---
-to: _templates/<%= name %>/<%= action || 'new' %>/hello.ejs.t
+to: _templates/<%= name %>/<%= action || 'new' %>/default.ejs.t
 ---
 ---
-to: app/hello.js
+inject: false
+to: src/filename.ext
 ---
 const hello = ```
 Hello!
