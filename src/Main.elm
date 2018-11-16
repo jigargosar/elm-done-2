@@ -45,6 +45,10 @@ type Msg
     | Submit
 
 
+
+---- INJECT MSG ABOVE ----
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
@@ -60,6 +64,7 @@ update message model =
 
 
 
+---- INJECT UPDATE CASE ABOVE ----
 ---- VIEW ----
 
 
