@@ -28,12 +28,16 @@ type alias Flags =
 
 
 type alias Model =
-    { inputText : String }
+    { inputText : String
+    }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { inputText = "" }, Cmd.none )
+    ( { inputText = ""
+      }
+    , Cmd.none
+    )
 
 
 
