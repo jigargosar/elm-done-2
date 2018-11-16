@@ -73,17 +73,17 @@ updateF message =
             mapModel (setInputText value)
 
         Submit ->
-            andThenF (unWrap >> (\model -> updateTodoStore (TS.new model.inputText "")))
+            andThenF (unWrap >> (\model -> updateTS (TS.new model.inputText "")))
                 >> mapModel (setInputText "")
 
         TSMsg msg ->
-            andThen <| updateTodoStore msg
+            andThen <| updateTS msg
 
         LoadTS value ->
-            andThen <| updateTodoStore (TS.Load value)
+            andThen <| updateTS (TS.Load value)
 
 
-updateTodoStore msg (Model model) =
+updateTS msg (Model model) =
     let
         ( todoStore, cmd ) =
             TS.update msg model.todoStore
