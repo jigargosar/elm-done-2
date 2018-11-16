@@ -1,12 +1,12 @@
-module UI exposing (appBar, logo, rootLayout, title2)
+module UI exposing (appBar, logo, rootLayer, title2)
 
 import El exposing (..)
-import Element exposing (Element)
+import Element exposing (Element, clip, scrollbarY)
 import Element.Font
 import Theme
 
 
-rootLayout attrs =
+rootLayer attrs =
     l
         ([ Theme.baseFontFamily
          , Theme.baseFontSize
@@ -14,6 +14,14 @@ rootLayout attrs =
             ++ attrs
         )
         (t "")
+
+
+layout : { appBar : Element msg, content : Element msg } -> Element msg
+layout config =
+    c [ fw, clip, scrollbarY ]
+        [ config.appBar
+        , el [ fw, clip, scrollbarY ] (el [ fw, cx, fwx Theme.maxWidth ] config.content)
+        ]
 
 
 logo =

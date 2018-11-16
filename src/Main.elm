@@ -59,7 +59,7 @@ update message model =
 
 view : Model -> Html Msg
 view model =
-    UI.rootLayout [ inFront <| viewRootLayer model ]
+    UI.rootLayer [ inFront <| viewRootLayer model ]
 
 
 viewRootLayer model =
