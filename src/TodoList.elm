@@ -71,7 +71,7 @@ updateF message =
             mapModel (setInputText value)
 
         Submit ->
-            andThenF (\model -> updateTodoStore (TodoStore.new model.inputText ""))
+            andThenF (unWrap >> (\model -> updateTodoStore (TodoStore.new model.inputText "")))
                 >> mapModel (setInputText "")
 
         TodoStoreMsg msg ->
@@ -83,10 +83,6 @@ updateF message =
 
 unWrap (Model model) =
     model
-
-
-andThenF f =
-    UpdateX.andThenF (unWrap >> f)
 
 
 updateTodoStore msg (Model model) =
