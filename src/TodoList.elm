@@ -100,9 +100,9 @@ view (Model model) =
 
 
 viewInput model =
-    el [ p4 ]
+    el [ p3 ]
         (ip
-            [ br2, onEnterDown Submit ]
+            [ br2, onEnterDown Submit, p2 ]
             { onChange = InputChanged
             , text = model.inputText
             , placeholder = ipp [] (t "Title...")
