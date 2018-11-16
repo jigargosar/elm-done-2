@@ -3,7 +3,7 @@ module Main exposing (Flags, Model, Msg(..), init, main, update, view)
 import Browser
 import BrowserX exposing (WindowSize)
 import El exposing (..)
-import Element
+import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -15,6 +15,10 @@ import Theme
 import TimeX exposing (Millis)
 import TodoStore
 import UI
+
+
+el =
+    Element.el
 
 
 
@@ -75,10 +79,11 @@ viewContent model =
 
 viewInput model =
     el [ p4 ]
-        (Input.text [ p3 ]
+        (Input.text
+            [ Border.rounded u2 ]
             { onChange = InputChanged
             , text = model.inputText
-            , placeholder = Nothing
+            , placeholder = Just <| Input.placeholder [] (t "Task Title...")
             , label = Input.labelAbove [] (t "Lablaaee")
             }
         )
