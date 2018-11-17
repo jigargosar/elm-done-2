@@ -187,36 +187,17 @@ view model =
 
 
 viewInput model =
-    let
-        onKeyDownMayPreventDefault ke =
-            case ke of
-                ( [], "ArrowDown" ) ->
-                    ( NoOp, True ) |> D.succeed
-
-                ( [], "ArrowUp" ) ->
-                    ( NoOp, True ) |> D.succeed
-
-                ( [], "Enter" ) ->
-                    ( Submit, False ) |> D.succeed
-
-                _ ->
-                    D.fail "Ignoring other key combinations"
-    in
     el [ p3 ]
         (ip
             [ onFocus <| InputFocusChanged True
             , onLoseFocus <| InputFocusChanged False
             , br2
-
-            --            , onEnterDown Submit
-            , fHA <|
-                Html.Events.preventDefaultOn "keydown" <|
-                    --                    D.andThen onKeyDownMayPreventDefault HotKey.decoder
-                    HotKey.bindAll
-                        [ ( HotKey.arrowDown, ( NoOp, True ) )
-                        , ( HotKey.arrowUp, ( NoOp, True ) )
-                        , ( HotKey.enter, ( Submit, False ) )
-                        ]
+            , onKeyDownPD <|
+                HotKey.bindAll
+                    [ ( HotKey.arrowDown, ( NoOp, True ) )
+                    , ( HotKey.arrowUp, ( NoOp, True ) )
+                    , ( HotKey.enter, ( Submit, False ) )
+                    ]
             , p2
             ]
             { onChange = InputChanged

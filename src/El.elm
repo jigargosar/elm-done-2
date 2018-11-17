@@ -36,6 +36,7 @@ module El exposing
     , onEscDown
     , onKeyDown
     , onKeyDownBindAll
+    , onKeyDownPD
     , p
     , p1
     , p2
@@ -301,6 +302,10 @@ br2 =
 
 onKeyDown =
     EventX.onKeyDown >> fHA
+
+
+onKeyDownPD =
+    EventX.onKeyDownPD >> fHA
 
 
 onEscDown =
