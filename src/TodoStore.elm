@@ -1,4 +1,4 @@
-module TodoStore exposing (Model, Msg(..), decodeOrEmpty, empty, filterBy, new, update)
+module TodoStore exposing (Model, Msg(..), all, decodeOrEmpty, empty, new, update)
 
 import BasicsX exposing (unpackResult)
 import Dict exposing (Dict)
@@ -137,7 +137,7 @@ upsertAndCache todo =
         >> effect (Port.cacheTodoStore << encoder)
 
 
-filterBy (Model model) =
+all (Model model) =
     model.lookup |> Dict.values
 
 

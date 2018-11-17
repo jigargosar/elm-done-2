@@ -47,6 +47,22 @@ todoStore =
     unwrap >> .todoStore
 
 
+currentList (Model model) =
+    let
+        filteredList =
+            TS.all model.todoStore
+    in
+    if List.isEmpty filteredList then
+        Nothing
+
+    else
+        let
+            idxMax =
+                List.length filteredList - 1
+        in
+        model.selectedIdx |> unwrapMaybe 0 (min idxMax) |> (\idx -> Just ( idx, filteredList ))
+
+
 type Msg
     = ---- INJECT MSG BELOW ----
       OnDoneChanged Todo.Model Bool
@@ -130,20 +146,12 @@ viewInput model =
         )
 
 
-filteredList =
-    todoStore >> TS.filterBy
-
-
 viewTodoList model =
-    let
-        todos =
-            filteredList model
-    in
-    case todos of
-        [] ->
+    case currentList model of
+        Nothing ->
             c [ fw ] [ t "No Tasks Found" ]
 
-        _ ->
+        Just ( si, todos ) ->
             c [ fw ] (List.map viewTodo todos)
 
 
