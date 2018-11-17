@@ -10,7 +10,7 @@ module TodoList exposing
 import BasicsX exposing (..)
 import Browser.Events
 import El exposing (..)
-import Element exposing (Element, clip, el, fromRgb, fromRgb255, rgb, rgba, scrollbarY)
+import Element exposing (Element, clip, el, focused, fromRgb, fromRgb255, rgb, rgba, scrollbarY)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events exposing (onFocus, onLoseFocus)
@@ -250,7 +250,7 @@ viewTodo si idx ( matchResult, todo ) =
                 (t "")
 
         doneCheckBox =
-            Input.checkbox [ pxy u3 u2, sw ]
+            Input.checkbox [ p2, sw, focused [ Border.glow blueA100 1 ] ]
                 { label = lh "done"
                 , icon =
                     \checked ->
@@ -262,13 +262,15 @@ viewTodo si idx ( matchResult, todo ) =
                 }
 
         displayTitle =
-            el [ pxy u3 u2 ] (t <| Todo.title todo)
+            el [ p2 ] (t <| Todo.title todo)
     in
-    r
-        [ fw
-        , bgc blue50
-        ]
+    r [ fw, bgc blue50 ]
         [ selectionIndicator
-        , doneCheckBox
-        , displayTitle
+        , r
+            [ fw
+            , p1
+            ]
+            [ doneCheckBox
+            , displayTitle
+            ]
         ]
