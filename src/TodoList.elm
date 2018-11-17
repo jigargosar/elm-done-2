@@ -251,21 +251,27 @@ viewTodo si idx ( matchResult, todo ) =
                 , bcIf isSelected blue300
                 ]
                 (t "")
+
+        doneCheckBox =
+            Input.checkbox [ pxy u3 u2, sw ]
+                { label = lh "done"
+                , icon =
+                    \checked ->
+                        r [ fw, fh ]
+                            [ ter checked Icons.checkCircleOutline Icons.circleOutline
+                            ]
+                , checked = Todo.done todo
+                , onChange = OnDoneChanged todo
+                }
+
+        displayTitle =
+            el [ pxy u3 u2 ] (t <| Todo.title todo)
     in
     r
         [ fw
         , bgc blue50
         ]
         [ selectionIndicator
-        , Input.checkbox [ pxy u3 u2, sw ]
-            { label = lh "done"
-            , icon =
-                \checked ->
-                    r [ fw, fh ]
-                        [ ter checked Icons.checkCircleOutline Icons.circleOutline
-                        ]
-            , checked = Todo.done todo
-            , onChange = OnDoneChanged todo
-            }
-        , el [ pxy u3 u2 ] (t <| Todo.title todo)
+        , doneCheckBox
+        , displayTitle
         ]
