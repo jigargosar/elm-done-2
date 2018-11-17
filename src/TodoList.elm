@@ -273,14 +273,17 @@ viewTodo si idx ( matchResult, todo ) =
                 }
 
         displayTitle =
-            el [ p3 ] (t <| Todo.title todo)
+            el [ fw, p3 ] (t <| Todo.title todo)
+
+        listRow =
+            r [ fw, bgc blue50 ]
+
+        listInnerRow =
+            r [ fw, p1 ]
     in
-    r [ fw, bgc blue50 ]
+    listRow
         [ selectionIndicator
-        , r
-            [ fw
-            , p1
-            ]
+        , listInnerRow
             [ doneCheckBox
             , displayTitle
             ]
