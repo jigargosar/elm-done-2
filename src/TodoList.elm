@@ -73,32 +73,31 @@ updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnDoneChanged todo bool ->
-            updateTSF <| TS.ModTodo (Todo.SetDone bool) todo
+            updateTS <| TS.ModTodo (Todo.SetDone bool) todo
 
         InputChanged value ->
             mapModel (setInputText value)
 
         Submit ->
-            andThenF (\model -> updateTSF (TS.new (inputText model) ""))
+            andThenF (\model -> updateTS (TS.new (inputText model) ""))
                 >> mapModel (setInputText "")
 
         TSMsg msg ->
-            updateTSF msg
+            updateTS msg
 
         LoadTS value ->
-            updateTSF (TS.Load value)
+            updateTS (TS.Load value)
 
 
-updateTSF msg =
-    andThen <| updateTS msg
-
-
-updateTS msg (Model model) =
-    let
-        ( todoStore, cmd ) =
-            TS.update msg model.todoStore
-    in
-    ( Model { model | todoStore = todoStore }, Cmd.map TSMsg cmd )
+updateTS msg =
+    andThen
+        (\(Model model) ->
+            let
+                ( todoStore, cmd ) =
+                    TS.update msg model.todoStore
+            in
+            ( Model { model | todoStore = todoStore }, Cmd.map TSMsg cmd )
+        )
 
 
 view : Model -> Element Msg
