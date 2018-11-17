@@ -27,6 +27,7 @@ import UpdateX exposing (..)
 type alias ModelRecord =
     { inputText : String
     , todoStore : TS.Model
+    , selectedIdx : Maybe Int
     }
 
 
@@ -52,6 +53,7 @@ empty =
     Model
         { inputText = ""
         , todoStore = TS.empty
+        , selectedIdx = Nothing
         }
 
 
