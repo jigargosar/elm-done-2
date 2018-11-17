@@ -254,9 +254,13 @@ viewTodo si idx ( matchResult, todo ) =
             Input.checkbox
                 [ p1
                 , sw
-                , br 9999
+                , brPill
                 , focused [ Border.glow blue200 3 ]
                 , mouseOver [ Border.glow blueGrey300 1 ]
+                , onKeyDownPD <|
+                    HotKey.bindAll
+                        [ ( HotKey.space, ( NoOp, True ) )
+                        ]
                 ]
                 { label = lh "done"
                 , icon =

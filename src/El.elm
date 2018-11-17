@@ -7,6 +7,7 @@ module El exposing
     , black
     , br
     , br2
+    , brPill
     , bw
     , c
     , cx
@@ -185,6 +186,10 @@ fb =
 
 br =
     Border.rounded
+
+
+brPill =
+    br 9999
 
 
 bw =

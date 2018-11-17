@@ -16,6 +16,7 @@ module HotKey exposing
     , onKeyDown
     , onKeyDownBindAll
     , singletonBool
+    , space
     )
 
 import BasicsX exposing (..)
@@ -98,6 +99,10 @@ arrowDown =
 
 arrowUp =
     ( [], "ArrowUp" )
+
+
+space =
+    ( [], " " )
 
 
 bind : HotKey -> msg -> Decoder msg
