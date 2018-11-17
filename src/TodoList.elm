@@ -91,7 +91,8 @@ setInputText val (Model model) =
 
 subscriptions model =
     Sub.batch
-        [ Browser.Events.onKeyDown <| HotKey.bindAll [ ( HotKey.arrowDown, OnNext ), ( HotKey.arrowUp, OnPrev ) ]
+        [ Browser.Events.onKeyDown <| HotKey.bindAll [
+         ( HotKey.arrowDown, OnNext ), ( HotKey.arrowUp, OnPrev ) ]
         ]
 
 
