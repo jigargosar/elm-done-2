@@ -204,7 +204,13 @@ view : Model -> Element Msg
 view model =
     c [ fw, clip, Element.scrollbarY ]
         [ viewInput model
-        , viewTodoList model
+        , c [ fw, clip, Element.scrollbarY ] <|
+            case currentList model of
+                Nothing ->
+                    [ t "No Tasks Found" ]
+
+                Just ( si, todos ) ->
+                    List.indexedMap (viewTodo si) todos
         ]
 
 
@@ -228,15 +234,6 @@ viewInput model =
             , label = lh "Task Title"
             }
         )
-
-
-viewTodoList model =
-    case currentList model of
-        Nothing ->
-            c [ fw, clip, Element.scrollbarY ] [ t "No Tasks Found" ]
-
-        Just ( si, todos ) ->
-            c [ fw, clip, Element.scrollbarY ] (List.indexedMap (viewTodo si) todos)
 
 
 viewTodo si idx ( matchResult, todo ) =
