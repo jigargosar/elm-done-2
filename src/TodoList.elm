@@ -18,7 +18,7 @@ import HotKey
 import Icons
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
-import MaterialColor exposing (blue50)
+import MaterialColorsElmUI exposing (..)
 import Todo
 import TodoStore as TS
 import UpdateX exposing (..)
@@ -126,12 +126,8 @@ viewTodoList model =
     c [ fw ] (List.map viewTodo <| TS.list model.todoStore)
 
 
-mcToEc { red, green, blue } =
-    Element.rgb255 red green blue
-
-
 viewTodo todo =
-    r [ fw, bc <| mcToEc blue50 ]
+    r [ fw, bc blue50 ]
         [ Input.checkbox [ pxy u3 u2, sw ]
             { label = lh "done"
             , icon =
