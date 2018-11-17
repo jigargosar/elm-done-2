@@ -17,6 +17,7 @@ module BasicsX exposing
     , flip
     , ifElse
     , isBlank
+    , justWhen
     , maybeBool
     , maybeWhen
     , notPred
@@ -154,6 +155,10 @@ maybeBool bool value =
 
 maybeWhen pred answerFn =
     ifElse pred (answerFn >> Just) (always Nothing)
+
+
+justWhen pred =
+    maybeWhen pred identity
 
 
 unwrapMaybe : b -> (a -> b) -> Maybe a -> b

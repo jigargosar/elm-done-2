@@ -60,18 +60,12 @@ fuzzySort query =
             String.toLower
 
         fuzzMatcher todo =
-            Fuzzy.match [] [] (boil query) <| boil (Todo.title todo)
+            Fuzzy.match [] [] (boil query) (boil <| Todo.title todo)
+                |> justWhen (.score >> flip (<) 1000)
 
         filterMapFn todo =
-            let
-                matchResult =
-                    fuzzMatcher todo
-            in
-            if matchResult.score > 1000 then
-                Nothing
-
-            else
-                Just ( matchResult, todo )
+            fuzzMatcher todo
+                |> Maybe.map (\res -> ( res, todo ))
 
         sort =
             List.sortBy (Tuple.first >> .score)
