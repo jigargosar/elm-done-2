@@ -15,6 +15,7 @@ import Element.Font as Font
 import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
 import HotKey
+import Icons
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import MaterialColor exposing (blue50)
@@ -39,7 +40,7 @@ unWrap (Model model) =
 
 type Msg
     = ---- INJECT MSG BELOW ----
-      OnDoneChanged Bool
+      OnDoneChanged Todo.Model Bool
     | InputChanged String
     | Submit
     | TSMsg TS.Msg
@@ -71,7 +72,7 @@ updateF : Msg -> ReturnF
 updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
-        OnDoneChanged bool ->
+        OnDoneChanged todo bool ->
             identity
 
         InputChanged value ->
@@ -128,9 +129,9 @@ viewTodo todo =
     r [ fw, bc <| mcToEc blue50 ]
         [ Input.checkbox [ pxy u3 u2, sw ]
             { label = lh "done"
-            , icon = \checked -> el [] (t "X")
+            , icon = \checked -> r [ fw, fh ] [ Icons.trash ]
             , checked = Todo.done todo
-            , onChange = OnDoneChanged
+            , onChange = OnDoneChanged todo
             }
         , el [ pxy u3 u2 ] (t <| Todo.title todo)
         ]

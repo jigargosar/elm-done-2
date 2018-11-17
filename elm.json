@@ -9,6 +9,7 @@
       "elm/html": "1.0.0",
       "elm/json": "1.1.1",
       "elm/random": "1.0.0",
+      "elm/svg": "1.0.1",
       "elm/time": "1.0.0",
       "jigargosar/elm-material-color": "1.0.0",
       "mdgriffith/elm-ui": "1.1.0"
