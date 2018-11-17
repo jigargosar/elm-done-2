@@ -16,7 +16,7 @@ module BasicsX exposing
     , firstEq
     , flip
     , ifElse
-    , isWhitespaceOrEmptyString
+    , isBlank
     , maybeBool
     , maybeWhen
     , notPred
@@ -26,6 +26,7 @@ module BasicsX exposing
     , swap
     , ter
     , unless
+    , unlessBool
     , unpackMaybe
     , unpackResult
     , unwrapMaybe
@@ -131,6 +132,10 @@ unless b =
     when (b >> not)
 
 
+unlessBool bool =
+    when (always <| not bool)
+
+
 eqs =
     (==)
 
@@ -182,7 +187,7 @@ swap ( a, b ) =
     ( b, a )
 
 
-isWhitespaceOrEmptyString =
+isBlank =
     String.trim >> String.isEmpty
 
 

@@ -12,7 +12,8 @@
       "elm/svg": "1.0.1",
       "elm/time": "1.0.0",
       "jigargosar/elm-material-color": "1.0.0",
-      "mdgriffith/elm-ui": "1.1.0"
+      "mdgriffith/elm-ui": "1.1.0",
+      "tripokey/elm-fuzzy": "5.2.1"
     },
     "indirect": {
       "elm/url": "1.0.0",

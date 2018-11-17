@@ -17,6 +17,7 @@ import Element.Events exposing (onFocus, onLoseFocus)
 import Element.Font as Font
 import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
+import Fuzzy
 import HotKey
 import Html.Attributes exposing (tabindex)
 import Html.Events
@@ -53,10 +54,26 @@ todoStore =
     unwrap >> .todoStore
 
 
+fuzzySort query =
+    let
+        matchTodoTitle todo =
+            Fuzzy.match [] [] query <| Todo.title todo
+
+        fm todo =
+            Just ( matchTodoTitle todo, todo )
+
+        sort =
+            List.sortBy (Tuple.first >> .score)
+    in
+    List.filterMap fm
+        >> unlessBool (isBlank query) sort
+
+
 currentList (Model model) =
     let
         filteredList =
             TS.all model.todoStore
+                |> fuzzySort model.inputText
     in
     if List.isEmpty filteredList then
         Nothing
@@ -217,7 +234,7 @@ viewTodoList model =
             c [ fw ] (List.indexedMap (viewTodo si) todos)
 
 
-viewTodo si idx todo =
+viewTodo si idx ( matchResult, todo ) =
     let
         isSelected =
             idx == si
