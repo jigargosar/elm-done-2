@@ -105,8 +105,8 @@ updateSelectedIdxBy numFn model =
         |> unwrapMaybe model
             (Tuple.mapBoth
                 numFn
-                (List.length >> (+) -1)
-                >> (\( idx, idxMax ) -> safeModBy idxMax idx)
+                List.length
+                >> (\( idx, length ) -> safeModBy length idx)
                 >> setSelectedIdxIn model
             )
 
