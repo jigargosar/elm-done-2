@@ -78,6 +78,10 @@ updateTodoList msg model =
     ( { model | todoList = todoList }, Cmd.map TLMsg cmd )
 
 
+subscriptions model =
+    Sub.batch [ TodoList.subscriptions model.todoList |> Sub.map TLMsg ]
+
+
 
 ---- VIEW ----
 
@@ -103,5 +107,5 @@ main =
         { view = view
         , init = init
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }

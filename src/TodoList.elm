@@ -2,6 +2,7 @@ module TodoList exposing
     ( Model
     , Msg(..)
     , empty
+    , subscriptions
     , update
     , view
     )
@@ -74,8 +75,8 @@ updateSelectedIdxWith numFn model =
         |> unwrapMaybe model
             (Tuple.mapBoth
                 numFn
-                (List.length >> (-) 1)
-                >> (\( idx, idxMax ) -> clamp 0 idxMax idx)
+                (List.length >> (+) -1)
+                >> (\( idx, idxMax ) -> safeModBy idxMax idx)
                 >> setSelectedIdxIn model
             )
 
@@ -128,7 +129,7 @@ updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnPrev ->
-            mapModel <| updateSelectedIdxWith ((-) 1)
+            mapModel <| updateSelectedIdxWith ((+) -1)
 
         OnNext ->
             mapModel <| updateSelectedIdxWith ((+) 1)
