@@ -192,13 +192,13 @@ viewInput model =
             [ onFocus <| InputFocusChanged True
             , onLoseFocus <| InputFocusChanged False
             , br2
+            , p2
             , onKeyDownPD <|
                 HotKey.bindAll
                     [ ( HotKey.arrowDown, ( NoOp, True ) )
                     , ( HotKey.arrowUp, ( NoOp, True ) )
                     , ( HotKey.enter, ( Submit, False ) )
                     ]
-            , p2
             ]
             { onChange = InputChanged
             , text = inputText model
