@@ -15,6 +15,7 @@ import Element.Font as Font
 import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
 import HotKey
+import Html.Attributes exposing (tabindex)
 import Icons
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
