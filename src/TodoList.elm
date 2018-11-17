@@ -209,12 +209,12 @@ view model =
 
 
 viewInput model =
-    el [ p3 ]
+    el [ p3, fw ]
         (ip
-            [ onFocus <| InputFocusChanged True
-            , onLoseFocus <| InputFocusChanged False
-            , br2
+            [ br2
             , p2
+            , onLoseFocus <| InputFocusChanged False
+            , onFocus <| InputFocusChanged True
             , onKeyDownPD <|
                 HotKey.bindAll
                     [ ( HotKey.arrowDown, ( NoOp, True ) )
@@ -224,7 +224,7 @@ viewInput model =
             ]
             { onChange = InputChanged
             , text = inputText model
-            , placeholder = ipp [] (t "Title...")
+            , placeholder = ipp [] (t "Add... / Search...")
             , label = lh "Task Title"
             }
         )
