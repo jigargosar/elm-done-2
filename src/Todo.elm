@@ -1,4 +1,4 @@
-module Todo exposing (Id, Model, Msg(..), decoder, done, encoder, idString, init, setDone, title, update)
+module Todo exposing (Id, Model, Msg(..), decoder, done, encoder, idString, init, modify, setDone, title)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -83,7 +83,8 @@ type Msg
     = SetDone Bool
 
 
-update message =
+modify : Msg -> Model -> Model
+modify message =
     case message of
         SetDone bool ->
             setDone bool
