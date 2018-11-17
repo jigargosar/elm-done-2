@@ -118,7 +118,7 @@ updateF message =
                                 , contextId = builder.contextId
                                 }
                     in
-                    upsertAndCache todo
+                    upsertAndCacheF todo
 
         Load value ->
             andThen
@@ -128,14 +128,18 @@ updateF message =
                 )
 
         ModTodo msg todo ->
-            upsertAndCache (Todo.modify msg todo)
+            andThen (\model -> pure model |> upsertAndCacheF (Todo.modify msg (getOr todo model)))
 
 
-upsertAndCache : Todo.Model -> ReturnF
-upsertAndCache todo =
+upsertAndCacheF : Todo.Model -> ReturnF
+upsertAndCacheF todo =
     mapModel (\(Model model) -> Model { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
         >> effect (Port.cacheTodoStore << encoder)
 
 
 list (Model model) =
     model.lookup |> Dict.values
+
+
+getOr todo (Model model) =
+    model.lookup |> Dict.get (Todo.idString todo) |> Maybe.withDefault todo
