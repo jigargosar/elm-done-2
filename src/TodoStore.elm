@@ -77,7 +77,7 @@ setJustNow model now =
 type Msg
     = New TodoBuilder
     | Load Value
-    | SetDone Todo.Model Bool
+    | UpdateTodo Todo.Msg Todo.Model
 
 
 new title contextId =
@@ -127,8 +127,8 @@ updateF message =
                         |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
                 )
 
-        SetDone todo bool ->
-            upsertAndCache (Todo.setDone bool todo)
+        UpdateTodo msg todo ->
+            upsertAndCache (Todo.update msg todo)
 
 
 upsertAndCache : Todo.Model -> ReturnF

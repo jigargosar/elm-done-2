@@ -1,4 +1,4 @@
-module Todo exposing (Id, Model, decoder, done, encoder, idString, init, setDone, title)
+module Todo exposing (Id, Model, Msg(..), decoder, done, encoder, idString, init, setDone, title, update)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -77,3 +77,13 @@ decoder =
         (D.field "modifiedAt" D.int)
         (D.field "contextId" D.string)
         |> D.map Model
+
+
+type Msg
+    = SetDone Bool
+
+
+update message =
+    case message of
+        SetDone bool ->
+            setDone bool
