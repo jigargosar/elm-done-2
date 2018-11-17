@@ -128,7 +128,7 @@ updateF message =
                 )
 
         ModTodo msg todo ->
-            andThen (\model -> pure model |> upsertAndCacheF (Todo.modify msg (getOr todo model)))
+            andThenF (\model -> upsertAndCacheF (Todo.modify msg (getOr todo model)))
 
 
 upsertAndCacheF : Todo.Model -> ReturnF

@@ -26,4 +26,4 @@ andThen f ( m1, c1 ) =
 
 
 andThenF f =
-    andThen (\m -> pure m |> andThen (f m))
+    andThen (\m -> pure m |> f m)
