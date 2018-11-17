@@ -20,7 +20,7 @@ layout : { appBar : Element msg, content : Element msg } -> Element msg
 layout config =
     c [ fw, clip, scrollbarY ]
         [ config.appBar
-        , el [ fw, clip, scrollbarY ] (el [ fw, cx, fwx Theme.maxWidth ] config.content)
+        , el [ fw, clip, scrollbarY ] (el [ fw, cx, fwx Theme.maxWidth, clip, scrollbarY ] config.content)
         ]
 
 
