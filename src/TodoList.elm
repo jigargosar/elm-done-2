@@ -132,11 +132,7 @@ viewTodo todo =
             , icon =
                 \checked ->
                     r [ fw, fh ]
-                        [ if checked then
-                            Icons.trash
-
-                          else
-                            Icons.checkOutline
+                        [ ter checked Icons.checkCircleOutline Icons.circleOutline
                         ]
             , checked = Todo.done todo
             , onChange = OnDoneChanged todo
