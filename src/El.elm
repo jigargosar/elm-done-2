@@ -1,9 +1,13 @@
 module El exposing
-    ( bc
+    ( a0
+    , bc
     , bcBlack
+    , bcIf
+    , bgc
     , black
     , br
     , br2
+    , bw
     , c
     , cx
     , cy
@@ -53,6 +57,7 @@ module El exposing
     , white
     )
 
+import BasicsX exposing (..)
 import Element exposing (..)
 import Element.Background as Background
 import Element.Border as Border
@@ -153,7 +158,7 @@ s =
     spacing
 
 
-bc =
+bgc =
     Background.color
 
 
@@ -179,6 +184,18 @@ fb =
 
 br =
     Border.rounded
+
+
+bw =
+    Border.width
+
+
+bc =
+    Border.color
+
+
+bcIf bool clr =
+    bc <| ter bool clr a0
 
 
 
@@ -210,16 +227,20 @@ lh =
 -- Custom
 
 
+a0 =
+    rgba 0 0 0 0
+
+
 black =
-    Element.rgb 0 0 0
+    rgb 0 0 0
 
 
 white =
-    Element.rgb 1 1 1
+    rgb 1 1 1
 
 
 bcBlack =
-    bc black
+    bgc black
 
 
 fcWhite =

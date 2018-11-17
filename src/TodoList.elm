@@ -8,7 +8,7 @@ module TodoList exposing
 
 import BasicsX exposing (..)
 import El exposing (..)
-import Element exposing (Element, el, fromRgb, fromRgb255, rgb)
+import Element exposing (Element, el, fromRgb, fromRgb255, rgb, rgba)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
@@ -152,12 +152,28 @@ viewTodoList model =
             c [ fw ] [ t "No Tasks Found" ]
 
         Just ( si, todos ) ->
-            c [ fw ] (List.map viewTodo todos)
+            c [ fw ] (List.indexedMap (viewTodo si) todos)
 
 
-viewTodo todo =
-    r [ fw, bc blue50 ]
-        [ Input.checkbox [ pxy u3 u2, sw ]
+viewTodo si idx todo =
+    let
+        isSelected =
+            idx == si
+
+        selectionIndicator =
+            el
+                [ bw 2
+                , fh
+                , bcIf isSelected blue300
+                ]
+                (t "")
+    in
+    r
+        [ fw
+        , bgc blue50
+        ]
+        [ selectionIndicator
+        , Input.checkbox [ pxy u3 u2, sw ]
             { label = lh "done"
             , icon =
                 \checked ->
