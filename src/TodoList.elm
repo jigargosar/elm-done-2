@@ -204,7 +204,7 @@ updateTS msg =
 view : Model -> Element Msg
 view model =
     c [ fw, clip, scrollbarY ]
-        [ el [ p3, fwx Theme.maxWidth, cx ] <| viewInput model
+        [ el [ p3, cx, fwx Theme.maxWidth ] <| viewInput model
         , el [ fw, clip, scrollbarY ] <|
             c [ cx, fwx Theme.maxWidth ] <|
                 case currentList model of
