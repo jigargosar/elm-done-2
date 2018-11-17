@@ -73,20 +73,24 @@ updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnDoneChanged todo bool ->
-            andThen (updateTS <| TS.ModTodo (Todo.SetDone bool) todo)
+            updateTSF <| TS.ModTodo (Todo.SetDone bool) todo
 
         InputChanged value ->
             mapModel (setInputText value)
 
         Submit ->
-            andThen (\model -> updateTS (TS.new (inputText model) "") model)
+            andThenF (\model -> updateTSF (TS.new (inputText model) ""))
                 >> mapModel (setInputText "")
 
         TSMsg msg ->
-            andThen <| updateTS msg
+            updateTSF msg
 
         LoadTS value ->
-            andThen <| updateTS (TS.Load value)
+            updateTSF (TS.Load value)
+
+
+updateTSF msg =
+    andThen <| updateTS msg
 
 
 updateTS msg (Model model) =
