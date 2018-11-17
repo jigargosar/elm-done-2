@@ -56,16 +56,27 @@ todoStore =
 
 fuzzySort query =
     let
-        matchTodoTitle todo =
-            Fuzzy.match [] [] query <| Todo.title todo
+        boil =
+            String.toLower
 
-        fm todo =
-            Just ( matchTodoTitle todo, todo )
+        fuzzMatcher todo =
+            Fuzzy.match [] [] (boil query) <| boil (Todo.title todo)
+
+        filterMapFn todo =
+            let
+                matchResult =
+                    fuzzMatcher todo
+            in
+            if matchResult.score > 1000 then
+                Nothing
+
+            else
+                Just ( matchResult, todo )
 
         sort =
             List.sortBy (Tuple.first >> .score)
     in
-    List.filterMap fm
+    List.filterMap filterMapFn
         >> unlessBool (isBlank query) sort
 
 
