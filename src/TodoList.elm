@@ -211,7 +211,12 @@ viewInput model =
             --            , onEnterDown Submit
             , fHA <|
                 Html.Events.preventDefaultOn "keydown" <|
-                    D.andThen onKeyDownMayPreventDefault HotKey.decoder
+                    --                    D.andThen onKeyDownMayPreventDefault HotKey.decoder
+                    HotKey.bindAll
+                        [ ( HotKey.arrowDown, ( NoOp, True ) )
+                        , ( HotKey.arrowUp, ( NoOp, True ) )
+                        , ( HotKey.enter, ( Submit, False ) )
+                        ]
             , p2
             ]
             { onChange = InputChanged
