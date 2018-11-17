@@ -1,6 +1,8 @@
 module HotKey exposing
     ( Event
     , SoftKey(..)
+    , arrowDown
+    , arrowUp
     , bindAll
     , bindEnter
     , bindEsc
@@ -88,6 +90,14 @@ enter =
 esc : HotKey
 esc =
     ( [], "Escape" )
+
+
+arrowDown =
+    ( [], "ArrowDown" )
+
+
+arrowUp =
+    ( [], "ArrowUp" )
 
 
 bind : HotKey -> msg -> Decoder msg

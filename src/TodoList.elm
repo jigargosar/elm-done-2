@@ -7,6 +7,7 @@ module TodoList exposing
     )
 
 import BasicsX exposing (..)
+import Browser.Events
 import El exposing (..)
 import Element exposing (Element, el, fromRgb, fromRgb255, rgb, rgba)
 import Element.Background as Background
@@ -66,7 +67,9 @@ currentList (Model model) =
 
 type Msg
     = ---- INJECT MSG BELOW ----
-      OnDoneChanged Todo.Model Bool
+      OnPrev
+    | OnNext
+    | OnDoneChanged Todo.Model Bool
     | InputChanged String
     | Submit
     | TSMsg TS.Msg
@@ -86,6 +89,12 @@ setInputText val (Model model) =
     Model { model | inputText = val }
 
 
+subscriptions model =
+    Sub.batch
+        [ Browser.Events.onKeyDown <| HotKey.bindAll [ ( HotKey.arrowDown, OnNext ), ( HotKey.arrowUp, OnPrev ) ]
+        ]
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message =
     updateF message << pure
@@ -99,6 +108,12 @@ updateF : Msg -> ReturnF
 updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
+        OnPrev ->
+            identity
+
+        OnNext ->
+            identity
+
         OnDoneChanged todo bool ->
             updateTS <| TS.ModTodo (Todo.SetDone bool) todo
 
