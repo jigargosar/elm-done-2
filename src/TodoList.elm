@@ -203,7 +203,7 @@ updateTS msg =
 view : Model -> Element Msg
 view model =
     c [ fw, clip, scrollbarY ]
-        [ viewInput model
+        [ el [ p3, fw ] <| viewInput model
         , c [ fw, clip, scrollbarY ] <|
             case currentList model of
                 Nothing ->
@@ -215,25 +215,23 @@ view model =
 
 
 viewInput model =
-    el [ p3, fw ]
-        (ip
-            [ br2
-            , p2
-            , onLoseFocus <| InputFocusChanged False
-            , onFocus <| InputFocusChanged True
-            , onKeyDownPD <|
-                HotKey.bindAll
-                    [ ( HotKey.arrowDown, ( NoOp, True ) )
-                    , ( HotKey.arrowUp, ( NoOp, True ) )
-                    , ( HotKey.enter, ( Submit, False ) )
-                    ]
-            ]
-            { onChange = InputChanged
-            , text = inputText model
-            , placeholder = ipp [] (t "Add... / Search...")
-            , label = lh "Task Title"
-            }
-        )
+    ip
+        [ br2
+        , p2
+        , onLoseFocus <| InputFocusChanged False
+        , onFocus <| InputFocusChanged True
+        , onKeyDownPD <|
+            HotKey.bindAll
+                [ ( HotKey.arrowDown, ( NoOp, True ) )
+                , ( HotKey.arrowUp, ( NoOp, True ) )
+                , ( HotKey.enter, ( Submit, False ) )
+                ]
+        ]
+        { onChange = InputChanged
+        , text = inputText model
+        , placeholder = ipp [] (t "Add... / Search...")
+        , label = lh "Task Title"
+        }
 
 
 viewTodo si idx ( matchResult, todo ) =
