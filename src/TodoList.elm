@@ -79,7 +79,7 @@ updateF message =
             mapModel (setInputText value)
 
         Submit ->
-            andThenF (unWrap >> (\model -> updateTS (TS.new model.inputText "")))
+            andThen (\model -> updateTS (TS.new (inputText model) "") model)
                 >> mapModel (setInputText "")
 
         TSMsg msg ->
@@ -139,3 +139,7 @@ viewTodo todo =
             }
         , el [ pxy u3 u2 ] (t <| Todo.title todo)
         ]
+
+
+inputText =
+    unWrap >> .inputText
