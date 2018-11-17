@@ -65,6 +65,21 @@ currentList (Model model) =
         model.selectedIdx |> unwrapMaybe 0 (min idxMax) |> (\idx -> Just ( idx, filteredList ))
 
 
+setSelectedIdxIn (Model model) idx =
+    Model { model | selectedIdx = Just idx }
+
+
+updateSelectedIdxWith numFn model =
+    currentList model
+        |> unwrapMaybe model
+            (Tuple.mapBoth
+                numFn
+                (List.length >> (-) 1)
+                >> (\( idx, idxMax ) -> clamp 0 idxMax idx)
+                >> setSelectedIdxIn model
+            )
+
+
 type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
@@ -91,8 +106,11 @@ setInputText val (Model model) =
 
 subscriptions model =
     Sub.batch
-        [ Browser.Events.onKeyDown <| HotKey.bindAll [
-         ( HotKey.arrowDown, OnNext ), ( HotKey.arrowUp, OnPrev ) ]
+        [ Browser.Events.onKeyDown <|
+            HotKey.bindAll
+                [ ( HotKey.arrowDown, OnNext )
+                , ( HotKey.arrowUp, OnPrev )
+                ]
         ]
 
 
@@ -110,10 +128,10 @@ updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnPrev ->
-            identity
+            mapModel <| updateSelectedIdxWith ((-) 1)
 
         OnNext ->
-            identity
+            mapModel <| updateSelectedIdxWith ((+) 1)
 
         OnDoneChanged todo bool ->
             updateTS <| TS.ModTodo (Todo.SetDone bool) todo
