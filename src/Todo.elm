@@ -1,4 +1,4 @@
-module Todo exposing (Id, Model, decoder, done, encoder, idString, init, title)
+module Todo exposing (Id, Model, decoder, done, encoder, idString, init, setDone, title)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
@@ -43,6 +43,10 @@ title =
 
 done =
     unWrap >> .done
+
+
+setDone val (Model model) =
+    Model { model | done = val }
 
 
 type alias Encoder =

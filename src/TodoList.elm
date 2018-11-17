@@ -73,7 +73,7 @@ updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnDoneChanged todo bool ->
-            identity
+            andThen (updateTS <| TS.SetDone todo bool)
 
         InputChanged value ->
             mapModel (setInputText value)
