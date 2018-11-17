@@ -5,10 +5,13 @@ module El exposing
     , bcIf
     , bgc
     , black
+    , blackA
     , br
     , br2
     , brPill
     , bw
+    , bwb
+    , bwr
     , c
     , cx
     , cy
@@ -196,6 +199,22 @@ bw =
     Border.width
 
 
+each x =
+    { bottom = x, top = x, left = x, right = x }
+
+
+each0 =
+    each 0
+
+
+bwb x =
+    Border.widthEach { each0 | bottom = x }
+
+
+bwr x =
+    Border.widthEach { each0 | right = x }
+
+
 bc =
     Border.color
 
@@ -239,6 +258,10 @@ a0 =
 
 black =
     rgb 0 0 0
+
+
+blackA x =
+    rgba 0 0 0 x
 
 
 white =

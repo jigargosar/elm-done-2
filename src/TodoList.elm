@@ -243,10 +243,9 @@ viewTodo si idx ( matchResult, todo ) =
 
         selectionIndicator =
             el
-                [ bw 2
-                , br 2
+                [ bwr 3
                 , fh
-                , bcIf isSelected blue300
+                , bcIf isSelected blue400
                 ]
                 (t "")
 
@@ -265,7 +264,7 @@ viewTodo si idx ( matchResult, todo ) =
                 { label = lh "done"
                 , icon =
                     \checked ->
-                        r [ fw, fh ]
+                        r [ fw, fh, fc grey300 ]
                             [ ter checked Icons.checkCircleOutline Icons.circleOutline
                             ]
                 , checked = Todo.done todo
@@ -276,10 +275,10 @@ viewTodo si idx ( matchResult, todo ) =
             el [ fw, p3 ] (t <| Todo.title todo)
 
         listRow =
-            r [ fw, bgc blue50 ]
+            r [ s1, fw, bwb 1, bc <| blackA 0.1 ]
 
         listInnerRow =
-            r [ fw, p1 ]
+            r [ fw ]
     in
     listRow
         [ selectionIndicator
