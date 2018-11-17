@@ -35,8 +35,16 @@ type Model
     = Model ModelRecord
 
 
-unWrap (Model model) =
+unwrap (Model model) =
     model
+
+
+inputText =
+    unwrap >> .inputText
+
+
+todoStore =
+    unwrap >> .todoStore
 
 
 type Msg
@@ -95,15 +103,15 @@ updateTS msg =
     andThen
         (\(Model model) ->
             let
-                ( todoStore, cmd ) =
+                ( todoStore_, cmd ) =
                     TS.update msg model.todoStore
             in
-            ( Model { model | todoStore = todoStore }, Cmd.map TSMsg cmd )
+            ( Model { model | todoStore = todoStore_ }, Cmd.map TSMsg cmd )
         )
 
 
 view : Model -> Element Msg
-view (Model model) =
+view model =
     c [ fw ]
         [ viewInput model
         , viewTodoList model
@@ -115,15 +123,28 @@ viewInput model =
         (ip
             [ br2, onEnterDown Submit, p2 ]
             { onChange = InputChanged
-            , text = model.inputText
+            , text = inputText model
             , placeholder = ipp [] (t "Title...")
             , label = lh "Task Title"
             }
         )
 
 
+filteredList =
+    todoStore >> TS.filterBy
+
+
 viewTodoList model =
-    c [ fw ] (List.map viewTodo <| TS.list model.todoStore)
+    let
+        todos =
+            filteredList model
+    in
+    case todos of
+        [] ->
+            c [ fw ] [ t "No Tasks Found" ]
+
+        _ ->
+            c [ fw ] (List.map viewTodo todos)
 
 
 viewTodo todo =
@@ -140,7 +161,3 @@ viewTodo todo =
             }
         , el [ pxy u3 u2 ] (t <| Todo.title todo)
         ]
-
-
-inputText =
-    unWrap >> .inputText
