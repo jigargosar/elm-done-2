@@ -129,7 +129,15 @@ viewTodo todo =
     r [ fw, bc <| mcToEc blue50 ]
         [ Input.checkbox [ pxy u3 u2, sw ]
             { label = lh "done"
-            , icon = \checked -> r [ fw, fh ] [ Icons.trash ]
+            , icon =
+                \checked ->
+                    r [ fw, fh ]
+                        [ if checked then
+                            Icons.trash
+
+                          else
+                            Icons.checkOutline
+                        ]
             , checked = Todo.done todo
             , onChange = OnDoneChanged todo
             }

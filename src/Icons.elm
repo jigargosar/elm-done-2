@@ -1,4 +1,4 @@
-module Icons exposing (trash)
+module Icons exposing (checkOutline, trash)
 
 import Element exposing (html)
 import Html.Attributes exposing (attribute)
