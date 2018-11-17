@@ -10,7 +10,7 @@ module TodoList exposing
 import BasicsX exposing (..)
 import Browser.Events
 import El exposing (..)
-import Element exposing (Element, clip, el, fromRgb, fromRgb255, rgb, rgba)
+import Element exposing (Element, clip, el, fromRgb, fromRgb255, rgb, rgba, scrollbarY)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events exposing (onFocus, onLoseFocus)
@@ -202,9 +202,9 @@ updateTS msg =
 
 view : Model -> Element Msg
 view model =
-    c [ fw, clip, Element.scrollbarY ]
+    c [ fw, clip, scrollbarY ]
         [ viewInput model
-        , c [ fw, clip, Element.scrollbarY ] <|
+        , c [ fw, clip, scrollbarY ] <|
             case currentList model of
                 Nothing ->
                     [ t "No Tasks Found" ]
