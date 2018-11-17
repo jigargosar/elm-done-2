@@ -13,11 +13,13 @@ import El exposing (..)
 import Element exposing (Element, el, fromRgb, fromRgb255, rgb, rgba)
 import Element.Background as Background
 import Element.Border as Border
+import Element.Events exposing (onFocus, onLoseFocus)
 import Element.Font as Font
 import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
 import HotKey
 import Html.Attributes exposing (tabindex)
+import Html.Events
 import Icons
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
@@ -31,6 +33,7 @@ type alias ModelRecord =
     { inputText : String
     , todoStore : TS.Model
     , selectedIdx : Maybe Int
+    , inputHasFocus : Bool
     }
 
 
@@ -70,7 +73,11 @@ setSelectedIdxIn (Model model) idx =
     Model { model | selectedIdx = Just idx }
 
 
-updateSelectedIdxWith numFn model =
+setInputHasFocus val (Model model) =
+    Model { model | inputHasFocus = val }
+
+
+updateSelectedIdxBy numFn model =
     currentList model
         |> unwrapMaybe model
             (Tuple.mapBoth
@@ -87,6 +94,7 @@ type Msg
     | OnNext
     | OnDoneChanged Todo.Model Bool
     | InputChanged String
+    | InputFocusChanged Bool
     | Submit
     | TSMsg TS.Msg
     | LoadTS Value
@@ -98,6 +106,7 @@ empty =
         { inputText = ""
         , todoStore = TS.empty
         , selectedIdx = Nothing
+        , inputHasFocus = False
         }
 
 
@@ -129,16 +138,19 @@ updateF message =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnPrev ->
-            mapModel <| updateSelectedIdxWith ((+) -1)
+            mapModel <| updateSelectedIdxBy ((+) -1)
 
         OnNext ->
-            mapModel <| updateSelectedIdxWith ((+) 1)
+            mapModel <| updateSelectedIdxBy ((+) 1)
 
         OnDoneChanged todo bool ->
             updateTS <| TS.ModTodo (Todo.SetDone bool) todo
 
         InputChanged value ->
-            mapModel (setInputText value)
+            mapModel <| setInputText value
+
+        InputFocusChanged hasFocus ->
+            mapModel <| setInputHasFocus hasFocus
 
         Submit ->
             andThenF (\model -> updateTS (TS.new (inputText model) ""))
@@ -173,7 +185,12 @@ view model =
 viewInput model =
     el [ p3 ]
         (ip
-            [ br2, onEnterDown Submit, p2 ]
+            [ onFocus <| InputFocusChanged True
+            , onLoseFocus <| InputFocusChanged False
+            , br2
+            , onEnterDown Submit
+            , p2
+            ]
             { onChange = InputChanged
             , text = inputText model
             , placeholder = ipp [] (t "Title...")
