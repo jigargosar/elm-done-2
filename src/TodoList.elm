@@ -25,6 +25,7 @@ import Icons
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import MaterialColorsElmUI exposing (..)
+import Theme
 import Todo
 import TodoStore as TS
 import UpdateX exposing (..)
@@ -203,14 +204,15 @@ updateTS msg =
 view : Model -> Element Msg
 view model =
     c [ fw, clip, scrollbarY ]
-        [ el [ p3, fw ] <| viewInput model
-        , c [ fw, clip, scrollbarY ] <|
-            case currentList model of
-                Nothing ->
-                    [ t "No Tasks Found" ]
+        [ el [ p3, fwx Theme.maxWidth, cx ] <| viewInput model
+        , el [ fw, clip, scrollbarY ] <|
+            c [ cx, fwx Theme.maxWidth ] <|
+                case currentList model of
+                    Nothing ->
+                        [ t "No Tasks Found" ]
 
-                Just ( si, todos ) ->
-                    List.indexedMap (viewTodo si) todos
+                    Just ( si, todos ) ->
+                        List.indexedMap (viewTodo si) todos
         ]
 
 
