@@ -98,6 +98,7 @@ type Msg
     | Submit
     | TSMsg TS.Msg
     | LoadTS Value
+    | NoOp
 
 
 empty : Model
@@ -162,6 +163,9 @@ updateF message =
         LoadTS value ->
             updateTS (TS.Load value)
 
+        NoOp ->
+            identity
+
 
 updateTS msg =
     andThen
@@ -183,12 +187,31 @@ view model =
 
 
 viewInput model =
+    let
+        onKeyDownMayPreventDefault ke =
+            case ke of
+                ( [], "ArrowDown" ) ->
+                    ( NoOp, True ) |> D.succeed
+
+                ( [], "ArrowUp" ) ->
+                    ( NoOp, True ) |> D.succeed
+
+                ( [], "Enter" ) ->
+                    ( Submit, False ) |> D.succeed
+
+                _ ->
+                    D.fail "Ignoring other key combinations"
+    in
     el [ p3 ]
         (ip
             [ onFocus <| InputFocusChanged True
             , onLoseFocus <| InputFocusChanged False
             , br2
-            , onEnterDown Submit
+
+            --            , onEnterDown Submit
+            , fHA <|
+                Html.Events.preventDefaultOn "keydown" <|
+                    D.andThen onKeyDownMayPreventDefault HotKey.decoder
             , p2
             ]
             { onChange = InputChanged
