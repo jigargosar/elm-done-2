@@ -254,8 +254,9 @@ viewTodo si idx ( matchResult, todo ) =
                 [ p1
                 , sw
                 , brPill
-                , focused [ Border.glow blue200 3 ]
-                , mouseOver [ Border.glow blueGrey300 1 ]
+                , fc grey500
+                , focused [ Border.glow blue200 3, fc grey800 ]
+                , mouseOver [ Border.glow blueGrey300 1, fc grey800 ]
                 , onKeyDownPD <|
                     HotKey.bindAll
                         [ ( HotKey.space, ( NoOp, True ) )
@@ -264,7 +265,7 @@ viewTodo si idx ( matchResult, todo ) =
                 { label = lh "done"
                 , icon =
                     \checked ->
-                        r [ fw, fh, fc grey300 ]
+                        r [ fw, fh ]
                             [ ter checked Icons.checkCircleOutline Icons.circleOutline
                             ]
                 , checked = Todo.done todo
