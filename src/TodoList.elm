@@ -33,7 +33,7 @@ import UpdateX exposing (..)
 
 type alias Model =
     { inputText : String
-    , todoStore : TS.Model
+    , todoStore : TS.TodoStore
     , selectedIdx : Maybe Int
     , inputHasFocus : Bool
     }

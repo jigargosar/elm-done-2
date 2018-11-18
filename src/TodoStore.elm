@@ -1,6 +1,6 @@
 module TodoStore exposing
-    ( Model
-    , TodoBuilder
+    ( TodoBuilder
+    , TodoStore
     , all
     , empty
     , initBuilder
@@ -21,12 +21,12 @@ import Todo exposing (Todo)
 import UpdateX exposing (..)
 
 
-type alias Model =
+type alias TodoStore =
     { lookup : Dict String Todo
     }
 
 
-empty : Model
+empty : TodoStore
 empty =
     { lookup = Dict.empty }
 
@@ -50,23 +50,23 @@ initBuilder title contextId =
     TodoBuilder Nothing Nothing title contextId
 
 
-modTodo : Todo.Msg -> Todo -> Model -> ( Model, Cmd msg )
+modTodo : Todo.Msg -> Todo -> TodoStore -> ( TodoStore, Cmd msg )
 modTodo msg todo model =
     upsertAndCache (Todo.modify msg (getOr todo model)) <| pure model
 
 
 restore value =
     let
-        decoder : Decoder Model
+        decoder : Decoder TodoStore
         decoder =
-            D.map Model
+            D.map TodoStore
                 (D.field "lookup" <| D.dict Todo.decoder)
     in
     D.decodeValue decoder value
         |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
 
 
-new : (TodoBuilder -> msg) -> TodoBuilder -> Model -> ( Model, Cmd msg )
+new : (TodoBuilder -> msg) -> TodoBuilder -> TodoStore -> ( TodoStore, Cmd msg )
 new msg builder model =
     let
         setJustId : HasMaybeIdNow x -> String -> HasMaybeIdNow x
