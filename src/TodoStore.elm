@@ -1,4 +1,16 @@
-module TodoStore exposing (Model, Msg(..), all, decodeOrEmpty, empty, new, update)
+module TodoStore exposing
+    ( Model
+    , Msg(..)
+    , all
+    , decodeOrEmpty
+    , empty
+    , new
+    , onLoadMsg
+    , onModTodoMsg
+    , onNewMsg
+    , update
+    , updateF
+    )
 
 import BasicsX exposing (unpackResult)
 import Dict exposing (Dict)
@@ -97,38 +109,50 @@ updateF : Msg -> ReturnF
 updateF message =
     case message of
         New builder ->
-            case ( builder.id, builder.now ) of
-                ( Nothing, _ ) ->
-                    addCmd <| RandomId.gen (New << setJustId builder)
-
-                ( _, Nothing ) ->
-                    addCmd <| TimeX.now (New << setJustNow builder)
-
-                ( Just id, Just now ) ->
-                    let
-                        todo : Todo.Model
-                        todo =
-                            Todo.init
-                                { id = id
-                                , createdAt = now
-                                , modifiedAt = now
-                                , title = builder.title
-                                , body = ""
-                                , done = False
-                                , contextId = builder.contextId
-                                }
-                    in
-                    upsertAndCache todo
+            onNewMsg builder
 
         Load value ->
-            andThen
-                (\_ ->
-                    D.decodeValue decoder value
-                        |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
-                )
+            onLoadMsg value
 
         ModTodo msg todo ->
-            andThenF (\model -> upsertAndCache (Todo.modify msg (getOr todo model)))
+            onModTodoMsg msg todo
+
+
+onModTodoMsg msg todo =
+    andThenF (\model -> upsertAndCache (Todo.modify msg (getOr todo model)))
+
+
+onLoadMsg value =
+    andThen
+        (\_ ->
+            D.decodeValue decoder value
+                |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
+        )
+
+
+onNewMsg builder =
+    case ( builder.id, builder.now ) of
+        ( Nothing, _ ) ->
+            addCmd <| RandomId.gen (New << setJustId builder)
+
+        ( _, Nothing ) ->
+            addCmd <| TimeX.now (New << setJustNow builder)
+
+        ( Just id, Just now ) ->
+            let
+                todo : Todo.Model
+                todo =
+                    Todo.init
+                        { id = id
+                        , createdAt = now
+                        , modifiedAt = now
+                        , title = builder.title
+                        , body = ""
+                        , done = False
+                        , contextId = builder.contextId
+                        }
+            in
+            upsertAndCache todo
 
 
 upsertAndCache : Todo.Model -> ReturnF
