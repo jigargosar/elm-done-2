@@ -26,7 +26,7 @@ import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import MaterialColorsUI exposing (..)
 import Theme
-import Todo
+import Todo exposing (Todo)
 import TodoStore as TS
 import UpdateX exposing (..)
 
@@ -39,6 +39,7 @@ type alias Model =
     }
 
 
+filterWithFuzzyResult : String -> List Todo -> List ( Fuzzy.Result, Todo )
 filterWithFuzzyResult query =
     let
         boil =
@@ -99,7 +100,7 @@ type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
-    | OnDoneChanged Todo.Model Bool
+    | OnDoneChanged Todo Bool
     | InputChanged String
     | InputFocusChanged Bool
     | Submit

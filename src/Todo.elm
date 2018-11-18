@@ -1,4 +1,4 @@
-module Todo exposing (Model, Msg(..), decoder, encoder, init, modify)
+module Todo exposing (Msg(..), Todo, decoder, encoder, init, modify)
 
 import BasicsX exposing (..)
 import DecodeX exposing (Encoder)
@@ -9,7 +9,7 @@ import Json.Encode as E exposing (Value)
 import TimeX exposing (Millis)
 
 
-type alias Model =
+type alias Todo =
     { id : String
     , title : String
     , body : String
@@ -24,7 +24,7 @@ init model =
     model
 
 
-encoder : Encoder Model
+encoder : Encoder Todo
 encoder model =
     E.object
         [ ( "id", E.string model.id )
@@ -37,9 +37,9 @@ encoder model =
         ]
 
 
-decoder : Decoder Model
+decoder : Decoder Todo
 decoder =
-    DecodeX.start Model
+    DecodeX.start Todo
         |> required "id" D.string
         |> required "title" D.string
         |> required "body" D.string
@@ -53,7 +53,7 @@ type Msg
     = SetDone Bool
 
 
-modify : Msg -> Model -> Model
+modify : Msg -> Todo -> Todo
 modify message model =
     case message of
         SetDone done ->

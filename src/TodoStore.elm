@@ -17,12 +17,12 @@ import Port
 import Random
 import RandomId
 import TimeX exposing (Millis)
-import Todo
+import Todo exposing (Todo)
 import UpdateX exposing (..)
 
 
 type alias Model =
-    { lookup : Dict String Todo.Model
+    { lookup : Dict String Todo
     }
 
 
@@ -81,7 +81,7 @@ initBuilder title contextId =
 --modTodo : Todo.Msg -> Todo.Model -> ReturnF
 
 
-modTodo : Todo.Msg -> Todo.Model -> Model -> ( Model, Cmd msg )
+modTodo : Todo.Msg -> Todo -> Model -> ( Model, Cmd msg )
 modTodo msg todo model =
     upsertAndCache (Todo.modify msg (getOr todo model)) <| pure model
 
@@ -102,7 +102,7 @@ new msg builder model =
 
         ( Just id, Just now ) ->
             let
-                todo : Todo.Model
+                todo : Todo
                 todo =
                     Todo.init
                         { id = id
