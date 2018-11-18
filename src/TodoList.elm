@@ -213,8 +213,8 @@ viewTodoList ( selectedIdx, fuzzyTodos ) =
             viewTodoListItem
                 { selected = idx == selectedIdx
                 , done = todo.done
-                , title = todo.title
                 , doneChangedMsg = UpdateTodo todo << Todo.SetDone
+                , title = todo.title
                 , noOpMsg = NoOp
                 }
     in
