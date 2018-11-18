@@ -234,14 +234,6 @@ viewTodoListItem viewModel =
         { selected, done, doneChangedMsg, title, noOpMsg } =
             viewModel
 
-        selectionIndicator =
-            el
-                [ bwr 3
-                , fh
-                , bcIf selected blue400
-                ]
-                (t "")
-
         listRow =
             r [ s1, fw, bwb 1, bc <| blackA 0.1 ]
 
@@ -249,12 +241,21 @@ viewTodoListItem viewModel =
             r [ fw ]
     in
     listRow
-        [ selectionIndicator
+        [ selectionIndicator selected
         , listInnerRow
             [ doneCheckBox done doneChangedMsg noOpMsg
             , displayTitle title
             ]
         ]
+
+
+selectionIndicator selected =
+    el
+        [ bwr 3
+        , fh
+        , bcIf selected blue400
+        ]
+        (t "")
 
 
 displayTitle title =
