@@ -80,12 +80,21 @@ maybeTodoListViewModel model =
 
 updateSelectedIdxBy numFn model =
     maybeTodoListViewModel model
-        |> unwrapMaybe model
-            (Tuple.mapBoth
-                numFn
-                List.length
-                >> (\( idx, length ) -> safeModBy length idx)
-                >> (\idx -> { model | selectedIdx = Just idx })
+        |> unwrapMaybe (pure model)
+            (\( si, tl ) ->
+                let
+                    newIdx =
+                        safeModBy (List.length tl) (numFn si)
+
+                    --                  _  =
+                    --                    Array.fromList
+                    --                      |> List.head
+                    --                      |> Maybe.map (Tuple.second >> .id)
+                    --
+                in
+                ( numFn si, List.length tl )
+                    |> (\( idx, length ) -> safeModBy length idx)
+                    >> (\idx -> ( { model | selectedIdx = Just idx }, Cmd.none ))
             )
 
 
@@ -138,10 +147,10 @@ update message model =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnPrev ->
-            pure <| updateSelectedIdxBy ((+) -1) model
+            updateSelectedIdxBy ((+) -1) model
 
         OnNext ->
-            pure <| updateSelectedIdxBy ((+) 1) model
+            updateSelectedIdxBy ((+) 1) model
 
         UpdateTodo todo msg ->
             updateTS (Todo.update msg todo) model
