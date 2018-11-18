@@ -24,7 +24,7 @@ import Html.Events
 import Icons
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
-import MaterialColorsElmUI exposing (..)
+import MaterialColorsUI exposing (..)
 import Theme
 import Todo
 import TodoStore as TS
