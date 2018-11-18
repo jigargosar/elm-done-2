@@ -59,6 +59,7 @@ filterWithFuzzyResult query =
         >> unlessBool (isBlank query) sort
 
 
+currentList : Model -> Maybe ( Int, List ( Fuzzy.Result, Todo ) )
 currentList model =
     let
         filteredList =
@@ -76,14 +77,6 @@ currentList model =
         model.selectedIdx |> unwrapMaybe 0 (min idxMax) |> (\idx -> Just ( idx, filteredList ))
 
 
-setSelectedIdxIn model idx =
-    { model | selectedIdx = Just idx }
-
-
-setInputHasFocus val model =
-    { model | inputHasFocus = val }
-
-
 updateSelectedIdxBy numFn model =
     currentList model
         |> unwrapMaybe model
@@ -91,7 +84,7 @@ updateSelectedIdxBy numFn model =
                 numFn
                 List.length
                 >> (\( idx, length ) -> safeModBy length idx)
-                >> setSelectedIdxIn model
+                >> (\idx -> { model | selectedIdx = Just idx })
             )
 
 
@@ -148,7 +141,7 @@ update message model =
             pure <| setInputText value model
 
         InputFocusChanged hasFocus ->
-            pure <| setInputHasFocus hasFocus model
+            pure <| { model | inputHasFocus = hasFocus }
 
         Submit ->
             onNewTodoMsg (Todo.initBuilder model.inputText "") model
