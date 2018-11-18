@@ -183,8 +183,8 @@ view model =
                     Nothing ->
                         [ t "No Tasks Found" ]
 
-                    Just ( si, fuzzyTodos ) ->
-                        List.indexedMap (viewTodo si) fuzzyTodos
+                    Just viewModel ->
+                        viewTodoList viewModel
         ]
 
 
@@ -207,14 +207,18 @@ viewInput model =
         }
 
 
-viewTodo selectedIdx idx ( matchResult, todo ) =
-    viewTodoListItem
-        { selected = idx == selectedIdx
-        , done = todo.done
-        , title = todo.title
-        , doneChangedMsg = UpdateTodo todo << Todo.SetDone
-        , noOpMsg = NoOp
-        }
+viewTodoList ( selectedIdx, fuzzyTodos ) =
+    let
+        viewTodo idx ( matchResult, todo ) =
+            viewTodoListItem
+                { selected = idx == selectedIdx
+                , done = todo.done
+                , title = todo.title
+                , doneChangedMsg = UpdateTodo todo << Todo.SetDone
+                , noOpMsg = NoOp
+                }
+    in
+    List.indexedMap viewTodo fuzzyTodos
 
 
 viewTodoListItem { selected, done, doneChangedMsg, title, noOpMsg } =
