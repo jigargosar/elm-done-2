@@ -263,3 +263,53 @@ viewTodo si idx ( matchResult, todo ) =
             , displayTitle
             ]
         ]
+
+
+viewTodoListItem { selected, done, doneChangedMsg, title, noOpMsg } =
+    let
+        selectionIndicator =
+            el
+                [ bwr 3
+                , fh
+                , bcIf selected blue400
+                ]
+                (t "")
+
+        doneCheckBox =
+            Input.checkbox
+                [ p1
+                , sw
+                , brPill
+                , fc grey500
+                , focused [ Border.glow blue200 3, fc grey800 ]
+                , mouseOver [ Border.glow blueGrey300 1, fc grey800 ]
+                , onKeyDownPDBindAll
+                    [ ( HotKey.space, ( noOpMsg, True ) )
+                    ]
+                ]
+                { label = lh "done"
+                , icon =
+                    \checked ->
+                        r [ fw, fh ]
+                            [ ter checked Icons.checkCircleOutline Icons.circleOutline
+                            ]
+                , checked = done
+                , onChange = doneChangedMsg
+                }
+
+        displayTitle =
+            el [ fw, p3 ] (t title)
+
+        listRow =
+            r [ s1, fw, bwb 1, bc <| blackA 0.1 ]
+
+        listInnerRow =
+            r [ fw ]
+    in
+    listRow
+        [ selectionIndicator
+        , listInnerRow
+            [ doneCheckBox
+            , displayTitle
+            ]
+        ]
