@@ -233,16 +233,10 @@ viewTodoListItem viewModel =
     let
         { selected, done, doneChangedMsg, title, noOpMsg } =
             viewModel
-
-        listRow =
-            r [ s1, fw, bwb 1, bc <| blackA 0.1 ]
-
-        listInnerRow =
-            r [ fw ]
     in
-    listRow
+    r [ s1, fw, bwb 1, bc <| blackA 0.1 ]
         [ selectionIndicator selected
-        , listInnerRow
+        , r [ fw ]
             [ doneCheckBox done doneChangedMsg noOpMsg
             , displayTitle title
             ]
