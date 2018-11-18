@@ -2,14 +2,14 @@ module Main exposing (main)
 
 ---- PROGRAM ----
 
-import MainAthelete
+import MainAthlete
 import MainUI
-
-
-main =
-    MainAthelete.main
 
 
 
 --main =
---    MainUI.main
+--    MainAthlete.main
+
+
+main =
+    MainUI.main

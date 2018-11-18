@@ -1,4 +1,4 @@
-module MainAthelete exposing (main)
+module MainAthlete exposing (main)
 
 {-| This code is something I always dreamt of being able to code with only html
 and styles. I thought it would have taken more time to create, but, in the
