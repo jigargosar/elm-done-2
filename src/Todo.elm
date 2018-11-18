@@ -3,6 +3,7 @@ module Todo exposing (Model, Msg(..), decoder, done, encoder, idString, init, mo
 import BasicsX exposing (..)
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
+import Json.Decode.Pipeline exposing (..)
 import Json.Encode as E exposing (Value)
 import TimeX exposing (Millis)
 
@@ -57,16 +58,6 @@ encoder model =
         , ( "modifiedAt", E.int model.modifiedAt )
         , ( "contextId", E.string model.contextId )
         ]
-
-
-andMap : Decoder a -> Decoder (a -> b) -> Decoder b
-andMap =
-    D.map2 callOn
-
-
-required : String -> Decoder a -> Decoder (a -> b) -> Decoder b
-required name =
-    andMap << D.field name
 
 
 decoder : Decoder Model
