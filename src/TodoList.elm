@@ -111,7 +111,7 @@ type Msg
 empty : Model
 empty =
     { inputText = ""
-    , todoStore = TS.empty
+    , todoStore = TS.emptyStore
     , selectedIdx = Nothing
     , inputHasFocus = False
     }
@@ -158,7 +158,7 @@ update message model =
             onNewTodoMsg builder model
 
         LoadTS value ->
-            updateTS (\_ -> TS.restore value) model
+            updateTS (\_ -> TS.loadStore value) model
 
         NoOp ->
             pure model

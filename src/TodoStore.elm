@@ -4,10 +4,10 @@ module TodoStore exposing
     , TodoBuilder
     , TodoStore
     , all
-    , empty
+    , emptyStore
     , initBuilder
+    , loadStore
     , new
-    , restore
     , update
     )
 
@@ -44,9 +44,31 @@ type alias TodoStore =
     }
 
 
-empty : TodoStore
-empty =
+emptyStore : TodoStore
+emptyStore =
     { lookup = Dict.empty }
+
+
+loadStore value =
+    let
+        todoDecoder : Decoder Todo
+        todoDecoder =
+            DecodeX.start Todo
+                |> required "id" D.string
+                |> required "title" D.string
+                |> required "body" D.string
+                |> required "done" D.bool
+                |> required "createdAt" D.int
+                |> required "modifiedAt" D.int
+                |> required "contextId" D.string
+
+        decoder : Decoder TodoStore
+        decoder =
+            D.map TodoStore
+                (D.field "lookup" <| D.dict todoDecoder)
+    in
+    D.decodeValue decoder value
+        |> unpackResult (\err -> ( emptyStore, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
 
 
 type alias TodoBuilder =
@@ -66,28 +88,6 @@ type alias HasMaybeIdNow x =
 
 initBuilder title contextId =
     TodoBuilder Nothing Nothing title contextId
-
-
-restore value =
-    let
-        todoDecoder : Decoder Todo
-        todoDecoder =
-            DecodeX.start Todo
-                |> required "id" D.string
-                |> required "title" D.string
-                |> required "body" D.string
-                |> required "done" D.bool
-                |> required "createdAt" D.int
-                |> required "modifiedAt" D.int
-                |> required "contextId" D.string
-
-        decoder : Decoder TodoStore
-        decoder =
-            D.map TodoStore
-                (D.field "lookup" <| D.dict todoDecoder)
-    in
-    D.decodeValue decoder value
-        |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
 
 
 new : (TodoBuilder -> msg) -> TodoBuilder -> TodoStore -> ( TodoStore, Cmd msg )
