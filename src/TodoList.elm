@@ -158,8 +158,9 @@ update message model =
         --        NewTodo builder ->
         --            onNewTodoMsg builder
         --
-        --        LoadTS value ->
-        --            overTodoStore <| \_ -> TS.restore value
+        LoadTS value ->
+            overTodoStore (\_ -> TS.restore value) model
+
         --
         --        NoOp ->
         _ ->
