@@ -169,11 +169,8 @@ type alias ReturnF =
 
 
 updateTS fn model =
-    Tuple.mapFirst
-        (\todoStore ->
-            { model | todoStore = todoStore }
-        )
-        (fn model.todoStore)
+    fn model.todoStore
+        |> Tuple.mapFirst (\ts -> { model | todoStore = ts })
 
 
 onNewTodoMsg : TS.TodoBuilder -> Model -> ( Model, Cmd Msg )
