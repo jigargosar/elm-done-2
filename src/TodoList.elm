@@ -88,13 +88,17 @@ updateSelectedIdxBy numFn model =
             )
 
 
+type FormMsg
+    = InputChanged String
+    | InputFocusChanged Bool
+
+
 type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
     | UpdateTodo Todo Todo.Msg
-    | InputChanged String
-    | InputFocusChanged Bool
+    | FormChange FormMsg
     | Submit
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -137,11 +141,13 @@ update message model =
         UpdateTodo todo msg ->
             updateTS (Todo.update msg todo) model
 
-        InputChanged value ->
-            pure <| setInputText value model
+        FormChange msg ->
+            case msg of
+                InputChanged value ->
+                    pure <| setInputText value model
 
-        InputFocusChanged hasFocus ->
-            pure <| { model | inputHasFocus = hasFocus }
+                InputFocusChanged hasFocus ->
+                    pure <| { model | inputHasFocus = hasFocus }
 
         Submit ->
             onNewTodoMsg (Todo.initBuilder model.inputText "") model
@@ -186,15 +192,15 @@ viewInput model =
     ip
         [ br2
         , p2
-        , onLoseFocus <| InputFocusChanged False
-        , onFocus <| InputFocusChanged True
+        , onLoseFocus <| FormChange <| InputFocusChanged False
+        , onFocus <| FormChange <| InputFocusChanged True
         , onKeyDownPDBindAll
             [ ( HotKey.arrowDown, ( NoOp, True ) )
             , ( HotKey.arrowUp, ( NoOp, True ) )
             , ( HotKey.enter, ( Submit, False ) )
             ]
         ]
-        { onChange = InputChanged
+        { onChange = FormChange << InputChanged
         , text = model.inputText
         , placeholder = ipp [] (t "Add... / Search...")
         , label = lh "Task Title"
