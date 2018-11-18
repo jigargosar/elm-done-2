@@ -52,16 +52,6 @@ type alias HasMaybeIdNow x =
     }
 
 
-setJustId : HasMaybeIdNow x -> String -> HasMaybeIdNow x
-setJustId model id =
-    { model | id = Just id }
-
-
-setJustNow : HasMaybeIdNow x -> Millis -> HasMaybeIdNow x
-setJustNow model now =
-    { model | now = Just now }
-
-
 initBuilder title contextId =
     TodoBuilder Nothing Nothing title contextId
 
@@ -78,6 +68,15 @@ restore value =
 
 new : (TodoBuilder -> msg) -> TodoBuilder -> Model -> ( Model, Cmd msg )
 new msg builder model =
+    let
+        setJustId : HasMaybeIdNow x -> String -> HasMaybeIdNow x
+        setJustId hasIdNow id =
+            { hasIdNow | id = Just id }
+
+        setJustNow : HasMaybeIdNow x -> Millis -> HasMaybeIdNow x
+        setJustNow hasIdNow now =
+            { hasIdNow | now = Just now }
+    in
     (case ( builder.id, builder.now ) of
         ( Nothing, _ ) ->
             addCmd <| RandomId.gen (msg << setJustId builder)
@@ -120,8 +119,8 @@ cache =
     Port.cacheTodoStore << encoder
 
 
-all model =
-    model.lookup |> Dict.values
+all =
+    .lookup >> Dict.values
 
 
 getOr todo model =
