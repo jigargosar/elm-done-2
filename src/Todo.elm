@@ -6,7 +6,7 @@ import Json.Encode as E exposing (Value)
 import TimeX exposing (Millis)
 
 
-type alias ModelRecord =
+type alias Model =
     { id : String
     , title : String
     , body : String
@@ -17,15 +17,11 @@ type alias ModelRecord =
     }
 
 
-type Model
-    = Model ModelRecord
-
-
 init model =
-    Model model
+    model
 
 
-unWrap (Model model) =
+unWrap model =
     model
 
 
@@ -41,8 +37,8 @@ done =
     unWrap >> .done
 
 
-setDone val (Model model) =
-    Model { model | done = val }
+setDone val model =
+    { model | done = val }
 
 
 type alias Encoder =
@@ -50,7 +46,7 @@ type alias Encoder =
 
 
 encoder : Encoder
-encoder (Model model) =
+encoder model =
     E.object
         [ ( "id", E.string model.id )
         , ( "title", E.string model.title )
@@ -64,7 +60,7 @@ encoder (Model model) =
 
 decoder : Decoder Model
 decoder =
-    D.map7 ModelRecord
+    D.map7 Model
         (D.field "id" D.string)
         (D.field "title" D.string)
         (D.field "body" D.string)
@@ -72,7 +68,6 @@ decoder =
         (D.field "createdAt" D.int)
         (D.field "modifiedAt" D.int)
         (D.field "contextId" D.string)
-        |> D.map Model
 
 
 type Msg
