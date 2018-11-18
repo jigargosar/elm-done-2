@@ -162,9 +162,8 @@ updateF message =
 
         Submit ->
             andThenF (\model -> onNewTodoMsg <| TS.initBuilder model.inputText "")
+                >> mapModel (setInputText "")
 
-        --            andThenF (\model -> updateTS (TS.new model.inputText ""))
-        --                >> mapModel (setInputText "")
         TSMsg msg ->
             updateTS msg
 
