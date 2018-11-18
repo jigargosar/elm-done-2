@@ -144,26 +144,23 @@ update message model =
         OnDoneChanged todo bool ->
             overTodoStore (TS.modTodo (Todo.SetDone bool) todo) model
 
-        --
         InputChanged value ->
             pure <| setInputText value model
 
         InputFocusChanged hasFocus ->
             pure <| setInputHasFocus hasFocus model
 
-        --        Submit ->
-        --            andThenF (\model -> onNewTodoMsg <| TS.initBuilder model.inputText "")
-        --                >> mapModel (setInputText "")
-        --
-        --        NewTodo builder ->
-        --            onNewTodoMsg builder
-        --
+        Submit ->
+            onNewTodoMsg (TS.initBuilder model.inputText "") model
+                |> mapModel (setInputText "")
+
+        NewTodo builder ->
+            onNewTodoMsg builder model
+
         LoadTS value ->
             overTodoStore (\_ -> TS.restore value) model
 
-        --
-        --        NoOp ->
-        _ ->
+        NoOp ->
             pure model
 
 
