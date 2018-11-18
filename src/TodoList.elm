@@ -142,7 +142,7 @@ update message model =
             pure <| updateSelectedIdxBy ((+) 1) model
 
         OnDoneChanged todo bool ->
-            updateTS (TS.modTodo (TS.SetDone bool) todo) model
+            updateTS (TS.update (TS.SetDone bool) todo) model
 
         InputChanged value ->
             pure <| setInputText value model

@@ -6,9 +6,9 @@ module TodoStore exposing
     , all
     , empty
     , initBuilder
-    , modTodo
     , new
     , restore
+    , update
     )
 
 import BasicsX exposing (unpackResult)
@@ -39,13 +39,6 @@ type Msg
     = SetDone Bool
 
 
-modify : Msg -> Todo -> Todo
-modify message model =
-    case message of
-        SetDone done ->
-            { model | done = done }
-
-
 type alias TodoStore =
     { lookup : Dict String Todo
     }
@@ -73,11 +66,6 @@ type alias HasMaybeIdNow x =
 
 initBuilder title contextId =
     TodoBuilder Nothing Nothing title contextId
-
-
-modTodo : Msg -> Todo -> TodoStore -> ( TodoStore, Cmd msg )
-modTodo msg todo model =
-    upsertAndCache (modify msg (getOr todo model)) <| pure model
 
 
 restore value =
@@ -113,12 +101,12 @@ new msg builder model =
         setJustNow hasIdNow now =
             { hasIdNow | now = Just now }
     in
-    (case ( builder.id, builder.now ) of
+    case ( builder.id, builder.now ) of
         ( Nothing, _ ) ->
-            addCmd <| RandomId.gen (msg << setJustId builder)
+            ( model, RandomId.gen (msg << setJustId builder) )
 
         ( _, Nothing ) ->
-            addCmd <| TimeX.now (msg << setJustNow builder)
+            ( model, TimeX.now (msg << setJustNow builder) )
 
         ( Just id, Just now ) ->
             let
@@ -133,15 +121,24 @@ new msg builder model =
                     , contextId = builder.contextId
                     }
             in
-            upsertAndCache todo
-    )
-    <|
-        pure model
+            upsertAndCache todo model
 
 
-upsertAndCache todo =
-    mapModel (\model -> { model | lookup = Dict.insert todo.id todo model.lookup })
-        >> effect cache
+update : Msg -> Todo -> TodoStore -> ( TodoStore, Cmd msg )
+update msg todo model =
+    upsertAndCache (updateTodo msg (getOr todo model)) model
+
+
+updateTodo : Msg -> Todo -> Todo
+updateTodo message model =
+    case message of
+        SetDone done ->
+            { model | done = done }
+
+
+upsertAndCache todo model =
+    pure { model | lookup = Dict.insert todo.id todo model.lookup }
+        |> effect cache
 
 
 cache =
