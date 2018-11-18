@@ -104,6 +104,7 @@ type Msg
     | InputFocusChanged Bool
     | Submit
     | TSMsg TS.Msg
+    | NewTodo TS.TodoBuilder
     | LoadTS Value
     | NoOp
 
@@ -160,11 +161,15 @@ updateF message =
             mapModel <| setInputHasFocus hasFocus
 
         Submit ->
-            andThenF (\model -> updateTS (TS.new model.inputText ""))
-                >> mapModel (setInputText "")
+            andThenF (\model -> onNewTodoMsg <| TS.initBuilder model.inputText "")
 
+        --            andThenF (\model -> updateTS (TS.new model.inputText ""))
+        --                >> mapModel (setInputText "")
         TSMsg msg ->
             updateTS msg
+
+        NewTodo builder ->
+            onNewTodoMsg builder
 
         LoadTS value ->
             andThen
@@ -179,6 +184,18 @@ updateF message =
 
         NoOp ->
             identity
+
+
+onNewTodoMsg : TS.TodoBuilder -> ReturnF
+onNewTodoMsg builder =
+    andThen <|
+        \model ->
+            Tuple.mapBoth
+                (\todoStore ->
+                    { model | todoStore = todoStore }
+                )
+                identity
+                (TS.onNewMsg2 NewTodo builder model.todoStore)
 
 
 updateTS message =

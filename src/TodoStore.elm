@@ -1,12 +1,15 @@
 module TodoStore exposing
     ( Model
     , Msg(..)
+    , TodoBuilder
     , all
     , decodeOrEmpty
     , empty
+    , initBuilder
     , new
     , onModTodoMsg
     , onNewMsg
+    , onNewMsg2
     , restore
     )
 
@@ -93,6 +96,10 @@ new title contextId =
     New <| TodoBuilder Nothing Nothing title contextId
 
 
+initBuilder title contextId =
+    TodoBuilder Nothing Nothing title contextId
+
+
 type alias ReturnF =
     ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 
@@ -131,7 +138,39 @@ onNewMsg builder =
             upsertAndCache todo
 
 
-upsertAndCache : Todo.Model -> ReturnF
+onNewMsg2 : (TodoBuilder -> msg) -> TodoBuilder -> Model -> ( Model, Cmd msg )
+onNewMsg2 msg builder model =
+    (case ( builder.id, builder.now ) of
+        ( Nothing, _ ) ->
+            addCmd <| RandomId.gen (msg << setJustId builder)
+
+        ( _, Nothing ) ->
+            addCmd <| TimeX.now (msg << setJustNow builder)
+
+        ( Just id, Just now ) ->
+            let
+                todo : Todo.Model
+                todo =
+                    Todo.init
+                        { id = id
+                        , createdAt = now
+                        , modifiedAt = now
+                        , title = builder.title
+                        , body = ""
+                        , done = False
+                        , contextId = builder.contextId
+                        }
+            in
+            upsertAndCache todo
+    )
+    <|
+        pure model
+
+
+
+--upsertAndCache : Todo.Model -> ReturnF
+
+
 upsertAndCache todo =
     mapModel (\(Model model) -> Model { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
         >> effect (Port.cacheTodoStore << encoder)
