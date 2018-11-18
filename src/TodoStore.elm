@@ -31,12 +31,6 @@ empty =
     { lookup = Dict.empty }
 
 
-decoder : Decoder Model
-decoder =
-    D.map Model
-        (D.field "lookup" <| D.dict Todo.decoder)
-
-
 type alias TodoBuilder =
     { id : Maybe String
     , now : Maybe Millis
@@ -62,6 +56,12 @@ modTodo msg todo model =
 
 
 restore value =
+    let
+        decoder : Decoder Model
+        decoder =
+            D.map Model
+                (D.field "lookup" <| D.dict Todo.decoder)
+    in
     D.decodeValue decoder value
         |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
 
@@ -88,15 +88,14 @@ new msg builder model =
             let
                 todo : Todo
                 todo =
-                    Todo.init
-                        { id = id
-                        , createdAt = now
-                        , modifiedAt = now
-                        , title = builder.title
-                        , body = ""
-                        , done = False
-                        , contextId = builder.contextId
-                        }
+                    { id = id
+                    , createdAt = now
+                    , modifiedAt = now
+                    , title = builder.title
+                    , body = ""
+                    , done = False
+                    , contextId = builder.contextId
+                    }
             in
             upsertAndCache todo
     )

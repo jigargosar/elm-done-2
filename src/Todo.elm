@@ -1,4 +1,4 @@
-module Todo exposing (Msg(..), Todo, decoder, encoder, init, modify)
+module Todo exposing (Msg(..), Todo, decoder, encoder, modify)
 
 import BasicsX exposing (..)
 import DecodeX exposing (Encoder)
@@ -18,10 +18,6 @@ type alias Todo =
     , modifiedAt : Millis
     , contextId : String
     }
-
-
-init model =
-    model
 
 
 encoder : Encoder Todo
