@@ -103,7 +103,6 @@ type Msg
     | InputChanged String
     | InputFocusChanged Bool
     | Submit
-    | TSMsg TS.Msg
     | NewTodo TS.TodoBuilder
     | LoadTS Value
     | NoOp
@@ -152,7 +151,15 @@ updateF message =
             mapModel <| updateSelectedIdxBy ((+) 1)
 
         OnDoneChanged todo bool ->
-            updateTS <| TS.ModTodo (Todo.SetDone bool) todo
+            andThen
+                (\model ->
+                    Tuple.mapBoth
+                        (\todoStore ->
+                            { model | todoStore = todoStore }
+                        )
+                        identity
+                        (TS.modTodo (Todo.SetDone bool) todo model.todoStore)
+                )
 
         InputChanged value ->
             mapModel <| setInputText value
@@ -164,9 +171,6 @@ updateF message =
             andThenF (\model -> onNewTodoMsg <| TS.initBuilder model.inputText "")
                 >> mapModel (setInputText "")
 
-        TSMsg msg ->
-            updateTS msg
-
         NewTodo builder ->
             onNewTodoMsg builder
 
@@ -177,7 +181,7 @@ updateF message =
                         (\todoStore ->
                             { model | todoStore = todoStore }
                         )
-                        (Cmd.map TSMsg)
+                        identity
                         (TS.restore value)
                 )
 
@@ -195,22 +199,6 @@ onNewTodoMsg builder =
                 )
                 identity
                 (TS.new NewTodo builder model.todoStore)
-
-
-updateTS message =
-    andThen
-        (\model ->
-            let
-                ( todoStore_, cmd ) =
-                    (case message of
-                        TS.ModTodo msg todo ->
-                            TS.onModTodoMsg msg todo
-                    )
-                    <|
-                        pure model.todoStore
-            in
-            ( { model | todoStore = todoStore_ }, Cmd.map TSMsg cmd )
-        )
 
 
 view : Model -> Element Msg

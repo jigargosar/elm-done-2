@@ -1,13 +1,12 @@
 module TodoStore exposing
     ( Model
-    , Msg(..)
     , TodoBuilder
     , all
     , decodeOrEmpty
     , empty
     , initBuilder
+    , modTodo
     , new
-    , onModTodoMsg
     , restore
     )
 
@@ -85,20 +84,17 @@ setJustNow model now =
     { model | now = Just now }
 
 
-type Msg
-    = ModTodo Todo.Msg Todo.Model
-
-
 initBuilder title contextId =
     TodoBuilder Nothing Nothing title contextId
 
 
-type alias ReturnF =
-    ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+
+--modTodo : Todo.Msg -> Todo.Model -> ReturnF
 
 
-onModTodoMsg msg todo =
-    andThenF (\model -> upsertAndCache (Todo.modify msg (getOr todo model)))
+modTodo : Todo.Msg -> Todo.Model -> Model -> ( Model, Cmd msg )
+modTodo msg todo model =
+    upsertAndCache (Todo.modify msg (getOr todo model)) <| pure model
 
 
 restore value =
