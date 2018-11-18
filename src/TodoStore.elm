@@ -5,11 +5,9 @@ module TodoStore exposing
     , decodeOrEmpty
     , empty
     , new
-    , onLoadMsg
     , onModTodoMsg
     , onNewMsg
-    , update
-    , updateF
+    , restore
     )
 
 import BasicsX exposing (unpackResult)
@@ -88,7 +86,6 @@ setJustNow model now =
 
 type Msg
     = New TodoBuilder
-    | Load Value
     | ModTodo Todo.Msg Todo.Model
 
 
@@ -96,38 +93,17 @@ new title contextId =
     New <| TodoBuilder Nothing Nothing title contextId
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update message =
-    updateF message << pure
-
-
 type alias ReturnF =
     ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-
-
-updateF : Msg -> ReturnF
-updateF message =
-    case message of
-        New builder ->
-            onNewMsg builder
-
-        Load value ->
-            onLoadMsg value
-
-        ModTodo msg todo ->
-            onModTodoMsg msg todo
 
 
 onModTodoMsg msg todo =
     andThenF (\model -> upsertAndCache (Todo.modify msg (getOr todo model)))
 
 
-onLoadMsg value =
-    andThen
-        (\_ ->
-            D.decodeValue decoder value
-                |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
-        )
+restore value =
+    D.decodeValue decoder value
+        |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
 
 
 onNewMsg builder =

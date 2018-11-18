@@ -184,18 +184,34 @@ updateF message =
             updateTS msg
 
         LoadTS value ->
-            updateTS (TS.Load value)
+            andThen
+                (\(Model model) ->
+                    Tuple.mapBoth
+                        (\ts ->
+                            Model { model | todoStore = model.todoStore }
+                        )
+                        (Cmd.map TSMsg)
+                        (TS.restore value)
+                )
 
         NoOp ->
             identity
 
 
-updateTS msg =
+updateTS message =
     andThen
         (\(Model model) ->
             let
                 ( todoStore_, cmd ) =
-                    TS.update msg model.todoStore
+                    (case message of
+                        TS.New builder ->
+                            TS.onNewMsg builder
+
+                        TS.ModTodo msg todo ->
+                            TS.onModTodoMsg msg todo
+                    )
+                    <|
+                        pure model.todoStore
             in
             ( Model { model | todoStore = todoStore_ }, Cmd.map TSMsg cmd )
         )
