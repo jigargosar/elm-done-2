@@ -45,7 +45,7 @@ fuzzySort query =
             String.toLower
 
         fuzzMatcher todo =
-            Fuzzy.match [] [] (boil query) (boil <| Todo.title todo)
+            Fuzzy.match [] [] (boil query) (boil <| todo.title)
                 |> justWhen (.score >> flip (<) 1000)
 
         filterMapFn todo =
@@ -215,8 +215,8 @@ viewInput model =
 viewTodo selectedIdx idx ( matchResult, todo ) =
     viewTodoListItem
         { selected = idx == selectedIdx
-        , done = Todo.done todo
-        , title = Todo.title todo
+        , done = todo.done
+        , title = todo.title
         , doneChangedMsg = OnDoneChanged todo
         , noOpMsg = NoOp
         }

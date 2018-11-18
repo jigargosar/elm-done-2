@@ -125,7 +125,7 @@ new msg builder model =
 
 
 upsertAndCache todo =
-    mapModel (\model -> { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
+    mapModel (\model -> { model | lookup = Dict.insert todo.id todo model.lookup })
         >> effect (Port.cacheTodoStore << encoder)
 
 
@@ -134,4 +134,4 @@ all model =
 
 
 getOr todo model =
-    model.lookup |> Dict.get (Todo.idString todo) |> Maybe.withDefault todo
+    model.lookup |> Dict.get todo.id |> Maybe.withDefault todo

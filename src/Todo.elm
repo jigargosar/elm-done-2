@@ -1,6 +1,7 @@
-module Todo exposing (Model, Msg(..), decoder, done, encoder, idString, init, modify, setDone, title)
+module Todo exposing (Model, Msg(..), decoder, encoder, init, modify)
 
 import BasicsX exposing (..)
+import DecodeX exposing (Encoder)
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
 import Json.Decode.Pipeline exposing (..)
@@ -23,31 +24,7 @@ init model =
     model
 
 
-unWrap model =
-    model
-
-
-idString =
-    unWrap >> .id
-
-
-title =
-    unWrap >> .title
-
-
-done =
-    unWrap >> .done
-
-
-setDone val model =
-    { model | done = val }
-
-
-type alias Encoder =
-    Model -> Value
-
-
-encoder : Encoder
+encoder : Encoder Model
 encoder model =
     E.object
         [ ( "id", E.string model.id )
@@ -62,7 +39,7 @@ encoder model =
 
 decoder : Decoder Model
 decoder =
-    D.succeed Model
+    DecodeX.start Model
         |> required "id" D.string
         |> required "title" D.string
         |> required "body" D.string
@@ -77,7 +54,7 @@ type Msg
 
 
 modify : Msg -> Model -> Model
-modify message =
+modify message model =
     case message of
-        SetDone bool ->
-            setDone bool
+        SetDone done ->
+            { model | done = done }
