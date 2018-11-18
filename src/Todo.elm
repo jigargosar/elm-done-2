@@ -6,10 +6,6 @@ import Json.Encode as E exposing (Value)
 import TimeX exposing (Millis)
 
 
-type alias Id =
-    String
-
-
 type alias ModelRecord =
     { id : String
     , title : String
