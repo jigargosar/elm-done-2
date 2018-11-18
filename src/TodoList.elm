@@ -10,7 +10,7 @@ module TodoList exposing
 import BasicsX exposing (..)
 import Browser.Events
 import El exposing (..)
-import Element exposing (Element, clip, el, focused, fromRgb, fromRgb255, mouseOver, rgb, rgba, scrollbarY)
+import Element as E exposing (Element, clip, el, focused, fromRgb, fromRgb255, mouseOver, rgb, rgba, scrollbarY)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events exposing (onFocus, onLoseFocus)
