@@ -31,17 +31,6 @@ empty =
     { lookup = Dict.empty }
 
 
-type alias Encoder =
-    Model -> Value
-
-
-encoder : Encoder
-encoder model =
-    E.object
-        [ ( "lookup", E.dict identity Todo.encoder model.lookup )
-        ]
-
-
 decoder : Decoder Model
 decoder =
     D.map Model
@@ -75,10 +64,6 @@ setJustNow model now =
 
 initBuilder title contextId =
     TodoBuilder Nothing Nothing title contextId
-
-
-
---modTodo : Todo.Msg -> Todo.Model -> ReturnF
 
 
 modTodo : Todo.Msg -> Todo -> Model -> ( Model, Cmd msg )
@@ -120,13 +105,19 @@ new msg builder model =
         pure model
 
 
-
---upsertAndCache : Todo.Model -> ReturnF
-
-
 upsertAndCache todo =
     mapModel (\model -> { model | lookup = Dict.insert todo.id todo model.lookup })
-        >> effect (Port.cacheTodoStore << encoder)
+        >> effect cache
+
+
+cache =
+    let
+        encoder model =
+            E.object
+                [ ( "lookup", E.dict identity Todo.encoder model.lookup )
+                ]
+    in
+    Port.cacheTodoStore << encoder
 
 
 all model =
