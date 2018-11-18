@@ -21,18 +21,14 @@ import Todo
 import UpdateX exposing (..)
 
 
-type alias ModelRecord =
+type alias Model =
     { lookup : Dict String Todo.Model
     }
 
 
-type Model
-    = Model ModelRecord
-
-
 empty : Model
 empty =
-    Model { lookup = Dict.empty }
+    { lookup = Dict.empty }
 
 
 type alias Encoder =
@@ -40,7 +36,7 @@ type alias Encoder =
 
 
 encoder : Encoder
-encoder (Model model) =
+encoder model =
     E.object
         [ ( "lookup", E.dict identity Todo.encoder model.lookup )
         ]
@@ -48,9 +44,8 @@ encoder (Model model) =
 
 decoder : Decoder Model
 decoder =
-    D.map ModelRecord
+    D.map Model
         (D.field "lookup" <| D.dict Todo.decoder)
-        |> D.map Model
 
 
 type alias TodoBuilder =
@@ -130,13 +125,13 @@ new msg builder model =
 
 
 upsertAndCache todo =
-    mapModel (\(Model model) -> Model { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
+    mapModel (\model -> { model | lookup = Dict.insert (Todo.idString todo) todo model.lookup })
         >> effect (Port.cacheTodoStore << encoder)
 
 
-all (Model model) =
+all model =
     model.lookup |> Dict.values
 
 
-getOr todo (Model model) =
+getOr todo model =
     model.lookup |> Dict.get (Todo.idString todo) |> Maybe.withDefault todo
