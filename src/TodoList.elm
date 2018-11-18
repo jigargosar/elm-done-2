@@ -26,13 +26,13 @@ import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import MaterialColorsUI exposing (..)
 import Theme
-import TodoStore as TS exposing (Todo)
+import Todo exposing (Todo, TodoStore)
 import UpdateX exposing (..)
 
 
 type alias Model =
     { inputText : String
-    , todoStore : TS.TodoStore
+    , todoStore : TodoStore
     , selectedIdx : Maybe Int
     , inputHasFocus : Bool
     }
@@ -62,7 +62,7 @@ filterWithFuzzyResult query =
 currentList model =
     let
         filteredList =
-            TS.all model.todoStore
+            Todo.all model.todoStore
                 |> filterWithFuzzyResult model.inputText
     in
     if List.isEmpty filteredList then
@@ -103,7 +103,7 @@ type Msg
     | InputChanged String
     | InputFocusChanged Bool
     | Submit
-    | NewTodo TS.TodoBuilder
+    | NewTodo Todo.TodoBuilder
     | LoadTS Value
     | NoOp
 
@@ -111,7 +111,7 @@ type Msg
 empty : Model
 empty =
     { inputText = ""
-    , todoStore = TS.emptyStore
+    , todoStore = Todo.emptyStore
     , selectedIdx = Nothing
     , inputHasFocus = False
     }
@@ -142,7 +142,7 @@ update message model =
             pure <| updateSelectedIdxBy ((+) 1) model
 
         OnDoneChanged todo bool ->
-            updateTS (TS.update (TS.SetDone bool) todo) model
+            updateTS (Todo.update (Todo.SetDone bool) todo) model
 
         InputChanged value ->
             pure <| setInputText value model
@@ -151,14 +151,14 @@ update message model =
             pure <| setInputHasFocus hasFocus model
 
         Submit ->
-            onNewTodoMsg (TS.initBuilder model.inputText "") model
+            onNewTodoMsg (Todo.initBuilder model.inputText "") model
                 |> mapModel (setInputText "")
 
         NewTodo builder ->
             onNewTodoMsg builder model
 
         LoadTS value ->
-            updateTS (\_ -> TS.loadStore value) model
+            updateTS (\_ -> Todo.loadStore value) model
 
         NoOp ->
             pure model
@@ -173,9 +173,9 @@ updateTS fn model =
         |> Tuple.mapFirst (\ts -> { model | todoStore = ts })
 
 
-onNewTodoMsg : TS.TodoBuilder -> Model -> ( Model, Cmd Msg )
+onNewTodoMsg : Todo.TodoBuilder -> Model -> ( Model, Cmd Msg )
 onNewTodoMsg =
-    updateTS << TS.new NewTodo
+    updateTS << Todo.new NewTodo
 
 
 view : Model -> Element Msg

@@ -1,4 +1,4 @@
-module TodoStore exposing
+module Todo exposing
     ( Msg(..)
     , Todo
     , TodoBuilder
