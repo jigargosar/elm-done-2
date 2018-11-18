@@ -1,5 +1,6 @@
 module Todo exposing (Model, Msg(..), decoder, done, encoder, idString, init, modify, setDone, title)
 
+import BasicsX exposing (..)
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
@@ -58,16 +59,26 @@ encoder model =
         ]
 
 
+andMap : Decoder a -> Decoder (a -> b) -> Decoder b
+andMap =
+    D.map2 callOn
+
+
+required : String -> Decoder a -> Decoder (a -> b) -> Decoder b
+required name =
+    andMap << D.field name
+
+
 decoder : Decoder Model
 decoder =
-    D.map7 Model
-        (D.field "id" D.string)
-        (D.field "title" D.string)
-        (D.field "body" D.string)
-        (D.field "done" D.bool)
-        (D.field "createdAt" D.int)
-        (D.field "modifiedAt" D.int)
-        (D.field "contextId" D.string)
+    D.succeed Model
+        |> required "id" D.string
+        |> required "title" D.string
+        |> required "body" D.string
+        |> required "done" D.bool
+        |> required "createdAt" D.int
+        |> required "modifiedAt" D.int
+        |> required "contextId" D.string
 
 
 type Msg
