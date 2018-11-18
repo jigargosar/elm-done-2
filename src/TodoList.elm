@@ -59,8 +59,8 @@ filterWithFuzzyResult query =
         >> unlessBool (isBlank query) sort
 
 
-maybeFuzzyTodoListWithSelectionIdx : Model -> Maybe ( Int, List ( Fuzzy.Result, Todo ) )
-maybeFuzzyTodoListWithSelectionIdx model =
+maybeCurrentTodoListViewModel : Model -> Maybe ( Int, List ( Fuzzy.Result, Todo ) )
+maybeCurrentTodoListViewModel model =
     let
         filteredList =
             Todo.all model.todoStore
@@ -78,7 +78,7 @@ maybeFuzzyTodoListWithSelectionIdx model =
 
 
 updateSelectedIdxBy numFn model =
-    maybeFuzzyTodoListWithSelectionIdx model
+    maybeCurrentTodoListViewModel model
         |> unwrapMaybe model
             (Tuple.mapBoth
                 numFn
@@ -179,7 +179,7 @@ view model =
         [ el [ p3, cx, fwx Theme.maxWidth ] <| viewInput model
         , el [ fw, clip, scrollbarY ] <|
             c [ cx, fwx Theme.maxWidth ] <|
-                case maybeFuzzyTodoListWithSelectionIdx model of
+                case maybeCurrentTodoListViewModel model of
                     Nothing ->
                         [ t "No Tasks Found" ]
 
