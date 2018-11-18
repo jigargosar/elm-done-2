@@ -13,6 +13,7 @@ import HotKey
 import Html exposing (Html)
 import Json.Decode as D
 import Json.Encode as E exposing (Value)
+import MainAthelete
 import Theme
 import TimeX exposing (Millis)
 import Todo
@@ -101,11 +102,5 @@ view model =
 ---- PROGRAM ----
 
 
-main : Program Flags Model Msg
 main =
-    Browser.element
-        { view = view
-        , init = init
-        , update = update
-        , subscriptions = subscriptions
-        }
+    MainAthelete.main
