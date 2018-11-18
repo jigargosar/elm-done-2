@@ -2,7 +2,6 @@ module TodoStore exposing
     ( Model
     , TodoBuilder
     , all
-    , decodeOrEmpty
     , empty
     , initBuilder
     , modTodo
@@ -34,11 +33,6 @@ type Model
 empty : Model
 empty =
     Model { lookup = Dict.empty }
-
-
-decodeOrEmpty : Value -> ( Model, Cmd msg )
-decodeOrEmpty =
-    D.decodeValue decoder >> unpackResult (\err -> ( empty, Port.error "ERROR" )) pure
 
 
 type alias Encoder =
