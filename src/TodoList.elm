@@ -25,6 +25,7 @@ import Icons
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import MaterialColorsUI exposing (..)
+import Port
 import Theme
 import Todo exposing (Todo, TodoStore)
 import UpdateX exposing (..)
@@ -100,6 +101,7 @@ type Msg
     | UpdateTodo Todo Todo.Msg
     | FormChange FormMsg
     | TodoRootClicked Todo
+    | FocusId String
     | Submit
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -144,6 +146,9 @@ update message model =
 
         TodoRootClicked todo ->
             ( model, Cmd.none )
+
+        FocusId domId ->
+            ( model, Port.focusId domId )
 
         FormChange msg ->
             case msg of
@@ -225,7 +230,7 @@ viewTodoList ( selectedIdx, fuzzyTodos ) =
                 , doneChangedMsg = UpdateTodo todo << Todo.SetDone
                 , noOpMsg = NoOp
                 , title = todo.title
-                , onClickRoot = TodoRootClicked todo
+                , onClickRoot = FocusId <| selectionIndicatorDomId todo.id
                 }
     in
     List.indexedMap viewTodo fuzzyTodos
@@ -245,12 +250,12 @@ viewTodoListItem :
     , onClickRoot : msg
     }
     -> Element msg
-viewTodoListItem viewModel =
+viewTodoListItem vm =
     let
         { todoId, selected, done, doneChangedMsg, title, noOpMsg } =
-            viewModel
+            vm
     in
-    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick onClickRoot ]
+    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick vm.onClickRoot ]
         [ selectionIndicator selected (selectionIndicatorDomId todoId)
         , r [ fw ]
             [ doneCheckBox done doneChangedMsg noOpMsg

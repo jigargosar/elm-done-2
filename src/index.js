@@ -69,6 +69,14 @@ subscribe(
     // warn: data => {
     //   console.warn(data)
     // },
+    focusId: id => {
+      const el = document.getElementById(id)
+      if (el) {
+        el.focus()
+      } else {
+        console.error('Focus: El Not Found', id)
+      }
+    },
     error: data => {
       console.error(data)
     },
