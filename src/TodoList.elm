@@ -26,7 +26,10 @@ import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
 import List as L
 import List.Extra as L
+import List.Selection as Selection exposing (Selection)
 import MaterialColorsUI exposing (..)
+import Maybe as M
+import Maybe.Extra as M
 import Port
 import Theme
 import Todo exposing (Todo, TodoStore)
@@ -60,6 +63,23 @@ filterWithFuzzyResult query =
     in
     L.filterMap filterMapFn
         >> unlessBool (isBlank query) sort
+
+
+todoSelectionList : Model -> Maybe (Selection ( Fuzzy.Result, Todo ))
+todoSelectionList model =
+    let
+        filteredList =
+            Todo.all model.todoStore
+                |> filterWithFuzzyResult model.inputText
+
+        maybeSelected =
+            model.maybeIdx |> M.withDefault 0 |> atClampedIdx filteredList
+
+        noSelectionList =
+            Selection.fromList filteredList
+    in
+    maybeSelected
+        |> M.map (\item -> Selection.select item noSelectionList)
 
 
 maybeTodoListViewModel : Model -> Maybe ( Int, List ( Fuzzy.Result, Todo ) )

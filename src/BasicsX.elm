@@ -8,6 +8,7 @@ module BasicsX exposing
     , applyMaybeFn2
     , applyTo
     , applyTo2
+    , atClampedIdx
     , call
     , callOn
     , defaultEmptyStringTo
@@ -38,6 +39,9 @@ module BasicsX exposing
     , unwrapMaybe
     , when
     )
+
+import List as L
+import List.Extra as L
 
 
 firstEq val =
@@ -238,3 +242,15 @@ find_by : (a -> b) -> b -> List a -> Maybe a
 find_by insideDataFun data =
     List.filter (\e -> insideDataFun e == data)
         >> List.head
+
+
+atClampedIdx list idx =
+    if L.isEmpty list then
+        Nothing
+
+    else
+        let
+            clampedIdx =
+                clamp 0 (L.length list - 1) idx
+        in
+        L.getAt clampedIdx list
