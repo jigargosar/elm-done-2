@@ -16,3 +16,11 @@ type alias TextProperty big =
 
 type alias BoolProperty big =
     { get : big -> Bool, set : Bool -> big -> big }
+
+
+type alias TodoRecord =
+    { title : String, done : Bool }
+
+
+type alias TodoSchema =
+    Schema TodoRecord
