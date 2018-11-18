@@ -213,56 +213,13 @@ viewInput model =
 
 
 viewTodo si idx ( matchResult, todo ) =
-    let
-        isSelected =
-            idx == si
-
-        selectionIndicator =
-            el
-                [ bwr 3
-                , fh
-                , bcIf isSelected blue400
-                ]
-                (t "")
-
-        doneCheckBox =
-            Input.checkbox
-                [ p1
-                , sw
-                , brPill
-                , fc grey500
-                , focused [ Border.glow blue200 3, fc grey800 ]
-                , mouseOver [ Border.glow blueGrey300 1, fc grey800 ]
-                , onKeyDownPDBindAll
-                    [ ( HotKey.space, ( NoOp, True ) )
-                    ]
-                ]
-                { label = lh "done"
-                , icon =
-                    \checked ->
-                        r [ fw, fh ]
-                            [ ter checked Icons.checkCircleOutline Icons.circleOutline
-                            ]
-                , checked = Todo.done todo
-                , onChange = OnDoneChanged todo
-                }
-
-        displayTitle =
-            el [ fw, p3 ] (t <| Todo.title todo)
-
-        listRow =
-            r [ s1, fw, bwb 1, bc <| blackA 0.1 ]
-
-        listInnerRow =
-            r [ fw ]
-    in
-    listRow
-        [ selectionIndicator
-        , listInnerRow
-            [ doneCheckBox
-            , displayTitle
-            ]
-        ]
+    viewTodoListItem
+        { selected = idx == si
+        , done = Todo.done todo
+        , title = Todo.title todo
+        , doneChangedMsg = OnDoneChanged todo
+        , noOpMsg = NoOp
+        }
 
 
 viewTodoListItem { selected, done, doneChangedMsg, title, noOpMsg } =
