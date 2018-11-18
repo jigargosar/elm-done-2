@@ -24,3 +24,10 @@ type alias TodoRecord =
 
 type alias TodoSchema =
     Schema TodoRecord
+
+
+todoSchema : TodoSchema
+todoSchema =
+    [ Text { get = .title, set = \s b -> { b | title = s } }
+    , Bool { get = .done, set = \s b -> { b | done = s } }
+    ]
