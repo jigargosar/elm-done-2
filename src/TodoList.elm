@@ -151,15 +151,7 @@ updateF message =
             mapModel <| updateSelectedIdxBy ((+) 1)
 
         OnDoneChanged todo bool ->
-            andThen
-                (\model ->
-                    Tuple.mapBoth
-                        (\todoStore ->
-                            { model | todoStore = todoStore }
-                        )
-                        identity
-                        (TS.modTodo (Todo.SetDone bool) todo model.todoStore)
-                )
+            overTodoStore <| TS.modTodo (Todo.SetDone bool) todo
 
         InputChanged value ->
             mapModel <| setInputText value
@@ -175,30 +167,26 @@ updateF message =
             onNewTodoMsg builder
 
         LoadTS value ->
-            andThen
-                (\model ->
-                    Tuple.mapBoth
-                        (\todoStore ->
-                            { model | todoStore = todoStore }
-                        )
-                        identity
-                        (TS.restore value)
-                )
+            overTodoStore <| \_ -> TS.restore value
 
         NoOp ->
             identity
 
 
-onNewTodoMsg : TS.TodoBuilder -> ReturnF
-onNewTodoMsg builder =
-    andThen <|
-        \model ->
-            Tuple.mapBoth
+overTodoStore fn =
+    andThen
+        (\model ->
+            Tuple.mapFirst
                 (\todoStore ->
                     { model | todoStore = todoStore }
                 )
-                identity
-                (TS.new NewTodo builder model.todoStore)
+                (fn model.todoStore)
+        )
+
+
+onNewTodoMsg : TS.TodoBuilder -> ReturnF
+onNewTodoMsg =
+    overTodoStore << TS.new NewTodo
 
 
 view : Model -> Element Msg
