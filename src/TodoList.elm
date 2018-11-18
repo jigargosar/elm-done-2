@@ -141,8 +141,9 @@ update message model =
         OnNext ->
             pure <| updateSelectedIdxBy ((+) 1) model
 
-        --        OnDoneChanged todo bool ->
-        --            overTodoStore <| TS.modTodo (Todo.SetDone bool) todo
+        OnDoneChanged todo bool ->
+            overTodoStore (TS.modTodo (Todo.SetDone bool) todo) model
+
         --
         InputChanged value ->
             pure <| setInputText value model
@@ -169,18 +170,15 @@ type alias ReturnF =
     ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 
 
-overTodoStore fn =
-    andThen
-        (\model ->
-            Tuple.mapFirst
-                (\todoStore ->
-                    { model | todoStore = todoStore }
-                )
-                (fn model.todoStore)
+overTodoStore fn model =
+    Tuple.mapFirst
+        (\todoStore ->
+            { model | todoStore = todoStore }
         )
+        (fn model.todoStore)
 
 
-onNewTodoMsg : TS.TodoBuilder -> ReturnF
+onNewTodoMsg : TS.TodoBuilder -> Model -> ( Model, Cmd Msg )
 onNewTodoMsg =
     overTodoStore << TS.new NewTodo
 
