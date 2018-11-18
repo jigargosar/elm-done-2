@@ -100,6 +100,8 @@ type Msg
     | OnNext
     | UpdateTodo Todo Todo.Msg
     | FormChange FormMsg
+    | SelectTodo Todo
+    | SetSelectionIdx Int
     | TodoRootClicked Todo
     | FocusId String
     | Submit
@@ -143,6 +145,12 @@ update message model =
 
         UpdateTodo todo msg ->
             updateTS (Todo.update msg todo) model
+
+        SetSelectionIdx idx ->
+            ( { model | selectedIdx = Just idx }, Cmd.none )
+
+        SelectTodo todo ->
+            ( model, Cmd.none )
 
         TodoRootClicked todo ->
             ( model, Cmd.none )
@@ -225,6 +233,7 @@ viewTodoList ( selectedIdx, fuzzyTodos ) =
         viewTodo idx ( matchResult, todo ) =
             viewTodoListItem
                 { selected = idx == selectedIdx
+                , selectionIndicatorFocusMsg = SetSelectionIdx idx
                 , todoId = todo.id
                 , done = todo.done
                 , doneChangedMsg = UpdateTodo todo << Todo.SetDone
@@ -242,6 +251,7 @@ selectionIndicatorDomId todoId =
 
 viewTodoListItem :
     { selected : Bool
+    , selectionIndicatorFocusMsg : msg
     , todoId : String
     , done : Bool
     , doneChangedMsg : Bool -> msg
@@ -256,7 +266,7 @@ viewTodoListItem vm =
             vm
     in
     r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick vm.onClickRoot ]
-        [ selectionIndicator selected (selectionIndicatorDomId todoId)
+        [ selectionIndicator selected (selectionIndicatorDomId todoId) vm.selectionIndicatorFocusMsg
         , r [ fw ]
             [ doneCheckBox done doneChangedMsg noOpMsg
             , displayTitle title
@@ -264,7 +274,7 @@ viewTodoListItem vm =
         ]
 
 
-selectionIndicator selected domId =
+selectionIndicator selected domId focusMsg =
     el
         [ id domId |> fHA
         , ti_1
@@ -272,6 +282,7 @@ selectionIndicator selected domId =
         , fh
         , bcIf selected blue100
         , focused [ bc blue400 ]
+        , onFocus focusMsg
         ]
         (t "")
 
