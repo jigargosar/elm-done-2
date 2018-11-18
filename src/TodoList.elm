@@ -132,45 +132,41 @@ subscriptions model =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update message =
-    updateF message << pure
+update message model =
+    case message of
+        ---- INJECT UPDATE CASE BELOW ----
+        OnPrev ->
+            pure <| updateSelectedIdxBy ((+) -1) model
+
+        OnNext ->
+            pure <| updateSelectedIdxBy ((+) 1) model
+
+        --        OnDoneChanged todo bool ->
+        --            overTodoStore <| TS.modTodo (Todo.SetDone bool) todo
+        --
+        InputChanged value ->
+            pure <| setInputText value model
+
+        InputFocusChanged hasFocus ->
+            pure <| setInputHasFocus hasFocus model
+
+        --        Submit ->
+        --            andThenF (\model -> onNewTodoMsg <| TS.initBuilder model.inputText "")
+        --                >> mapModel (setInputText "")
+        --
+        --        NewTodo builder ->
+        --            onNewTodoMsg builder
+        --
+        --        LoadTS value ->
+        --            overTodoStore <| \_ -> TS.restore value
+        --
+        --        NoOp ->
+        _ ->
+            pure model
 
 
 type alias ReturnF =
     ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-
-
-updateF : Msg -> ReturnF
-updateF message =
-    case message of
-        ---- INJECT UPDATE CASE BELOW ----
-        OnPrev ->
-            mapModel <| updateSelectedIdxBy ((+) -1)
-
-        OnNext ->
-            mapModel <| updateSelectedIdxBy ((+) 1)
-
-        OnDoneChanged todo bool ->
-            overTodoStore <| TS.modTodo (Todo.SetDone bool) todo
-
-        InputChanged value ->
-            mapModel <| setInputText value
-
-        InputFocusChanged hasFocus ->
-            mapModel <| setInputHasFocus hasFocus
-
-        Submit ->
-            andThenF (\model -> onNewTodoMsg <| TS.initBuilder model.inputText "")
-                >> mapModel (setInputText "")
-
-        NewTodo builder ->
-            onNewTodoMsg builder
-
-        LoadTS value ->
-            overTodoStore <| \_ -> TS.restore value
-
-        NoOp ->
-            identity
 
 
 overTodoStore fn =
