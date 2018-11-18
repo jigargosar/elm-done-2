@@ -1,4 +1,4 @@
-module Todo exposing (Id, Model, Msg(..), decoder, done, encoder, idString, init, modify, setDone, title)
+module Todo exposing (Model, Msg(..), decoder, done, encoder, idString, init, modify, setDone, title)
 
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
