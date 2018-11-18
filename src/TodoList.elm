@@ -183,8 +183,8 @@ view model =
                     Nothing ->
                         [ t "No Tasks Found" ]
 
-                    Just ( si, todos ) ->
-                        List.indexedMap (viewTodo si) todos
+                    Just ( si, fuzzyTodos ) ->
+                        List.indexedMap (viewTodo si) fuzzyTodos
         ]
 
 
