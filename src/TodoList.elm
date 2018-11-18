@@ -31,28 +31,12 @@ import TodoStore as TS
 import UpdateX exposing (..)
 
 
-type alias ModelRecord =
+type alias Model =
     { inputText : String
     , todoStore : TS.Model
     , selectedIdx : Maybe Int
     , inputHasFocus : Bool
     }
-
-
-type Model
-    = Model ModelRecord
-
-
-unwrap (Model model) =
-    model
-
-
-inputText =
-    unwrap >> .inputText
-
-
-todoStore =
-    unwrap >> .todoStore
 
 
 fuzzySort query =
@@ -75,7 +59,7 @@ fuzzySort query =
         >> unlessBool (isBlank query) sort
 
 
-currentList (Model model) =
+currentList model =
     let
         filteredList =
             TS.all model.todoStore
@@ -92,12 +76,12 @@ currentList (Model model) =
         model.selectedIdx |> unwrapMaybe 0 (min idxMax) |> (\idx -> Just ( idx, filteredList ))
 
 
-setSelectedIdxIn (Model model) idx =
-    Model { model | selectedIdx = Just idx }
+setSelectedIdxIn model idx =
+    { model | selectedIdx = Just idx }
 
 
-setInputHasFocus val (Model model) =
-    Model { model | inputHasFocus = val }
+setInputHasFocus val model =
+    { model | inputHasFocus = val }
 
 
 updateSelectedIdxBy numFn model =
@@ -126,16 +110,15 @@ type Msg
 
 empty : Model
 empty =
-    Model
-        { inputText = ""
-        , todoStore = TS.empty
-        , selectedIdx = Nothing
-        , inputHasFocus = False
-        }
+    { inputText = ""
+    , todoStore = TS.empty
+    , selectedIdx = Nothing
+    , inputHasFocus = False
+    }
 
 
-setInputText val (Model model) =
-    Model { model | inputText = val }
+setInputText val model =
+    { model | inputText = val }
 
 
 subscriptions model =
@@ -177,7 +160,7 @@ updateF message =
             mapModel <| setInputHasFocus hasFocus
 
         Submit ->
-            andThenF (\model -> updateTS (TS.new (inputText model) ""))
+            andThenF (\model -> updateTS (TS.new model.inputText ""))
                 >> mapModel (setInputText "")
 
         TSMsg msg ->
@@ -185,10 +168,10 @@ updateF message =
 
         LoadTS value ->
             andThen
-                (\(Model model) ->
+                (\model ->
                     Tuple.mapBoth
-                        (\ts ->
-                            Model { model | todoStore = model.todoStore }
+                        (\todoStore ->
+                            { model | todoStore = todoStore }
                         )
                         (Cmd.map TSMsg)
                         (TS.restore value)
@@ -200,7 +183,7 @@ updateF message =
 
 updateTS message =
     andThen
-        (\(Model model) ->
+        (\model ->
             let
                 ( todoStore_, cmd ) =
                     (case message of
@@ -213,7 +196,7 @@ updateTS message =
                     <|
                         pure model.todoStore
             in
-            ( Model { model | todoStore = todoStore_ }, Cmd.map TSMsg cmd )
+            ( { model | todoStore = todoStore_ }, Cmd.map TSMsg cmd )
         )
 
 
@@ -246,7 +229,7 @@ viewInput model =
                 ]
         ]
         { onChange = InputChanged
-        , text = inputText model
+        , text = model.inputText
         , placeholder = ipp [] (t "Add... / Search...")
         , label = lh "Task Title"
         }
