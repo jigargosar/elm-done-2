@@ -8,6 +8,8 @@ module BasicsX exposing
     , applyMaybeFn2
     , applyTo
     , applyTo2
+    , call
+    , callOn
     , defaultEmptyStringTo
     , eq0
     , eqs
@@ -18,9 +20,11 @@ module BasicsX exposing
     , ifElse
     , isBlank
     , justWhen
+    , listFromT2
     , maybeBool
     , maybeWhen
     , notPred
+    , partitionList2
     , propEq
     , replaceHead
     , safeModBy
@@ -184,10 +188,6 @@ unpackResult errFn okFn result =
             errFn error
 
 
-flip fn a b =
-    fn b a
-
-
 swap ( a, b ) =
     ( b, a )
 
@@ -202,3 +202,32 @@ safeModBy total num =
 
     else
         modBy total num
+
+
+listFromT2 : ( a, a ) -> List a
+listFromT2 ( l1, l2 ) =
+    [ l1, l2 ]
+
+
+partitionList2 : Pred a -> List a -> List (List a)
+partitionList2 pred =
+    List.partition pred >> listFromT2
+
+
+compose : List (a -> a) -> a -> a
+compose =
+    List.foldl (<<) identity
+
+
+flip f b a =
+    f a b
+
+
+call : (a -> b) -> a -> b
+call fun =
+    fun
+
+
+callOn : a -> (a -> b) -> b
+callOn var fun =
+    fun var
