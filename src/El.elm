@@ -55,6 +55,9 @@ module El exposing
     , s3
     , sw
     , t
+    , ti
+    , ti0
+    , ti_1
     , u1
     , u2
     , u3
@@ -72,6 +75,7 @@ import Element.Input as Input
 import Element.Region as Region
 import EventX
 import HotKey
+import Html.Attributes exposing (tabindex)
 import Html.Events
 import Theme
 
@@ -327,6 +331,18 @@ br2 =
 
 
 -- Html Attributes
+
+
+ti =
+    tabindex >> fHA
+
+
+ti0 =
+    ti 0
+
+
+ti_1 =
+    ti -1
 
 
 onKeyDown =

@@ -245,7 +245,8 @@ viewTodoListItem viewModel =
 
 selectionIndicator selected =
     el
-        [ bwr 3
+        [ ti_1
+        , bwr 3
         , fh
         , bcIf selected blue400
         ]
