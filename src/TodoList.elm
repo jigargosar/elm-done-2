@@ -39,7 +39,7 @@ type alias Model =
     }
 
 
-withFuzzResult query =
+filterWithFuzzyResult query =
     let
         boil =
             String.toLower
@@ -63,7 +63,7 @@ currentList model =
     let
         filteredList =
             TS.all model.todoStore
-                |> withFuzzResult model.inputText
+                |> filterWithFuzzyResult model.inputText
     in
     if List.isEmpty filteredList then
         Nothing
