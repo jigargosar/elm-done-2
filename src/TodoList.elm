@@ -199,12 +199,11 @@ viewInput model =
         , p2
         , onLoseFocus <| InputFocusChanged False
         , onFocus <| InputFocusChanged True
-        , onKeyDownPD <|
-            HotKey.bindAll
-                [ ( HotKey.arrowDown, ( NoOp, True ) )
-                , ( HotKey.arrowUp, ( NoOp, True ) )
-                , ( HotKey.enter, ( Submit, False ) )
-                ]
+        , onKeyDownPDBindAll
+            [ ( HotKey.arrowDown, ( NoOp, True ) )
+            , ( HotKey.arrowUp, ( NoOp, True ) )
+            , ( HotKey.enter, ( Submit, False ) )
+            ]
         ]
         { onChange = InputChanged
         , text = model.inputText
@@ -234,10 +233,9 @@ viewTodo si idx ( matchResult, todo ) =
                 , fc grey500
                 , focused [ Border.glow blue200 3, fc grey800 ]
                 , mouseOver [ Border.glow blueGrey300 1, fc grey800 ]
-                , onKeyDownPD <|
-                    HotKey.bindAll
-                        [ ( HotKey.space, ( NoOp, True ) )
-                        ]
+                , onKeyDownPDBindAll
+                    [ ( HotKey.space, ( NoOp, True ) )
+                    ]
                 ]
                 { label = lh "done"
                 , icon =
