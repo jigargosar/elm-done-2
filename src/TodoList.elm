@@ -214,8 +214,8 @@ viewTodoList ( selectedIdx, fuzzyTodos ) =
                 { selected = idx == selectedIdx
                 , done = todo.done
                 , doneChangedMsg = UpdateTodo todo << Todo.SetDone
-                , title = todo.title
                 , noOpMsg = NoOp
+                , title = todo.title
                 }
     in
     List.indexedMap viewTodo fuzzyTodos
@@ -225,8 +225,8 @@ viewTodoListItem :
     { selected : Bool
     , done : Bool
     , doneChangedMsg : Bool -> msg
-    , title : String
     , noOpMsg : msg
+    , title : String
     }
     -> Element msg
 viewTodoListItem viewModel =
