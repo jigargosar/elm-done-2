@@ -92,7 +92,7 @@ type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
-    | OnDoneChanged Todo Bool
+    | UpdateTodo Todo Todo.Msg
     | InputChanged String
     | InputFocusChanged Bool
     | Submit
@@ -134,8 +134,8 @@ update message model =
         OnNext ->
             pure <| updateSelectedIdxBy ((+) 1) model
 
-        OnDoneChanged todo bool ->
-            updateTS (Todo.update (Todo.SetDone bool) todo) model
+        UpdateTodo todo msg ->
+            updateTS (Todo.update msg todo) model
 
         InputChanged value ->
             pure <| setInputText value model
@@ -206,7 +206,7 @@ viewTodo selectedIdx idx ( matchResult, todo ) =
         { selected = idx == selectedIdx
         , done = todo.done
         , title = todo.title
-        , doneChangedMsg = OnDoneChanged todo
+        , doneChangedMsg = UpdateTodo todo << Todo.SetDone
         , noOpMsg = NoOp
         }
 
