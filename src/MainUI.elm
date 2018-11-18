@@ -1,4 +1,4 @@
-module Main exposing (Flags, Model, Msg(..), init, main, update, view)
+module MainUI exposing (Flags, Model, Msg(..), init, main, update, view)
 
 import Browser
 import BrowserX exposing (WindowSize)

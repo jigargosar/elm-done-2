@@ -51,7 +51,7 @@ type Route
 
 
 type alias Data =
-    { blogPosts : List Blogpost
+    { blogPosts : List BlogPost
     }
 
 
@@ -66,7 +66,7 @@ type alias Model =
 
 
 type HistoryMsg
-    = BlogPostshow Int
+    = BlogPostShow Int
 
 
 type Msg
@@ -78,7 +78,7 @@ type alias MarkdownString =
     String
 
 
-type alias Blogpost =
+type alias BlogPost =
     { id : Int
     , title : String
     , content : MarkdownString
@@ -90,7 +90,7 @@ type alias Blogpost =
 handleHistory : HistoryMsg -> MyHistory -> MyHistory
 handleHistory route history =
     case route of
-        BlogPostshow id ->
+        BlogPostShow id ->
             history |> push (Router.pageWithDefaultTransition (BlogPostsShow id))
 
 
@@ -99,18 +99,18 @@ gray =
     Color.grayscale 0.9
 
 
-titleView : Blogpost -> NodeWithStyle Msg
-titleView blogpost =
+titleView : BlogPost -> NodeWithStyle Msg
+titleView blogPost =
     button
-        [ Events.onClick <| HistoryMsgWrapper <| BlogPostshow blogpost.id
+        [ Events.onClick <| HistoryMsgWrapper <| BlogPostShow blogPost.id
         , standardCellStyle
         ]
-        [ text blogpost.title ]
+        [ text blogPost.title ]
 
 
-showView : { b | maybeBlogpost : Maybe Blogpost } -> NodeWithStyle Msg
+showView : { b | maybeBlogPost : Maybe BlogPost } -> NodeWithStyle Msg
 showView data =
-    case data.maybeBlogpost of
+    case data.maybeBlogPost of
         Nothing ->
             node [] [ text "Error" ]
 
@@ -122,20 +122,20 @@ showView data =
                     , right = node [] []
                     }
                 )
-                (blogpostView blogPost)
+                (blogPostView blogPost)
 
 
-blogpostView : Blogpost -> NodeWithStyle msg
-blogpostView blogpost =
+blogPostView : BlogPost -> NodeWithStyle msg
+blogPostView blogPost =
     node []
-        [ img "" blogpost.image [ style [ Style.block [ Display.fullWidth ] ] ]
+        [ img "" blogPost.image [ style [ Style.block [ Display.fullWidth ] ] ]
         , node
             [ style
                 [ Style.block []
                 , Style.box [ Box.padding [ Padding.horizontal Constants.medium ] ]
                 ]
             ]
-            (textToHtml blogpost.content)
+            (textToHtml blogPost.content)
         ]
 
 
@@ -171,7 +171,7 @@ standardCellStyle =
         ]
 
 
-blogPostsIndex : List Blogpost -> NodeWithStyle Msg
+blogPostsIndex : List BlogPost -> NodeWithStyle Msg
 blogPostsIndex blogPosts =
     node
         [ style
@@ -182,9 +182,9 @@ blogPostsIndex blogPosts =
         (blogPosts |> List.map titleView)
 
 
-blogPostsShow : Int -> List Blogpost -> NodeWithStyle Msg
+blogPostsShow : Int -> List BlogPost -> NodeWithStyle Msg
 blogPostsShow id blogPosts =
-    node [] [ showView { maybeBlogpost = blogPosts |> find_by .id id } ]
+    node [] [ showView { maybeBlogPost = blogPosts |> find_by .id id } ]
 
 
 pageView : Data -> Page Route Msg -> Maybe (Transition Route Msg) -> NodeWithStyle Msg
@@ -227,7 +227,7 @@ subscriptions model =
     maybeTransitionSubscription model.history
 
 
-initBlogPosts : List Blogpost
+initBlogPosts : List BlogPost
 initBlogPosts =
     [ { id = 1
       , title = "La cigale et la fourmi"
