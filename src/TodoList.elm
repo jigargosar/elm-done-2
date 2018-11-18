@@ -13,13 +13,13 @@ import El exposing (..)
 import Element as E exposing (Element, clip, el, focused, fromRgb, fromRgb255, mouseOver, rgb, rgba, scrollbarY)
 import Element.Background as Background
 import Element.Border as Border
-import Element.Events exposing (onFocus, onLoseFocus)
+import Element.Events exposing (onClick, onFocus, onLoseFocus)
 import Element.Font as Font
 import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
 import Fuzzy
 import HotKey
-import Html.Attributes exposing (tabindex)
+import Html.Attributes exposing (id, tabindex)
 import Html.Events
 import Icons
 import Json.Decode as D exposing (Decoder)
@@ -99,6 +99,7 @@ type Msg
     | OnNext
     | UpdateTodo Todo Todo.Msg
     | FormChange FormMsg
+    | TodoRootClicked Todo
     | Submit
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -140,6 +141,9 @@ update message model =
 
         UpdateTodo todo msg ->
             updateTS (Todo.update msg todo) model
+
+        TodoRootClicked todo ->
+            ( model, Cmd.none )
 
         FormChange msg ->
             case msg of
@@ -207,35 +211,47 @@ viewInput model =
         }
 
 
+todoItemDomId id =
+    "todo--" ++ id
+
+
 viewTodoList ( selectedIdx, fuzzyTodos ) =
     let
         viewTodo idx ( matchResult, todo ) =
             viewTodoListItem
                 { selected = idx == selectedIdx
+                , todoId = todo.id
                 , done = todo.done
                 , doneChangedMsg = UpdateTodo todo << Todo.SetDone
                 , noOpMsg = NoOp
                 , title = todo.title
+                , onClickRoot = TodoRootClicked todo
                 }
     in
     List.indexedMap viewTodo fuzzyTodos
 
 
+selectionIndicatorDomId todoId =
+    todoItemDomId todoId ++ "-si"
+
+
 viewTodoListItem :
     { selected : Bool
+    , todoId : String
     , done : Bool
     , doneChangedMsg : Bool -> msg
     , noOpMsg : msg
     , title : String
+    , onClickRoot : msg
     }
     -> Element msg
 viewTodoListItem viewModel =
     let
-        { selected, done, doneChangedMsg, title, noOpMsg } =
+        { todoId, selected, done, doneChangedMsg, title, noOpMsg } =
             viewModel
     in
-    r [ s1, fw, bwb 1, bc <| blackA 0.1 ]
-        [ selectionIndicator selected
+    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick onClickRoot ]
+        [ selectionIndicator selected (selectionIndicatorDomId todoId)
         , r [ fw ]
             [ doneCheckBox done doneChangedMsg noOpMsg
             , displayTitle title
@@ -243,12 +259,14 @@ viewTodoListItem viewModel =
         ]
 
 
-selectionIndicator selected =
+selectionIndicator selected domId =
     el
-        [ ti_1
+        [ id domId |> fHA
+        , ti_1
         , bwr 3
         , fh
-        , bcIf selected blue400
+        , bcIf selected blue100
+        , focused [ bc blue400 ]
         ]
         (t "")
 
