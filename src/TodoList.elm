@@ -24,6 +24,8 @@ import Html.Events
 import Icons
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E exposing (Value)
+import List as L
+import List.Extra as L
 import MaterialColorsUI exposing (..)
 import Port
 import Theme
@@ -54,9 +56,9 @@ filterWithFuzzyResult query =
                 |> Maybe.map (\res -> ( res, todo ))
 
         sort =
-            List.sortBy (Tuple.first >> .score)
+            L.sortBy (Tuple.first >> .score)
     in
-    List.filterMap filterMapFn
+    L.filterMap filterMapFn
         >> unlessBool (isBlank query) sort
 
 
@@ -67,13 +69,13 @@ maybeTodoListViewModel model =
             Todo.all model.todoStore
                 |> filterWithFuzzyResult model.inputText
     in
-    if List.isEmpty filteredList then
+    if L.isEmpty filteredList then
         Nothing
 
     else
         let
             idxMax =
-                List.length filteredList - 1
+                L.length filteredList - 1
         in
         model.selectedIdx |> unwrapMaybe 0 (min idxMax) |> (\idx -> Just ( idx, filteredList ))
 
@@ -84,15 +86,15 @@ updateSelectedIdxBy numFn model =
             (\( si, tl ) ->
                 let
                     newIdx =
-                        safeModBy (List.length tl) (numFn si)
+                        safeModBy (L.length tl) (numFn si)
 
                     --                  _  =
                     --                    Array.fromList
-                    --                      |> List.head
+                    --                      |> L.head
                     --                      |> Maybe.map (Tuple.second >> .id)
                     --
                 in
-                ( numFn si, List.length tl )
+                ( numFn si, L.length tl )
                     |> (\( idx, length ) -> safeModBy length idx)
                     >> (\idx -> ( { model | selectedIdx = Just idx }, Cmd.none ))
             )
@@ -251,7 +253,7 @@ viewTodoList ( selectedIdx, fuzzyTodos ) =
                 , onClickRoot = FocusId <| selectionIndicatorDomId todo.id
                 }
     in
-    List.indexedMap viewTodo fuzzyTodos
+    L.indexedMap viewTodo fuzzyTodos
 
 
 selectionIndicatorDomId todoId =
