@@ -164,10 +164,6 @@ update message model =
             pure model
 
 
-type alias ReturnF =
-    ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-
-
 updateTS fn model =
     fn model.todoStore
         |> Tuple.mapFirst (\ts -> { model | todoStore = ts })
