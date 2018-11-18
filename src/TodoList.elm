@@ -36,7 +36,7 @@ import UpdateX exposing (..)
 type alias Model =
     { inputText : String
     , todoStore : TodoStore
-    , selectedIdx : Maybe Int
+    , maybeIdx : Maybe Int
     , inputHasFocus : Bool
     }
 
@@ -77,7 +77,7 @@ maybeTodoListViewModel model =
             idxMax =
                 L.length filteredList - 1
         in
-        model.selectedIdx |> unwrapMaybe 0 (min idxMax) |> (\idx -> Just ( idx, filteredList ))
+        model.maybeIdx |> unwrapMaybe 0 (min idxMax) |> (\idx -> Just ( idx, filteredList ))
 
 
 updateSelectedIdxBy numFn model =
@@ -96,7 +96,7 @@ updateSelectedIdxBy numFn model =
                 in
                 ( numFn si, L.length tl )
                     |> (\( idx, length ) -> safeModBy length idx)
-                    >> (\idx -> ( { model | selectedIdx = Just idx }, Cmd.none ))
+                    >> (\idx -> ( { model | maybeIdx = Just idx }, Cmd.none ))
             )
 
 
@@ -125,7 +125,7 @@ empty : Model
 empty =
     { inputText = ""
     , todoStore = Todo.emptyStore
-    , selectedIdx = Nothing
+    , maybeIdx = Nothing
     , inputHasFocus = False
     }
 
@@ -158,7 +158,7 @@ update message model =
             updateTS (Todo.update msg todo) model
 
         SetSelectionIdx idx ->
-            ( { model | selectedIdx = Just idx }, Cmd.none )
+            ( { model | maybeIdx = Just idx }, Cmd.none )
 
         SelectTodo todo ->
             ( model, Cmd.none )
@@ -239,11 +239,11 @@ todoItemDomId id =
     "todo--" ++ id
 
 
-viewTodoList ( selectedIdx, fuzzyTodos ) =
+viewTodoList ( maybeIdx, fuzzyTodos ) =
     let
         viewTodo idx ( matchResult, todo ) =
             viewTodoListItem
-                { selected = idx == selectedIdx
+                { selected = idx == maybeIdx
                 , selectionIndicatorFocusMsg = SetSelectionIdx idx
                 , todoId = todo.id
                 , done = todo.done
