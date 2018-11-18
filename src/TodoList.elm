@@ -221,8 +221,19 @@ viewTodoList ( selectedIdx, fuzzyTodos ) =
     List.indexedMap viewTodo fuzzyTodos
 
 
-viewTodoListItem { selected, done, doneChangedMsg, title, noOpMsg } =
+viewTodoListItem :
+    { selected : Bool
+    , done : Bool
+    , doneChangedMsg : Bool -> msg
+    , title : String
+    , noOpMsg : msg
+    }
+    -> Element msg
+viewTodoListItem viewModel =
     let
+        { selected, done, doneChangedMsg, title, noOpMsg } =
+            viewModel
+
         selectionIndicator =
             el
                 [ bwr 3
