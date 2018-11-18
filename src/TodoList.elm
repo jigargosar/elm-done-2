@@ -212,9 +212,9 @@ viewInput model =
         }
 
 
-viewTodo si idx ( matchResult, todo ) =
+viewTodo selectedIdx idx ( matchResult, todo ) =
     viewTodoListItem
-        { selected = idx == si
+        { selected = idx == selectedIdx
         , done = Todo.done todo
         , title = Todo.title todo
         , doneChangedMsg = OnDoneChanged todo
