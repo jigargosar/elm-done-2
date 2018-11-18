@@ -15,7 +15,6 @@ import Json.Decode as D
 import Json.Encode as E exposing (Value)
 import Theme
 import TimeX exposing (Millis)
-import Todo
 import TodoList
 import TodoStore
 import UI

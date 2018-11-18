@@ -1,5 +1,7 @@
 module TodoStore exposing
-    ( TodoBuilder
+    ( Msg(..)
+    , Todo
+    , TodoBuilder
     , TodoStore
     , all
     , empty
@@ -10,15 +12,38 @@ module TodoStore exposing
     )
 
 import BasicsX exposing (unpackResult)
+import DecodeX exposing (Encoder)
 import Dict exposing (Dict)
 import Json.Decode as D exposing (Decoder)
+import Json.Decode.Pipeline exposing (required)
 import Json.Encode as E exposing (Value)
 import Port
 import Random
 import RandomId
 import TimeX exposing (Millis)
-import Todo exposing (Todo)
 import UpdateX exposing (..)
+
+
+type alias Todo =
+    { id : String
+    , title : String
+    , body : String
+    , done : Bool
+    , createdAt : Millis
+    , modifiedAt : Millis
+    , contextId : String
+    }
+
+
+type Msg
+    = SetDone Bool
+
+
+modify : Msg -> Todo -> Todo
+modify message model =
+    case message of
+        SetDone done ->
+            { model | done = done }
 
 
 type alias TodoStore =
@@ -50,17 +75,28 @@ initBuilder title contextId =
     TodoBuilder Nothing Nothing title contextId
 
 
-modTodo : Todo.Msg -> Todo -> TodoStore -> ( TodoStore, Cmd msg )
+modTodo : Msg -> Todo -> TodoStore -> ( TodoStore, Cmd msg )
 modTodo msg todo model =
-    upsertAndCache (Todo.modify msg (getOr todo model)) <| pure model
+    upsertAndCache (modify msg (getOr todo model)) <| pure model
 
 
 restore value =
     let
+        todoDecoder : Decoder Todo
+        todoDecoder =
+            DecodeX.start Todo
+                |> required "id" D.string
+                |> required "title" D.string
+                |> required "body" D.string
+                |> required "done" D.bool
+                |> required "createdAt" D.int
+                |> required "modifiedAt" D.int
+                |> required "contextId" D.string
+
         decoder : Decoder TodoStore
         decoder =
             D.map TodoStore
-                (D.field "lookup" <| D.dict Todo.decoder)
+                (D.field "lookup" <| D.dict todoDecoder)
     in
     D.decodeValue decoder value
         |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
@@ -110,9 +146,21 @@ upsertAndCache todo =
 
 cache =
     let
+        todoEncoder : Encoder Todo
+        todoEncoder model =
+            E.object
+                [ ( "id", E.string model.id )
+                , ( "title", E.string model.title )
+                , ( "body", E.string model.body )
+                , ( "done", E.bool model.done )
+                , ( "createdAt", E.int model.createdAt )
+                , ( "modifiedAt", E.int model.modifiedAt )
+                , ( "contextId", E.string model.contextId )
+                ]
+
         encoder model =
             E.object
-                [ ( "lookup", E.dict identity Todo.encoder model.lookup )
+                [ ( "lookup", E.dict identity todoEncoder model.lookup )
                 ]
     in
     Port.cacheTodoStore << encoder
