@@ -8,8 +8,6 @@ module TodoStore exposing
     , initBuilder
     , new
     , onModTodoMsg
-    , onNewMsg
-    , onNewMsg2
     , restore
     )
 
@@ -88,12 +86,7 @@ setJustNow model now =
 
 
 type Msg
-    = New TodoBuilder
-    | ModTodo Todo.Msg Todo.Model
-
-
-new title contextId =
-    New <| TodoBuilder Nothing Nothing title contextId
+    = ModTodo Todo.Msg Todo.Model
 
 
 initBuilder title contextId =
@@ -113,33 +106,8 @@ restore value =
         |> unpackResult (\err -> ( empty, Port.error <| "TodoStore: " ++ D.errorToString err )) pure
 
 
-onNewMsg builder =
-    case ( builder.id, builder.now ) of
-        ( Nothing, _ ) ->
-            addCmd <| RandomId.gen (New << setJustId builder)
-
-        ( _, Nothing ) ->
-            addCmd <| TimeX.now (New << setJustNow builder)
-
-        ( Just id, Just now ) ->
-            let
-                todo : Todo.Model
-                todo =
-                    Todo.init
-                        { id = id
-                        , createdAt = now
-                        , modifiedAt = now
-                        , title = builder.title
-                        , body = ""
-                        , done = False
-                        , contextId = builder.contextId
-                        }
-            in
-            upsertAndCache todo
-
-
-onNewMsg2 : (TodoBuilder -> msg) -> TodoBuilder -> Model -> ( Model, Cmd msg )
-onNewMsg2 msg builder model =
+new : (TodoBuilder -> msg) -> TodoBuilder -> Model -> ( Model, Cmd msg )
+new msg builder model =
     (case ( builder.id, builder.now ) of
         ( Nothing, _ ) ->
             addCmd <| RandomId.gen (msg << setJustId builder)

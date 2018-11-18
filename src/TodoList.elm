@@ -195,7 +195,7 @@ onNewTodoMsg builder =
                     { model | todoStore = todoStore }
                 )
                 identity
-                (TS.onNewMsg2 NewTodo builder model.todoStore)
+                (TS.new NewTodo builder model.todoStore)
 
 
 updateTS message =
@@ -204,9 +204,6 @@ updateTS message =
             let
                 ( todoStore_, cmd ) =
                     (case message of
-                        TS.New builder ->
-                            TS.onNewMsg builder
-
                         TS.ModTodo msg todo ->
                             TS.onModTodoMsg msg todo
                     )
