@@ -112,7 +112,6 @@ type Msg
     | SetSelectionFixed Int
     | ResetSelection
     | TodoRootClicked Todo
-    | FocusId String
     | Submit
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -176,9 +175,6 @@ update message model =
 
         TodoRootClicked todo ->
             ( model, Cmd.none )
-
-        FocusId domId ->
-            ( model, Port.focusId domId )
 
         FormChange msg ->
             case msg of
