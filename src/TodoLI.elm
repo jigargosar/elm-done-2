@@ -128,17 +128,29 @@ type Msg
 
 type ItemMsg
     = FuzzyChanged Todo FuzzyMsg
+    | RootClicked
+    | RootFocusInChanged Bool
 
 
 type FuzzyMsg
-    = RootClicked
-    | RootFocusInChanged Bool
-    | Update Todo.Msg
+    = Update Todo.Msg
     | PD
 
 
 view : Int -> Bool -> Item -> Element Msg
 view idx selected item =
+    let
+        rootEl =
+            r
+                [ s1
+                , fw
+                , bwb 1
+                , bc <| blackA 0.1
+                , onClick RootClicked
+                , fHA <| EventX.onFocusIn <| RootFocusInChanged True
+                , fHA <| EventX.onFocusOut <| RootFocusInChanged False
+                ]
+    in
     E.map (Msg idx) <|
         case item of
             FuzzyTodoLI fuzzyTodo ->
@@ -146,22 +158,14 @@ view idx selected item =
                     todo =
                         fuzzyTodo.value
                 in
-                r
-                    [ s1
-                    , fw
-                    , bwb 1
-                    , bc <| blackA 0.1
-                    , onClick RootClicked
-                    , fHA <| EventX.onFocusIn <| RootFocusInChanged True
-                    , fHA <| EventX.onFocusOut <| RootFocusInChanged False
-                    ]
-                    [ selectionIndicator selected
+                rootEl
+                    [ selectionIndicator selected |> E.map (FuzzyChanged todo)
                     , r [ fw ]
                         [ doneCheckBox todo.done
                         , displayTitle todo.title
                         ]
+                        |> E.map (FuzzyChanged todo)
                     ]
-                    |> E.map (FuzzyChanged todo)
 
             CreateTodoLI title ->
                 r

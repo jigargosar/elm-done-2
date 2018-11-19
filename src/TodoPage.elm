@@ -161,15 +161,15 @@ update message model =
                                     updateTS (Todo.update modMsg todo)
                                         >> mapFirst (setFixedSelection idx)
 
-                                TodoLI.RootClicked ->
-                                    setFixedSelection idx >> pure
-
-                                TodoLI.RootFocusInChanged hasFocus ->
-                                    setListHasFocus hasFocus
-                                        >> pure
-
                                 TodoLI.PD ->
                                     pure
+
+                        TodoLI.RootClicked ->
+                            setFixedSelection idx >> pure
+
+                        TodoLI.RootFocusInChanged hasFocus ->
+                            setListHasFocus hasFocus
+                                >> pure
 
         FormChanged msg ->
             case msg of
