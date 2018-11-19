@@ -160,16 +160,16 @@ resetInputText =
     setInputText ""
 
 
-setSelection val model =
-    { model | selection = val }
+setCursorSelection val model =
+    { model | selection = val, cursor = val }
 
 
-setFixedSelection val =
-    setSelection <| SelectionList.fixedSelection val
+setSelectionCursorAt =
+    setCursorSelection << Cursor.initAt
 
 
-resetSelection =
-    setSelection <| SelectionList.emptySelection
+resetSelectionCursor =
+    setCursorSelection <| Cursor.empty
 
 
 setInputHasFocus val model =
@@ -208,16 +208,16 @@ update message model =
             case msg of
                 TodoLI.Update todo modMsg ->
                     updateTS (Todo.update modMsg todo)
-                        >> mapFirst (setFixedSelection idx)
+                        >> mapFirst (setSelectionCursorAt idx)
 
                 TodoLI.RootClicked ->
-                    setFixedSelection idx
+                    setSelectionCursorAt idx
                         >> setListHasFocus True
                         >> pure
 
                 TodoLI.RootFocusInChanged hasFocus ->
                     (if hasFocus then
-                        setFixedSelection idx
+                        setSelectionCursorAt idx
 
                      else
                         identity
@@ -235,7 +235,7 @@ update message model =
         FormChanged msg ->
             case msg of
                 InputChanged value ->
-                    setInputText value >> resetSelection >> pure
+                    setInputText value >> resetSelectionCursor >> pure
 
                 InputFocusChanged hasFocus ->
                     pure << setInputHasFocus hasFocus
