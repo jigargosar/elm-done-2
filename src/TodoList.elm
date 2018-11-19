@@ -174,11 +174,15 @@ update message model =
                     pure <| setFixedSelection idx model
 
                 TodoLI.RootFocusInChanged hasFocus ->
-                    if hasFocus then
-                        pure <| setFixedSelection idx model
+                    pure <|
+                        if hasFocus then
+                            setFixedSelection idx model
 
-                    else
-                        ( model, Cmd.none )
+                        else if SelectionList.fixedSelection idx == model.selection then
+                            resetSelection model
+
+                        else
+                            model
 
                 TodoLI.PD ->
                     ( model, Cmd.none )

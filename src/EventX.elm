@@ -1,4 +1,4 @@
-module EventX exposing (onFocusIn, onKeyDown, onKeyDownPD)
+module EventX exposing (onFocusIn, onFocusOut, onKeyDown, onKeyDownPD)
 
 import Html.Events as HE
 import Json.Decode as D
@@ -15,3 +15,7 @@ onKeyDownPD =
 
 onFocusIn tagger =
     HE.on "focusin" (D.succeed tagger)
+
+
+onFocusOut tagger =
+    HE.on "focusout" (D.succeed tagger)

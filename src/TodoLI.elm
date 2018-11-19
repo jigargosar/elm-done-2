@@ -33,7 +33,15 @@ view vm =
         { todoId, selected, done, title } =
             vm
     in
-    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick RootClicked, fHA <| EventX.onFocusIn <| RootFocusInChanged True ]
+    r
+        [ s1
+        , fw
+        , bwb 1
+        , bc <| blackA 0.1
+        , onClick RootClicked
+        , fHA <| EventX.onFocusIn <| RootFocusInChanged True
+        , fHA <| EventX.onFocusOut <| RootFocusInChanged False
+        ]
         [ selectionIndicator selected vm
         , r [ fw ]
             [ doneCheckBox done
