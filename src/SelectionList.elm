@@ -1,5 +1,10 @@
 module SelectionList exposing (Selection, SelectionList, circleSelectionByOffset, empty, selectionMap, toList, toSelection, withList)
 
+import Basics exposing ((|>))
+import BasicsX exposing (..)
+import Maybe as M
+import Maybe.Extra as M
+
 
 type alias Selection =
     Maybe Int
@@ -24,7 +29,7 @@ selectionMap fn (SelectionList list maybeIdx) =
     else
         let
             sIdx =
-                maybeIdx |> Maybe.withDefault 0
+                maybeIdx |> M.withDefault 0
         in
         List.indexedMap (\idx -> fn idx <| sIdx == idx) list
 
@@ -33,8 +38,21 @@ toList (SelectionList list maybeIdx) =
     list
 
 
+getSelectedIndexForList : List a -> Maybe Int -> Int
+getSelectedIndexForList list =
+    M.andThen (clampIdx list) >> M.withDefault 0
+
+
 circleSelectionByOffset offset (SelectionList list maybeIdx) =
-    SelectionList list maybeIdx
+    if List.isEmpty list then
+        SelectionList list maybeIdx
+
+    else
+        let
+            sIdx =
+                getSelectedIndexForList list maybeIdx
+        in
+        SelectionList list maybeIdx
 
 
 toSelection (SelectionList list maybeIdx) =

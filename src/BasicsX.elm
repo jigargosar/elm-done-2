@@ -11,6 +11,7 @@ module BasicsX exposing
     , atClampedIdx
     , call
     , callOn
+    , clampIdx
     , defaultEmptyStringTo
     , eq0
     , eqs
@@ -254,3 +255,11 @@ atClampedIdx list idx =
                 clamp 0 (L.length list - 1) idx
         in
         L.getAt clampedIdx list
+
+
+clampIdx list idx =
+    if L.isEmpty list then
+        Nothing
+
+    else
+        Just <| clamp 0 (L.length list - 1) idx
