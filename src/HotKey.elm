@@ -62,6 +62,10 @@ fromKeyEvent { shiftKey, altKey, ctrlKey, metaKey, key } =
     )
 
 
+matchesKeyEvent ke =
+    eq (fromKeyEvent ke)
+
+
 decoder : Decoder HotKey
 decoder =
     D.map fromKeyEvent EventX.keyEventDecoder

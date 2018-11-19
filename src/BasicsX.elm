@@ -13,6 +13,7 @@ module BasicsX exposing
     , callOn
     , clampIdxIn
     , defaultEmptyStringTo
+    , eq
     , eq0
     , eqs
     , find
@@ -44,6 +45,10 @@ module BasicsX exposing
 
 import List as L
 import List.Extra as L
+
+
+eq =
+    (==)
 
 
 firstEq val =
