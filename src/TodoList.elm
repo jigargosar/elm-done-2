@@ -34,7 +34,7 @@ import SelectionList exposing (Selection, SelectionList)
 import Theme
 import Todo exposing (Todo, TodoStore)
 import TodoLI
-import Tuple exposing (second)
+import Tuple exposing (mapFirst, second)
 import UpdateX exposing (..)
 
 
@@ -168,6 +168,7 @@ update message model =
             case msg of
                 TodoLI.Update modMsg ->
                     updateTS (Todo.update modMsg todo) model
+                        |> mapFirst (setFixedSelection idx)
 
                 TodoLI.RootClicked ->
                     pure <| setFixedSelection idx model
