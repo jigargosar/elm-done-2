@@ -33,6 +33,7 @@ import Port
 import SelectionList exposing (Selection, SelectionList)
 import Theme
 import Todo exposing (Todo, TodoStore)
+import TodoLI
 import Tuple exposing (second)
 import UpdateX exposing (..)
 
@@ -96,7 +97,7 @@ rollSelectionBy offset model =
                     (second
                         >> .id
                         >> todoItemDomId
-                        >> (\domId -> Port.focusSelector ("#" ++ domId ++ " ." ++ xSelectionIndicator))
+                        >> (\domId -> Port.focusSelector ("#" ++ domId ++ " ." ++ TodoLI.xSelectionIndicator))
                     )
     in
     --    ( { model | selection = selection }, focusSelectedCmd )
@@ -110,17 +111,11 @@ type FormMsg
     | FormPD
 
 
-type ListMsg
-    = TodoRootClicked
-    | UpdateTodo Todo.Msg
-    | ListPD
-
-
 type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
-    | ListChange Int Todo ListMsg
+    | TodoLIChange Int Todo TodoLI.Msg
     | FormChange FormMsg
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -170,15 +165,15 @@ update message model =
             --            updateSelectedIdxBy ((+) 1) model
             rollSelectionBy 1 model
 
-        ListChange idx todo msg ->
+        TodoLIChange idx todo msg ->
             case msg of
-                UpdateTodo modMsg ->
+                TodoLI.Update modMsg ->
                     updateTS (Todo.update modMsg todo) model
 
-                TodoRootClicked ->
+                TodoLI.RootClicked ->
                     pure <| setFixedSelection idx model
 
-                ListPD ->
+                TodoLI.PD ->
                     ( model, Cmd.none )
 
         FormChange msg ->
@@ -261,83 +256,12 @@ todoItemDomId id =
 viewTodoListChildren selectionList =
     let
         viewChild idx isSelected ( matchResult, todo ) =
-            viewTodoListItem
+            TodoLI.view
                 { selected = isSelected
                 , todoId = todo.id
                 , done = todo.done
                 , title = todo.title
                 }
-                |> E.map (ListChange idx todo)
+                |> E.map (TodoLIChange idx todo)
     in
     SelectionList.selectionMap viewChild selectionList
-
-
-selectionIndicatorDomId todoId =
-    todoItemDomId todoId ++ "-si"
-
-
-viewTodoListItem :
-    { selected : Bool
-    , todoId : String
-    , done : Bool
-    , title : String
-    }
-    -> Element ListMsg
-viewTodoListItem vm =
-    let
-        { todoId, selected, done, title } =
-            vm
-    in
-    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick TodoRootClicked ]
-        [ selectionIndicator selected vm
-        , r [ fw ]
-            [ doneCheckBox done
-            , displayTitle title
-            ]
-        ]
-
-
-xSelectionIndicator =
-    "x-selection-indicator"
-
-
-selectionIndicator selected vm =
-    el
-        [ fHA <| class "x-selection-indicator"
-        , ti_1
-        , bwr 3
-        , fh
-        , bcIf selected blue400
-        , onKeyDownPDBindAll
-            [ ( HotKey.arrowDown, ( ListPD, True ) )
-            , ( HotKey.arrowUp, ( ListPD, True ) )
-            ]
-        ]
-        (t "")
-
-
-displayTitle title =
-    el [ fw, p3 ] (t title)
-
-
-doneCheckBox done =
-    Input.checkbox
-        [ p1
-        , sw
-        , brPill
-        , fc grey500
-        , focused [ Border.glow blue200 3, fc grey800 ]
-        , mouseOver [ Border.glow blueGrey300 1, fc grey800 ]
-        , onKeyDownPDBindAll
-            [ ( HotKey.space, ( ListPD, True ) )
-            ]
-        ]
-        { label = lh "done"
-        , icon =
-            \checked ->
-                r [ fw, fh ]
-                    [ ter checked Icons.checkCircleOutline Icons.circleOutline
-                    ]
-        , checked = done
-        , onChange = UpdateTodo << Todo.SetDone
-        }
