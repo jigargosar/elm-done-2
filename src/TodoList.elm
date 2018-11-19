@@ -173,6 +173,13 @@ update message model =
                 TodoLI.RootClicked ->
                     pure <| setFixedSelection idx model
 
+                TodoLI.RootFocusInChanged hasFocus ->
+                    if hasFocus then
+                        pure <| setFixedSelection idx model
+
+                    else
+                        ( model, Cmd.none )
+
                 TodoLI.PD ->
                     ( model, Cmd.none )
 

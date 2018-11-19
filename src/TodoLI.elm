@@ -4,8 +4,8 @@ import BasicsX exposing (..)
 import El exposing (..)
 import Element as E exposing (Element, el, focused, mouseOver)
 import Element.Border as Border
-import Element.Events exposing (onClick)
-import Element.Input as Input
+import Element.Events as EE exposing (onClick)
+import Element.Input as EI
 import HotKey
 import Html.Attributes exposing (class)
 import Icons
@@ -15,6 +15,7 @@ import Todo
 
 type Msg
     = RootClicked
+    | RootFocusInChanged Bool
     | Update Todo.Msg
     | PD
 
@@ -31,7 +32,7 @@ view vm =
         { todoId, selected, done, title } =
             vm
     in
-    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick RootClicked ]
+    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick RootClicked, EE.onFocus <| RootFocusInChanged True ]
         [ selectionIndicator selected vm
         , r [ fw ]
             [ doneCheckBox done
@@ -64,7 +65,7 @@ displayTitle title =
 
 
 doneCheckBox done =
-    Input.checkbox
+    EI.checkbox
         [ p1
         , sw
         , brPill
