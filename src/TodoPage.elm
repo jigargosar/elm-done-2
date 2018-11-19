@@ -59,11 +59,15 @@ rollSelectionFocusBy offset model =
 
         focusSelectedCmd : Cmd Msg
         focusSelectedCmd =
-            SelectionList.getSelectedItem todoList
-                |> M.unwrap Cmd.none
-                    (TodoLI.getFocusSelectorForItem
-                        >> Port.focusSelector
-                    )
+            if model.inputHasFocus then
+                Cmd.none
+
+            else
+                SelectionList.getSelectedItem todoList
+                    |> M.unwrap Cmd.none
+                        (TodoLI.getFocusSelectorForItem
+                            >> Port.focusSelector
+                        )
     in
     ( { model | selection = todoList |> SelectionList.toSelection }, focusSelectedCmd )
 
