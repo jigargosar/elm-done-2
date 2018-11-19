@@ -84,4 +84,4 @@ todoSelectionList { query, todoStore, selection } =
             else
                 fuzzyTodoList |> L.map FuzzyTodoLI
     in
-    SelectionList.withList fuzzyTodoList liList
+    SelectionList.withList liList selection
