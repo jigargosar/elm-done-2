@@ -1,4 +1,4 @@
-module SelectionList exposing (Selection, SelectionList, empty, getSelectedItem, rollBy, selectionMap, toList, toSelection, withList)
+module SelectionList exposing (Selection, SelectionList, emptySelection, fixedSelection, getSelectedItem, rollBy, selectionMap, toList, toSelection, withList)
 
 import Basics exposing ((|>))
 import BasicsX exposing (..)
@@ -16,8 +16,12 @@ type SelectionList a
     = SelectionList (List a) Selection
 
 
-empty =
+emptySelection =
     Nothing
+
+
+fixedSelection idx =
+    Just idx
 
 
 withList l s =

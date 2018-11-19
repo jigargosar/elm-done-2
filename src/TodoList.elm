@@ -109,7 +109,7 @@ type Msg
     | UpdateTodo Todo Todo.Msg
     | FormChange FormMsg
     | SelectTodo Todo
-    | SetSelectionIdx Int
+    | SetFixedSelection Int
     | TodoRootClicked Todo
     | FocusId String
     | Submit
@@ -123,7 +123,7 @@ empty =
     { inputText = ""
     , todoStore = Todo.emptyStore
     , inputHasFocus = False
-    , selection = SelectionList.empty
+    , selection = SelectionList.emptySelection
     }
 
 
@@ -156,9 +156,8 @@ update message model =
         UpdateTodo todo msg ->
             updateTS (Todo.update msg todo) model
 
-        SetSelectionIdx idx ->
-            --            ( { model | maybeIdx = Just idx }, Cmd.none )
-            ( model, Cmd.none )
+        SetFixedSelection idx ->
+            ( { model | selection = SelectionList.fixedSelection idx }, Cmd.none )
 
         SelectTodo todo ->
             ( model, Cmd.none )
@@ -213,7 +212,7 @@ view model =
                 --
                 --                    Just viewModel ->
                 --                        viewTodoList viewModel
-                viewTodoList2
+                viewTodoListChildren
                 <|
                     todoSelectionList model
         ]
@@ -242,11 +241,11 @@ todoItemDomId id =
     "todo--" ++ id
 
 
-viewTodoList2 selectionList =
+viewTodoListChildren selectionList =
     let
         createTodoViewModel idx isSelected ( matchResult, todo ) =
             { selected = isSelected
-            , selectionIndicatorFocusMsg = SetSelectionIdx idx
+            , selectionIndicatorFocusMsg = SetFixedSelection idx
             , todoId = todo.id
             , done = todo.done
             , doneChangedMsg = UpdateTodo todo << Todo.SetDone
@@ -256,23 +255,6 @@ viewTodoList2 selectionList =
             }
     in
     SelectionList.selectionMap createTodoViewModel selectionList |> List.map viewTodoListItem
-
-
-viewTodoList ( maybeIdx, fuzzyTodos ) =
-    let
-        viewTodo idx ( matchResult, todo ) =
-            viewTodoListItem
-                { selected = idx == maybeIdx
-                , selectionIndicatorFocusMsg = SetSelectionIdx idx
-                , todoId = todo.id
-                , done = todo.done
-                , doneChangedMsg = UpdateTodo todo << Todo.SetDone
-                , noOpMsg = NoOp
-                , title = todo.title
-                , onClickRoot = FocusId <| selectionIndicatorDomId todo.id
-                }
-    in
-    L.indexedMap viewTodo fuzzyTodos
 
 
 selectionIndicatorDomId todoId =
