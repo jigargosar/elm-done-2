@@ -48,7 +48,11 @@ type alias Model =
 
 
 currentTodoList model =
-    TodoLI.initList { query = model.inputText, todoStore = model.todoStore, selection = model.selection }
+    TodoLI.initList
+        { query = model.inputText
+        , todoStore = model.todoStore
+        , selection = model.selection
+        }
 
 
 rollSelectionFocusBy offset model =
