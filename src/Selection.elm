@@ -1,16 +1,16 @@
-module Selection exposing (Selection(..), SelectionList(..), none)
+module Selection exposing (Selection, SelectionList, empty, withList)
 
 
-type Selection a
-    = Selection Int (Maybe a)
+type alias Selection =
+    Maybe Int
 
 
 type SelectionList a
-    = SelectionList (List a) (Selection a)
+    = SelectionList (List a) Selection
 
 
-none =
-    Selection -1 Nothing
+empty =
+    Nothing
 
 
 withList l s =
