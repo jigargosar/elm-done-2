@@ -78,7 +78,7 @@ rollSelectionFocusBy offset model =
 debugNoOp x =
     let
         _ =
-            Debug.log "debugNoOp" debugNoOp
+            Debug.log "debugNoOp" x
     in
     NoOp
 
@@ -91,14 +91,19 @@ getScrollOrFocusSelectedCmd model =
                     |> SelectionList.getSelectedItem
                     |> M.unwrap Cmd.none
                         (TodoLI.getSelectionIndicatorDomId
-                            >> Dom.getViewportOf
+                            >> Dom.getElement
                             >> Task.attempt debugNoOp
                         )
         in
         scrollIntoViewCmd
 
     else
-        focusSelectedCmd model
+        Cmd.batch
+            [ focusSelectedCmd model
+            , todoListDomId
+                |> Dom.getElement
+                |> Task.attempt debugNoOp
+            ]
 
 
 focusSelectedCmd model =
@@ -280,7 +285,7 @@ view : Model -> Element Msg
 view model =
     c [ fw, clip, scrollbarY ]
         [ el [ p3, cx, fwx Theme.maxWidth ] <| viewInput model
-        , el [ fw, clip, scrollbarY ] <|
+        , el [ fHA <| id <| todoListScrollParentDomId, fw, clip, scrollbarY ] <|
             viewTodoList model
         ]
 
@@ -318,6 +323,14 @@ viewTodoList model =
         viewItems =
             SelectionList.selectionMap (TodoLI.view config) todoList
     in
-    c [ cx, fwx Theme.maxWidth ]
+    c [ fHA <| id <| todoListDomId, cx, fwx Theme.maxWidth ]
         viewItems
         |> E.map TodoLIChanged
+
+
+todoListDomId =
+    "todo-list-dom-id"
+
+
+todoListScrollParentDomId =
+    "todo-list-scroll-parent-dom-id"
