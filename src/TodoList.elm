@@ -165,27 +165,28 @@ update message model =
             rollSelectionBy 1 model
 
         TodoLIChange idx todo msg ->
-            case msg of
-                TodoLI.Update modMsg ->
-                    updateTS (Todo.update modMsg todo) model
-                        |> mapFirst (setFixedSelection idx)
+            callOn model <|
+                case msg of
+                    TodoLI.Update modMsg ->
+                        updateTS (Todo.update modMsg todo)
+                            >> mapFirst (setFixedSelection idx)
 
-                TodoLI.RootClicked ->
-                    pure <| setFixedSelection idx model
+                    TodoLI.RootClicked ->
+                        setFixedSelection idx >> pure
 
-                TodoLI.RootFocusInChanged hasFocus ->
-                    pure <|
+                    TodoLI.RootFocusInChanged hasFocus ->
                         if hasFocus then
-                            setFixedSelection idx model
+                            setFixedSelection idx
+                                >> pure
 
                         else if SelectionList.isSelectionFixedAt idx model.selection then
-                            resetSelection model
+                            resetSelection >> pure
 
                         else
-                            model
+                            pure
 
-                TodoLI.PD ->
-                    ( model, Cmd.none )
+                    TodoLI.PD ->
+                        pure
 
         FormChange msg ->
             case msg of
