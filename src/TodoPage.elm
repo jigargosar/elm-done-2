@@ -240,8 +240,11 @@ viewTodoList model =
         todoList =
             currentTodoList model
 
+        config =
+            { selectionHasFocus = model.listHasFocus }
+
         viewItems =
-            SelectionList.selectionMap TodoLI.view todoList
+            SelectionList.selectionMap (TodoLI.view config) todoList
     in
     c [ cx, fwx Theme.maxWidth ]
         viewItems

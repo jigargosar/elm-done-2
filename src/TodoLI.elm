@@ -133,8 +133,8 @@ type ItemMsg
     | PD
 
 
-view : Int -> Bool -> Item -> Element Msg
-view idx selected item =
+view : { selectionHasFocus : Bool } -> Int -> Bool -> Item -> Element Msg
+view config idx selected item =
     let
         rootEl : List (Attribute ItemMsg) -> List (Element ItemMsg) -> Element ItemMsg
         rootEl attrs =
@@ -156,7 +156,7 @@ view idx selected item =
                     fuzzyTodo.value
             in
             rootEl [ onClick RootClicked ]
-                [ selectionIndicator selected
+                [ selectionIndicator config selected
                 , r [ fw ]
                     [ doneCheckBox todo
                     , displayTitle todo.title
@@ -165,7 +165,7 @@ view idx selected item =
 
         CreateTodoLI title ->
             rootEl [ onClick Create ]
-                [ selectionIndicator selected
+                [ selectionIndicator config selected
                 , displayTitle " + add task"
                 ]
     )
@@ -176,13 +176,21 @@ xSelectionIndicator =
     "x-selection-indicator"
 
 
-selectionIndicator selected =
+selectionIndicator { selectionHasFocus } selected =
     el
         [ fHA <| class xSelectionIndicator
         , ti_1
         , bwr 3
         , fh
-        , bcIf selected blue400
+        , bc <|
+            if selected && selectionHasFocus then
+                blue400
+
+            else if selected then
+                blue100
+
+            else
+                a0
         , onKeyDownPDBindAll
             [ ( HotKey.arrowDown, ( PD, True ) )
             , ( HotKey.arrowUp, ( PD, True ) )
