@@ -51,8 +51,7 @@ rollBy offset list =
 
 selected : List a -> Cursor -> Maybe a
 selected list =
-    clampCursorIn list
-        >> M.andThen (flip L.getAt list)
+    clampCursorIn list >> M.andThen (flip L.getAt list)
 
 
 indexOfSelectedIn : List a -> Cursor -> Maybe Int
