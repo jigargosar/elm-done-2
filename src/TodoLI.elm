@@ -1,9 +1,8 @@
 module TodoLI exposing
-    ( FuzzyMsg(..)
-    , FuzzyTodo
+    ( FuzzyTodo
     , Item(..)
     , ItemMsg(..)
-    , Msg(..)
+    , Msg
     , TodoList
     , displayTitle
     , doneCheckBox
@@ -122,18 +121,14 @@ getFocusSelectorFor item =
             "#" ++ itemDomId "create-todo-action" ++ xSelectionIndicator
 
 
-type Msg
-    = Msg Int ItemMsg
+type alias Msg =
+    { idx : Int, itemMsg : ItemMsg }
 
 
 type ItemMsg
-    = FuzzyChanged Todo FuzzyMsg
+    = Update Todo Todo.Msg
     | RootClicked
     | RootFocusInChanged Bool
-
-
-type FuzzyMsg
-    = Update Todo.Msg
     | PD
 
 
@@ -159,12 +154,11 @@ view idx selected item =
                         fuzzyTodo.value
                 in
                 rootEl
-                    [ selectionIndicator selected |> E.map (FuzzyChanged todo)
+                    [ selectionIndicator selected
                     , r [ fw ]
-                        [ doneCheckBox todo.done
+                        [ doneCheckBox todo
                         , displayTitle todo.title
                         ]
-                        |> E.map (FuzzyChanged todo)
                     ]
 
             CreateTodoLI title ->
@@ -200,7 +194,7 @@ displayTitle title =
     el [ fw, p3 ] (t title)
 
 
-doneCheckBox done =
+doneCheckBox todo =
     EI.checkbox
         [ p1
         , sw
@@ -218,6 +212,6 @@ doneCheckBox done =
                 r [ fw, fh ]
                     [ ter checked Icons.checkCircleOutline Icons.circleOutline
                     ]
-        , checked = done
-        , onChange = Update << Todo.SetDone
+        , checked = todo.done
+        , onChange = Update todo << Todo.SetDone
         }

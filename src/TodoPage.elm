@@ -151,25 +151,21 @@ update message model =
         OnNext ->
             rollSelectionFocusBy 1
 
-        TodoLIChanged msg ->
-            case msg of
-                TodoLI.Msg idx msg2 ->
-                    case msg2 of
-                        TodoLI.FuzzyChanged todo msg3 ->
-                            case msg3 of
-                                TodoLI.Update modMsg ->
-                                    updateTS (Todo.update modMsg todo)
-                                        >> mapFirst (setFixedSelection idx)
+        TodoLIChanged { idx, itemMsg } ->
+            case itemMsg of
+                TodoLI.Update todo modMsg ->
+                    updateTS (Todo.update modMsg todo)
+                        >> mapFirst (setFixedSelection idx)
 
-                                TodoLI.PD ->
-                                    pure
+                TodoLI.PD ->
+                    pure
 
-                        TodoLI.RootClicked ->
-                            setFixedSelection idx >> pure
+                TodoLI.RootClicked ->
+                    setFixedSelection idx >> pure
 
-                        TodoLI.RootFocusInChanged hasFocus ->
-                            setListHasFocus hasFocus
-                                >> pure
+                TodoLI.RootFocusInChanged hasFocus ->
+                    setListHasFocus hasFocus
+                        >> pure
 
         FormChanged msg ->
             case msg of
