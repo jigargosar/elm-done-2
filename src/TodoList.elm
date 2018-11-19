@@ -99,7 +99,8 @@ rollSelectionBy offset model =
                         >> (\domId -> Port.focusSelector ("#" ++ domId ++ " ." ++ xSelectionIndicator))
                     )
     in
-    ( { model | selection = selection }, focusSelectedCmd )
+    --    ( { model | selection = selection }, focusSelectedCmd )
+    pure { model | selection = selection }
 
 
 type FormMsg
