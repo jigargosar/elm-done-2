@@ -162,13 +162,10 @@ view idx selected item =
                     ]
 
             CreateTodoLI title ->
-                r
-                    [ s3
-                    , fw
-                    , bwb 1
-                    , bc <| blackA 0.1
+                rootEl
+                    [ selectionIndicator selected
+                    , displayTitle " + add task"
                     ]
-                    [ t "add task", t title ]
 
 
 xSelectionIndicator =
