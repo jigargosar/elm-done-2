@@ -27,4 +27,8 @@ type alias KeyEvent =
     , ctrlKey : Bool
     , metaKey : Bool
     , key : String
+    , defaultPrevented : Bool
+    , repeat : Bool
+    , type_ : String
+    , code : String
     }
