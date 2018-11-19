@@ -36,8 +36,6 @@ module El exposing
     , l
     , la
     , lh
-    , onEnterDown
-    , onEscDown
     , onKeyDown
     , onKeyDownBindAll
     , onKeyDownPD
@@ -357,13 +355,5 @@ onKeyDownPDBindAll =
     onKeyDownPD << HotKey.bindAll
 
 
-onEscDown =
-    HotKey.onEscDown >> fHA
-
-
-onEnterDown =
-    HotKey.onEnterDown >> fHA
-
-
 onKeyDownBindAll =
-    HotKey.onKeyDownBindAll >> fHA
+    onKeyDown << HotKey.bindAll

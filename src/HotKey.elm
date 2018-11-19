@@ -13,8 +13,6 @@ module HotKey exposing
     , mapDecoder
     , onEnterDown
     , onEscDown
-    , onKeyDown
-    , onKeyDownBindAll
     , singletonBool
     , space
     )
@@ -73,7 +71,7 @@ mapDecoder tagger =
     D.map tagger decoder
 
 
-bindAll : List ( Event, msg ) -> Decoder msg
+bindAll : List ( HotKey, msg ) -> Decoder msg
 bindAll mappings =
     decoder
         |> D.andThen
@@ -118,19 +116,6 @@ bindEnter =
 bindEsc : msg -> Decoder msg
 bindEsc =
     bind esc
-
-
-onKeyDown : (Event -> msg) -> Html.Attribute msg
-onKeyDown handler =
-    EventX.onKeyDown
-        (D.map
-            handler
-            decoder
-        )
-
-
-onKeyDownBindAll =
-    EventX.onKeyDown << bindAll
 
 
 onEscDown : msg -> Html.Attribute msg
