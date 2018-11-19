@@ -11,3 +11,7 @@ type SelectionList a
 
 none =
     Selection -1 Nothing
+
+
+withList l s =
+    SelectionList l s
