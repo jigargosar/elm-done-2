@@ -6,6 +6,7 @@ import Element as E exposing (Element, el, focused, mouseOver)
 import Element.Border as Border
 import Element.Events as EE exposing (onClick)
 import Element.Input as EI
+import EventX
 import HotKey
 import Html.Attributes exposing (class)
 import Icons
@@ -32,7 +33,7 @@ view vm =
         { todoId, selected, done, title } =
             vm
     in
-    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick RootClicked, EE.onFocus <| RootFocusInChanged True ]
+    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick RootClicked, fHA <| EventX.onFocusIn <| RootFocusInChanged True ]
         [ selectionIndicator selected vm
         , r [ fw ]
             [ doneCheckBox done
