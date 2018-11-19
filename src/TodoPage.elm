@@ -73,6 +73,7 @@ rollSelectionFocusBy offset model =
                         currentTodoSelectionList model
                             |> SelectionList.rollBy offset
                             |> SelectionList.toSelection
+                    , cursor = Cursor.rollBy offset (currentTodoList model) model.cursor
                 }
 
             else
