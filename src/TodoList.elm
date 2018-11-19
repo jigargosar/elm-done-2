@@ -264,7 +264,9 @@ viewTodoListChildren selectionList =
             , doneChangedMsg = UpdateTodo todo << Todo.SetDone
             , noOpMsg = NoOp
             , title = todo.title
-            , onClickRoot = FocusId <| selectionIndicatorDomId todo.id
+
+            --            , onClickRoot = FocusId <| selectionIndicatorDomId todo.id
+            , onClickRoot = SetSelectionFixed idx
             }
     in
     SelectionList.selectionMap createTodoViewModel selectionList |> List.map viewTodoListItem
@@ -306,9 +308,10 @@ selectionIndicator selected vm =
         , ti_1
         , bwr 3
         , fh
-        , bcIf selected blue100
-        , focused [ bc blue400 ]
-        , onFocus vm.selectionIndicatorFocusMsg
+        , bcIf selected blue400
+
+        --        , focused [ bc blue400 ]
+        --        , onFocus vm.selectionIndicatorFocusMsg
         , onKeyDownPDBindAll
             [ ( HotKey.arrowDown, ( vm.noOpMsg, True ) )
             , ( HotKey.arrowUp, ( vm.noOpMsg, True ) )
