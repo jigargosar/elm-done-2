@@ -80,11 +80,8 @@ bindEach mappings =
         |> D.andThen
             (\ke ->
                 let
-                    hk =
-                        fromKeyEvent ke
-
                     maybeHandler =
-                        mappings |> find (first >> eq hk) |> Maybe.map second
+                        mappings |> find (first >> matchesKeyEvent ke) |> Maybe.map second
                 in
                 maybeHandler
                     |> Maybe.map (callOn ke)
