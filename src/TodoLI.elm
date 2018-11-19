@@ -8,7 +8,6 @@ module TodoLI exposing
     , doneCheckBox
     , getFocusSelectorForItem
     , initList
-    , selectionIndicator
     , view
     , xSelectionIndicator
     )
@@ -161,6 +160,29 @@ view config idx selected item =
                     ++ attrs
                 )
 
+        selectionIndicator =
+            el
+                [ fHA <| id <| xSelectionIndicator
+                , ti_1
+                , bwr 3
+                , fh
+                , bc <|
+                    if selected && config.selectionHasFocus then
+                        blue400
+
+                    else if selected then
+                        blue100
+
+                    else
+                        a0
+                , onKeyDownPD <|
+                    HK.bindEachToMsg
+                        [ ( HK.arrowDown, ( PD, True ) )
+                        , ( HK.arrowUp, ( PD, True ) )
+                        ]
+                ]
+                (t "")
+
         rootView =
             case item of
                 FuzzyTodoLI fuzzyTodo ->
@@ -169,7 +191,7 @@ view config idx selected item =
                             fuzzyTodo.value
                     in
                     rootEl [ onClick RootClicked ]
-                        [ selectionIndicator config selected
+                        [ selectionIndicator
                         , r [ fw ]
                             [ doneCheckBox todo
                             , displayTitle todo.title
@@ -178,7 +200,7 @@ view config idx selected item =
 
                 CreateTodoLI title ->
                     rootEl [ onClick Create ]
-                        [ selectionIndicator config selected
+                        [ selectionIndicator
                         , displayTitle " + add task"
                         ]
     in
@@ -188,30 +210,6 @@ view config idx selected item =
 
 xSelectionIndicator =
     "x-selection-indicator"
-
-
-selectionIndicator { selectionHasFocus } selected =
-    el
-        [ fHA <| class xSelectionIndicator
-        , ti_1
-        , bwr 3
-        , fh
-        , bc <|
-            if selected && selectionHasFocus then
-                blue400
-
-            else if selected then
-                blue100
-
-            else
-                a0
-        , onKeyDownPD <|
-            HK.bindEachToMsg
-                [ ( HK.arrowDown, ( PD, True ) )
-                , ( HK.arrowUp, ( PD, True ) )
-                ]
-        ]
-        (t "")
 
 
 displayTitle title =
