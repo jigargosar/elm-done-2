@@ -199,7 +199,7 @@ update message model =
         FormChange msg ->
             case msg of
                 InputChanged value ->
-                    (setInputText value >> resetSelection) >> pure
+                    setInputText value >> resetSelection >> pure
 
                 InputFocusChanged hasFocus ->
                     pure << (\_ -> { model | inputHasFocus = hasFocus })
