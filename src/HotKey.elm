@@ -17,6 +17,10 @@ import Html
 import Html.Events
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E
+import List as L
+import List.Extra as L
+import Maybe as M
+import Maybe.Extra as M
 import Tuple exposing (first, second)
 
 
@@ -81,7 +85,7 @@ bindEach mappings =
             (\ke ->
                 let
                     maybeHandler =
-                        mappings |> find (first >> matchesKeyEvent ke) |> Maybe.map second
+                        mappings |> L.find (first >> matchesKeyEvent ke) |> Maybe.map second
                 in
                 maybeHandler
                     |> Maybe.map (callOn ke)
