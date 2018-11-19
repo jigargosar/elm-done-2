@@ -19,3 +19,12 @@ onFocusIn tagger =
 
 onFocusOut tagger =
     HE.on "focusout" (D.succeed tagger)
+
+
+type alias KeyEvent =
+    { shiftKey : Bool
+    , altKey : Bool
+    , ctrlKey : Bool
+    , metaKey : Bool
+    , key : String
+    }

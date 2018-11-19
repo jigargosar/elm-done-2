@@ -7,7 +7,7 @@ module HotKey exposing
     , decoder
     , enter
     , esc
-    , initEvent
+    , initHotKey
     , mapDecoder
     , space
     )
@@ -43,7 +43,7 @@ singletonBool bool value =
         []
 
 
-initEvent shift_ alt_ ctrl_ meta_ key =
+initHotKey shift_ alt_ ctrl_ meta_ key =
     ( singletonBool shift_ Shift
         ++ singletonBool alt_ Alt
         ++ singletonBool ctrl_ Ctrl
@@ -52,8 +52,9 @@ initEvent shift_ alt_ ctrl_ meta_ key =
     )
 
 
+decoder : Decoder HotKey
 decoder =
-    D.map5 initEvent
+    D.map5 initHotKey
         (D.field "shiftKey" D.bool)
         (D.field "altKey" D.bool)
         (D.field "ctrlKey" D.bool)
