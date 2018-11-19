@@ -1,6 +1,8 @@
 module TodoLI exposing
-    ( FuzzyTodo
+    ( FuzzyMsg(..)
+    , FuzzyTodo
     , Item(..)
+    , ItemMsg(..)
     , Msg(..)
     , TodoList
     , displayTitle
@@ -121,70 +123,63 @@ getFocusSelectorFor item =
 
 
 type Msg
+    = Msg Int ItemMsg
+
+
+type ItemMsg
+    = FuzzyChanged Todo FuzzyMsg
+    | CreateTodoClicked
+
+
+type FuzzyMsg
     = RootClicked
     | RootFocusInChanged Bool
     | Update Todo.Msg
     | PD
 
 
-viewFuzzyTodoLI :
-    { selected : Bool
-    , todoId : String
-    , done : Bool
-    , title : String
-    }
-    -> Element Msg
-viewFuzzyTodoLI vm =
-    let
-        { todoId, selected, done, title } =
-            vm
-    in
-    r
-        [ s1
-        , fw
-        , bwb 1
-        , bc <| blackA 0.1
-        , onClick RootClicked
-        , fHA <| EventX.onFocusIn <| RootFocusInChanged True
-        , fHA <| EventX.onFocusOut <| RootFocusInChanged False
-        ]
-        [ selectionIndicator selected vm
-        , r [ fw ]
-            [ doneCheckBox done
-            , displayTitle title
-            ]
-        ]
+view : Int -> Bool -> Item -> Element Msg
+view idx selected todoLi =
+    E.map (Msg idx) <|
+        case todoLi of
+            FuzzyTodoLI li ->
+                let
+                    todo =
+                        li.value
+                in
+                r
+                    [ s1
+                    , fw
+                    , bwb 1
+                    , bc <| blackA 0.1
+                    , onClick RootClicked
+                    , fHA <| EventX.onFocusIn <| RootFocusInChanged True
+                    , fHA <| EventX.onFocusOut <| RootFocusInChanged False
+                    ]
+                    [ selectionIndicator selected
+                    , r [ fw ]
+                        [ doneCheckBox todo.done
+                        , displayTitle todo.title
+                        ]
+                    ]
+                    |> E.map (FuzzyChanged todo)
 
-
-view idx isSelected todoLi =
-    case todoLi of
-        FuzzyTodoLI li ->
-            let
-                todo =
-                    li.value
-            in
-            viewFuzzyTodoLI
-                { selected = isSelected
-                , todoId = todo.id
-                , done = todo.done
-                , title = todo.title
-                }
-
-        CreateTodoLI title ->
-            r
-                [ s3
-                , fw
-                , bwb 1
-                , bc <| blackA 0.1
-                ]
-                [ t "add task", t title ]
+            CreateTodoLI title ->
+                r
+                    [ s3
+                    , fw
+                    , bwb 1
+                    , bc <| blackA 0.1
+                    , onClick CreateTodoClicked
+                    ]
+                    [ t "add task", t title ]
 
 
 xSelectionIndicator =
     "x-selection-indicator"
 
 
-selectionIndicator selected vm =
+selectionIndicator selected =
     el
         [ fHA <| class xSelectionIndicator
         , ti_1

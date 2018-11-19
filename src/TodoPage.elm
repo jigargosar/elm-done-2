@@ -83,8 +83,7 @@ type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
-    | TodoLIChange Int Todo TodoLI.Msg
-    | CreateTodoLiChange
+    | TodoLIChange TodoLI.Msg
     | FormChange FormMsg
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -152,35 +151,39 @@ update message model =
         OnNext ->
             rollSelectionFocusBy 1
 
-        CreateTodoLiChange ->
-            pure
-
-        TodoLIChange idx todo msg ->
+        TodoLIChange msg ->
             case msg of
-                TodoLI.Update modMsg ->
-                    updateTS (Todo.update modMsg todo)
-                        >> mapFirst (setFixedSelection idx)
+                TodoLI.Msg idx msg2 ->
+                    case msg2 of
+                        TodoLI.FuzzyChanged todo msg3 ->
+                            case msg3 of
+                                TodoLI.Update modMsg ->
+                                    updateTS (Todo.update modMsg todo)
+                                        >> mapFirst (setFixedSelection idx)
 
-                TodoLI.RootClicked ->
-                    setFixedSelection idx >> pure
+                                TodoLI.RootClicked ->
+                                    setFixedSelection idx >> pure
 
-                TodoLI.RootFocusInChanged hasFocus ->
-                    {- (if hasFocus then
-                           setFixedSelection idx
+                                TodoLI.RootFocusInChanged hasFocus ->
+                                    {- (if hasFocus then
+                                           setFixedSelection idx
 
-                        else if SelectionList.isSelectionFixedAt idx model.selection then
-                           resetSelection
+                                        else if SelectionList.isSelectionFixedAt idx model.selection then
+                                           resetSelection
 
-                        else
-                           identity
-                       )
-                           >>
-                    -}
-                    setListHasFocus hasFocus
-                        >> pure
+                                        else
+                                           identity
+                                       )
+                                           >>
+                                    -}
+                                    setListHasFocus hasFocus
+                                        >> pure
 
-                TodoLI.PD ->
-                    pure
+                                TodoLI.PD ->
+                                    pure
+
+                        _ ->
+                            pure
 
         FormChange msg ->
             case msg of
@@ -248,16 +251,17 @@ viewInput model =
 
 viewTodoList : Model -> Element Msg
 viewTodoList model =
-    let
-        selectionView : Int -> Bool -> TodoLI.Item -> Element Msg
-        selectionView idx isSelected todoLI =
-            case todoLI of
-                TodoLI.FuzzyTodoLI li ->
-                    TodoLI.view idx isSelected todoLI
-                        |> E.map (TodoLIChange idx li.value)
-
-                TodoLI.CreateTodoLI title ->
-                    TodoLI.view idx isSelected todoLI
-                        |> E.map (\_ -> CreateTodoLiChange)
-    in
-    c [ cx, fwx Theme.maxWidth ] (SelectionList.selectionMap selectionView (currentTodoList model))
+    --    let
+    --        selectionView : Int -> Bool -> TodoLI.Item -> Element Msg
+    --        selectionView idx isSelected todoLI =
+    --            case todoLI of
+    --                TodoLI.FuzzyTodoLI li ->
+    --                    TodoLI.view idx isSelected todoLI
+    --                        |> E.map (TodoLIChange idx li.value)
+    --
+    --                TodoLI.CreateTodoLI title ->
+    --                    TodoLI.view idx isSelected todoLI
+    --                        |> E.map (\_ -> CreateTodoLiChange)
+    --    in
+    c [ cx, fwx Theme.maxWidth ] (SelectionList.selectionMap TodoLI.view (currentTodoList model))
+        |> E.map TodoLIChange
