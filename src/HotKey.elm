@@ -85,10 +85,10 @@ bindEach mappings =
             (\ke ->
                 let
                     maybeHandler =
-                        mappings |> L.find (first >> matchesKeyEvent ke) |> Maybe.map second
+                        mappings |> L.find (first >> matchesKeyEvent ke) |> M.map second
                 in
                 maybeHandler
-                    |> Maybe.map (callOn ke)
+                    |> M.map (callOn ke)
                     |> unwrapMaybe (D.fail "No Handler found") D.succeed
             )
 
