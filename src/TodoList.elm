@@ -39,7 +39,6 @@ import UpdateX exposing (..)
 type alias Model =
     { inputText : String
     , todoStore : TodoStore
-    , maybeIdx : Maybe Int
     , inputHasFocus : Bool
     , selection : Selection
     }
@@ -73,52 +72,11 @@ todoSelectionList model =
             Todo.all model.todoStore
                 |> filterWithFuzzyResult model.inputText
 
-        maybeSelected =
-            model.maybeIdx |> M.withDefault 0 |> atClampedIdx filteredList
-
         selectionList : SelectionList ( Fuzzy.Result, Todo )
         selectionList =
             SelectionList.withList filteredList model.selection
     in
     selectionList
-
-
-maybeTodoListViewModel : Model -> Maybe ( Int, List ( Fuzzy.Result, Todo ) )
-maybeTodoListViewModel model =
-    let
-        filteredList =
-            Todo.all model.todoStore
-                |> filterWithFuzzyResult model.inputText
-    in
-    if L.isEmpty filteredList then
-        Nothing
-
-    else
-        let
-            idxMax =
-                L.length filteredList - 1
-        in
-        model.maybeIdx |> unwrapMaybe 0 (min idxMax) |> (\idx -> Just ( idx, filteredList ))
-
-
-updateSelectedIdxBy numFn model =
-    maybeTodoListViewModel model
-        |> unwrapMaybe (pure model)
-            (\( si, tl ) ->
-                let
-                    newIdx =
-                        safeModBy (L.length tl) (numFn si)
-
-                    --                  _  =
-                    --                    Array.fromList
-                    --                      |> L.head
-                    --                      |> Maybe.map (Tuple.second >> .id)
-                    --
-                in
-                ( numFn si, L.length tl )
-                    |> (\( idx, length ) -> safeModBy length idx)
-                    >> (\idx -> ( { model | maybeIdx = Just idx }, Cmd.none ))
-            )
 
 
 rollSelectionBy offset model =
@@ -156,7 +114,6 @@ empty : Model
 empty =
     { inputText = ""
     , todoStore = Todo.emptyStore
-    , maybeIdx = Nothing
     , inputHasFocus = False
     , selection = SelectionList.empty
     }
@@ -192,7 +149,8 @@ update message model =
             updateTS (Todo.update msg todo) model
 
         SetSelectionIdx idx ->
-            ( { model | maybeIdx = Just idx }, Cmd.none )
+            --            ( { model | maybeIdx = Just idx }, Cmd.none )
+            ( model, Cmd.none )
 
         SelectTodo todo ->
             ( model, Cmd.none )
