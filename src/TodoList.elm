@@ -1,4 +1,4 @@
-module TodoList exposing (Item(..), toFuzzyTodoList, todoSelectionList)
+module TodoList exposing (Item(..), TodoList, init)
 
 import BasicsX exposing (..)
 import El exposing (..)
@@ -38,6 +38,10 @@ isScoreGreaterThan num { result } =
     result.score > num
 
 
+isScoreLessThan num { result } =
+    result.score < num
+
+
 type alias FuzzyTodo =
     FuzzyValue Todo
 
@@ -57,25 +61,25 @@ toFuzzyTodoList query =
         boil =
             String.toLower
 
-        filterMapFn todo =
+        filterFn todo =
             Fuzzy.match [] [] (boil query) (boil <| todo.title)
                 |> initFuzzyValue todo
-                |> justWhen (isScoreGreaterThan 1000)
-
-        sort =
-            L.sortBy getScore
     in
-    L.filterMap filterMapFn
+    L.map filterFn
 
 
 
 --        >> unlessBool (isBlank query) sort
 
 
-todoSelectionList :
+type alias TodoList =
+    SelectionList Item
+
+
+init :
     { query : String, todoStore : TodoStore, selection : Selection }
     -> SelectionList Item
-todoSelectionList { query, todoStore, selection } =
+init { query, todoStore, selection } =
     let
         fuzzyTodoList =
             Todo.all todoStore
@@ -87,6 +91,7 @@ todoSelectionList { query, todoStore, selection } =
 
             else
                 fuzzyTodoList
+                    |> L.filter (isScoreLessThan 1000)
                     |> L.sortBy getScore
                     |> L.map FuzzyTodoLI
                     |> (::) (CreateTodoLI query)

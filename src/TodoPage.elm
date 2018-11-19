@@ -34,6 +34,7 @@ import SelectionList exposing (Selection, SelectionList)
 import Theme
 import Todo exposing (Todo, TodoStore)
 import TodoLI
+import TodoList
 import Tuple exposing (mapFirst, second)
 import UpdateX exposing (..)
 
@@ -120,6 +121,7 @@ type Msg
       OnPrev
     | OnNext
     | TodoLIChange Int Todo TodoLI.Msg
+    | CreateTodoLiChange
     | FormChange FormMsg
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -186,6 +188,9 @@ update message model =
 
         OnNext ->
             rollSelectionFocusBy 1
+
+        CreateTodoLiChange ->
+            pure
 
         TodoLIChange idx todo msg ->
             case msg of
@@ -263,7 +268,7 @@ view model =
                 --                        viewTodoList viewModel
                 viewTodoListChildren
                 <|
-                    todoSelectionList model
+                    TodoList.init { query = model.inputText, todoStore = model.todoStore, selection = model.selection }
         ]
 
 
@@ -291,15 +296,32 @@ todoItemDomId id =
     "todo-li--" ++ id
 
 
-viewTodoListChildren selectionList =
+viewTodoListChildren todoList =
     let
-        viewChild idx isSelected ( matchResult, todo ) =
-            TodoLI.view
-                { selected = isSelected
-                , todoId = todo.id
-                , done = todo.done
-                , title = todo.title
-                }
-                |> E.map (TodoLIChange idx todo)
+        viewChild idx isSelected todoLi =
+            case todoLi of
+                TodoList.FuzzyTodoLI li ->
+                    let
+                        todo =
+                            li.value
+                    in
+                    TodoLI.view
+                        { selected = isSelected
+                        , todoId = todo.id
+                        , done = todo.done
+                        , title = todo.title
+                        }
+                        |> E.map (TodoLIChange idx todo)
+
+                TodoList.CreateTodoLI title ->
+                    r
+                        [ s3
+                        , fw
+                        , bwb 1
+                        , bc <| blackA 0.1
+                        ]
+                        [ t "add task", t title ]
+
+        --                        |> E.map CreateTodoLiChange
     in
-    SelectionList.selectionMap viewChild selectionList
+    SelectionList.selectionMap viewChild todoList
