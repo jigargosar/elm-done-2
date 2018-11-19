@@ -3,7 +3,6 @@ module TodoLI exposing
     , Item(..)
     , ItemMsg(..)
     , Msg
-    , TodoList
     , displayTitle
     , doneCheckBox
     , getSelectionIndicatorDomId
@@ -28,7 +27,6 @@ import List.Extra as L
 import MaterialColorsUI exposing (..)
 import Maybe as M
 import Maybe.Extra as M
-import SelectionList exposing (Selection, SelectionList)
 import Todo exposing (Todo, TodoStore)
 
 
@@ -78,10 +76,6 @@ toFuzzyTodoList query =
                 |> initFuzzyValue todo
     in
     L.map filterFn
-
-
-type alias TodoList =
-    SelectionList Item
 
 
 initList :

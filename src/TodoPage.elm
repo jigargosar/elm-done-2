@@ -325,12 +325,15 @@ viewTodoList model =
         config =
             { selectionHasFocus = model.listHasFocus }
 
+        viewItem idx selected item =
+            TodoLI.view config idx selected item
+                |> E.map TodoLIChanged
+
         viewItems =
-            SelectionList.selectionMap (TodoLI.view config) todoList
+            SelectionList.selectionMap viewItem todoList
     in
     c [ fHA <| id <| todoListDomId, cx, fwx Theme.maxWidth ]
         viewItems
-        |> E.map TodoLIChanged
 
 
 todoListDomId =
