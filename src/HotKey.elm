@@ -75,7 +75,7 @@ decoder =
 --        (D.field "key" D.string)
 
 
-mapDecoder : (Event -> msg) -> Decoder msg
+mapDecoder : (HotKey -> msg) -> Decoder msg
 mapDecoder tagger =
     D.map tagger decoder
 
