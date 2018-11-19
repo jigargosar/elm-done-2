@@ -1,4 +1,4 @@
-module TodoList exposing (LI(..), filterWithFuzzyResult, todoSelectionList)
+module TodoList exposing (LI(..), toFuzzyTodoList, todoSelectionList)
 
 import BasicsX exposing (..)
 import El exposing (..)
@@ -47,8 +47,8 @@ type LI
     | CreateTodo String
 
 
-filterWithFuzzyResult : String -> List Todo -> List FuzzyTodo
-filterWithFuzzyResult query =
+toFuzzyTodoList : String -> List Todo -> List FuzzyTodo
+toFuzzyTodoList query =
     let
         boil =
             String.toLower
@@ -73,8 +73,15 @@ todoSelectionList :
     -> SelectionList LI
 todoSelectionList { query, todoStore, selection } =
     let
-        filteredList =
+        fuzzyTodoList =
             Todo.all todoStore
-                |> filterWithFuzzyResult query
+                |> toFuzzyTodoList query
+
+        liList =
+            if isBlank query then
+                fuzzyTodoList |> L.map FuzzyTodoLI
+
+            else
+                fuzzyTodoList |> L.map FuzzyTodoLI
     in
-    SelectionList.withList filteredList selection
+    SelectionList.withList fuzzyTodoList liList
