@@ -6,7 +6,7 @@ module TodoLI exposing
     , TodoList
     , displayTitle
     , doneCheckBox
-    , getFocusSelectorFor
+    , getFocusSelectorForItem
     , initList
     , selectionIndicator
     , view
@@ -22,7 +22,7 @@ import Element.Input as EI
 import EventX
 import Fuzzy
 import HotKey as HK
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, id)
 import Icons
 import List as L
 import List.Extra as L
@@ -108,17 +108,27 @@ initList { query, todoStore, selection } =
     selection |> SelectionList.withList items
 
 
-itemDomId suffix =
-    "todo-li--" ++ suffix
+itemDomIdPrefix =
+    "todo-li--"
 
 
-getFocusSelectorFor item =
-    case item of
-        FuzzyTodoLI { value } ->
-            "#" ++ itemDomId value.id ++ " ." ++ xSelectionIndicator
+getItemDomId item =
+    itemDomIdPrefix
+        ++ (case item of
+                FuzzyTodoLI { value } ->
+                    value.id
 
-        CreateTodoLI title ->
-            "#" ++ itemDomId "create-todo-action" ++ xSelectionIndicator
+                CreateTodoLI title ->
+                    "create-todo-action"
+           )
+
+
+getFocusSelectorForItem item =
+    let
+        itemDomId =
+            getItemDomId item
+    in
+    "#" ++ itemDomId ++ " ." ++ xSelectionIndicator
 
 
 type alias Msg =
@@ -139,7 +149,8 @@ view config idx selected item =
         rootEl : List (Attribute ItemMsg) -> List (Element ItemMsg) -> Element ItemMsg
         rootEl attrs =
             r <|
-                ([ s1
+                ([ fHA <| id <| getItemDomId item
+                 , s1
                  , fw
                  , bwb 1
                  , bc <| blackA 0.1

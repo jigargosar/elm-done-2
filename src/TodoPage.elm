@@ -61,7 +61,7 @@ rollSelectionFocusBy offset model =
         focusSelectedCmd =
             SelectionList.getSelectedItem todoList
                 |> M.unwrap Cmd.none
-                    (TodoLI.getFocusSelectorFor
+                    (TodoLI.getFocusSelectorForItem
                         >> (\domId -> Port.focusSelector ("#" ++ domId ++ " ." ++ TodoLI.xSelectionIndicator))
                     )
     in
