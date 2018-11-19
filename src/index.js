@@ -69,24 +69,24 @@ subscribe(
     // warn: data => {
     //   console.warn(data)
     // },
-    // focusId: id => {
-    //   const el = document.getElementById(id)
-    //   if (el) {
-    //     el.focus()
-    //   } else {
-    //     console.error('Focus: El Not Found', id)
-    //   }
-    // },
-
-    focusSelector: selector => {
-      let escapedSelector = selector.replace('~', '\\~')
-      const el = document.querySelector(escapedSelector)
+    focusId: id => {
+      const el = document.getElementById(id)
       if (el) {
         el.focus()
       } else {
-        console.error('Focus: Selector Not Found', escapedSelector)
+        console.error('Focus: El Not Found', id)
       }
     },
+    //
+    // focusSelector: selector => {
+    //   let escapedSelector = selector.replace('~', '\\~')
+    //   const el = document.querySelector(escapedSelector)
+    //   if (el) {
+    //     el.focus()
+    //   } else {
+    //     console.error('Focus: Selector Not Found', escapedSelector)
+    //   }
+    // },
 
     error: data => {
       console.error(data)

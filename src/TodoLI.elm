@@ -6,7 +6,7 @@ module TodoLI exposing
     , TodoList
     , displayTitle
     , doneCheckBox
-    , getFocusSelectorForItem
+    , getSelectionIndicatorDomId
     , initList
     , view
     , xSelectionIndicator
@@ -122,12 +122,12 @@ getItemDomId item =
            )
 
 
-getFocusSelectorForItem item =
+getSelectionIndicatorDomId item =
     let
         itemDomId =
             getItemDomId item
     in
-    "#" ++ itemDomId ++ " ." ++ xSelectionIndicator
+    itemDomId ++ "--" ++ xSelectionIndicator
 
 
 type alias Msg =
@@ -162,7 +162,7 @@ view config idx selected item =
 
         selectionIndicator =
             el
-                [ fHA <| id <| xSelectionIndicator
+                [ fHA <| id <| getSelectionIndicatorDomId item
                 , ti_1
                 , bwr 3
                 , fh

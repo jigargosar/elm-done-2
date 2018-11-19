@@ -81,8 +81,8 @@ getFocusSelectedCmd model =
         currentTodoList model
             |> SelectionList.getSelectedItem
             |> M.unwrap Cmd.none
-                (TodoLI.getFocusSelectorForItem
-                    >> Port.focusSelector
+                (TodoLI.getSelectionIndicatorDomId
+                    >> Port.focusId
                 )
 
 
@@ -231,7 +231,7 @@ performSelectedItemDefaultAction model =
         performItemAction item =
             (case item of
                 TodoLI.FuzzyTodoLI todo ->
-                    pure >> addCmd (Port.focusSelector (TodoLI.getFocusSelectorForItem item))
+                    pure >> addCmd (Port.focusId (TodoLI.getSelectionIndicatorDomId item))
 
                 TodoLI.CreateTodoLI title ->
                     onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
