@@ -1,4 +1,4 @@
-module TodoList exposing (LI(..), toFuzzyTodoList, todoSelectionList)
+module TodoList exposing (Item(..), toFuzzyTodoList, todoSelectionList)
 
 import BasicsX exposing (..)
 import El exposing (..)
@@ -42,9 +42,9 @@ type alias FuzzyTodo =
     FuzzyValue Todo
 
 
-type LI
+type Item
     = FuzzyTodoLI FuzzyTodo
-    | CreateTodo String
+    | CreateTodoLI String
 
 
 toFuzzyTodoList : String -> List Todo -> List FuzzyTodo
@@ -70,18 +70,21 @@ toFuzzyTodoList query =
 
 todoSelectionList :
     { query : String, todoStore : TodoStore, selection : Selection }
-    -> SelectionList LI
+    -> SelectionList Item
 todoSelectionList { query, todoStore, selection } =
     let
         fuzzyTodoList =
             Todo.all todoStore
                 |> toFuzzyTodoList query
 
-        liList =
+        items =
             if isBlank query then
                 fuzzyTodoList |> L.map FuzzyTodoLI
 
             else
-                fuzzyTodoList |> L.sortBy getScore |> L.map FuzzyTodoLI
+                fuzzyTodoList
+                    |> L.sortBy getScore
+                    |> L.map FuzzyTodoLI
+                    |> (::) (CreateTodoLI query)
     in
-    SelectionList.withList liList selection
+    selection |> SelectionList.withList items
