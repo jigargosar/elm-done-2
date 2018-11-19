@@ -296,7 +296,7 @@ viewTodoListItem vm =
             vm
     in
     r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick vm.onClickRoot ]
-        [ selectionIndicator selected (selectionIndicatorDomId todoId) vm.selectionIndicatorFocusMsg
+        [ selectionIndicator selected vm
         , r [ fw ]
             [ doneCheckBox done doneChangedMsg noOpMsg
             , displayTitle title
@@ -304,15 +304,19 @@ viewTodoListItem vm =
         ]
 
 
-selectionIndicator selected domId focusMsg =
+selectionIndicator selected vm =
     el
-        [ id domId |> fHA
+        [ fHA <| id <| selectionIndicatorDomId vm.todoId
         , ti_1
         , bwr 3
         , fh
         , bcIf selected blue100
         , focused [ bc blue400 ]
-        , onFocus focusMsg
+        , onFocus vm.selectionIndicatorFocusMsg
+        , onKeyDownPDBindAll
+            [ ( HotKey.arrowDown, ( vm.noOpMsg, True ) )
+            , ( HotKey.arrowUp, ( vm.noOpMsg, True ) )
+            ]
         ]
         (t "")
 
