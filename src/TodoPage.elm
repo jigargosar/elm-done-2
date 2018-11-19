@@ -53,23 +53,33 @@ currentTodoList model =
 
 rollSelectionFocusBy offset model =
     let
-        todoList =
-            currentTodoList model
-                |> SelectionList.rollBy offset
-
-        focusSelectedCmd : Cmd Msg
-        focusSelectedCmd =
-            if model.inputHasFocus then
-                Cmd.none
+        updatedModel =
+            if model.listHasFocus || model.inputHasFocus then
+                { model
+                    | selection =
+                        currentTodoList model
+                            |> SelectionList.rollBy offset
+                            |> SelectionList.toSelection
+                }
 
             else
-                SelectionList.getSelectedItem todoList
-                    |> M.unwrap Cmd.none
-                        (TodoLI.getFocusSelectorForItem
-                            >> Port.focusSelector
-                        )
+                model
     in
-    ( { model | selection = todoList |> SelectionList.toSelection }, focusSelectedCmd )
+    pure updatedModel
+        |> effect getFocusSelectedCmd
+
+
+getFocusSelectedCmd model =
+    if model.inputHasFocus then
+        Cmd.none
+
+    else
+        currentTodoList model
+            |> SelectionList.getSelectedItem
+            |> M.unwrap Cmd.none
+                (TodoLI.getFocusSelectorForItem
+                    >> Port.focusSelector
+                )
 
 
 
