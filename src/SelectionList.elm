@@ -1,4 +1,17 @@
-module SelectionList exposing (Selection, SelectionList, emptySelection, fixedSelection, getSelectedItem, isSelectionEmpty, isSelectionFixedAt, rollBy, selectionMap, toList, toSelection, withList)
+module SelectionList exposing
+    ( Selection
+    , SelectionList
+    , emptySelection
+    , fixedSelection
+    , getSelectedItem
+    , isSelectionEmpty
+    , isSelectionFixedAt
+    , rollBy
+    , selectionMap
+    , toList
+    , toSelection
+    , withList
+    )
 
 import Basics exposing ((|>))
 import BasicsX exposing (..)
