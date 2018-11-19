@@ -85,9 +85,9 @@ type alias TodoList =
 
 
 initList :
-    { query : String, todoStore : TodoStore, selection : Selection }
-    -> SelectionList Item
-initList { query, todoStore, selection } =
+    { query : String, todoStore : TodoStore }
+    -> List Item
+initList { query, todoStore } =
     let
         fuzzyTodoList =
             Todo.all todoStore
@@ -104,7 +104,7 @@ initList { query, todoStore, selection } =
                     |> L.map FuzzyTodoLI
                     |> (::) (CreateTodoLI query)
     in
-    selection |> SelectionList.withList items
+    items
 
 
 itemDomIdPrefix =

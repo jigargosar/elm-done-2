@@ -10,6 +10,7 @@ module TodoPage exposing
 import BasicsX exposing (..)
 import Browser.Dom as Dom
 import Browser.Events
+import Cursor exposing (Cursor)
 import El exposing (..)
 import Element as E exposing (Element, clip, el, focused, fromRgb, fromRgb255, mouseOver, rgb, rgba, scrollbarY)
 import Element.Background as Background
@@ -45,16 +46,19 @@ type alias Model =
     , todoStore : TodoStore
     , inputHasFocus : Bool
     , selection : Selection
+    , cursor : Cursor
     , listHasFocus : Bool
     }
 
 
 currentTodoList model =
-    TodoLI.initList
-        { query = model.inputText
-        , todoStore = model.todoStore
-        , selection = model.selection
-        }
+    SelectionList.withList
+        (TodoLI.initList
+            { query = model.inputText
+            , todoStore = model.todoStore
+            }
+        )
+        model.selection
 
 
 rollSelectionFocusBy offset model =
@@ -139,6 +143,7 @@ empty =
     , todoStore = Todo.emptyStore
     , inputHasFocus = False
     , selection = SelectionList.emptySelection
+    , cursor = Cursor.empty
     , listHasFocus = False
     }
 
