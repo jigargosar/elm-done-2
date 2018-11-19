@@ -158,10 +158,19 @@ update message model =
                         >> mapFirst (setFixedSelection idx)
 
                 TodoLI.RootClicked ->
-                    setFixedSelection idx >> pure
+                    setFixedSelection idx
+                        >> setListHasFocus True
+                        >> pure
 
                 TodoLI.RootFocusInChanged hasFocus ->
-                    setListHasFocus hasFocus >> pure
+                    (if hasFocus then
+                        setFixedSelection idx
+
+                     else
+                        identity
+                    )
+                        >> setListHasFocus hasFocus
+                        >> pure
 
                 TodoLI.Create ->
                     onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
