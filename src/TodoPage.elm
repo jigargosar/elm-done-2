@@ -1,4 +1,4 @@
-module TodoList exposing
+module TodoPage exposing
     ( Model
     , Msg(..)
     , empty
@@ -82,7 +82,7 @@ todoSelectionList model =
     selectionList
 
 
-rollSelectionBy offset model =
+rollSelectionFocusBy offset model =
     let
         selectionList =
             todoSelectionList model
@@ -101,8 +101,11 @@ rollSelectionBy offset model =
                         >> (\domId -> Port.focusSelector ("#" ++ domId ++ " ." ++ TodoLI.xSelectionIndicator))
                     )
     in
-    --    ( { model | selection = selection }, focusSelectedCmd )
-    pure { model | selection = selection }
+    ( { model | selection = selection }, focusSelectedCmd )
+
+
+
+--    pure { model | selection = selection }
 
 
 type FormMsg
@@ -156,6 +159,10 @@ setInputHasFocus val model =
     { model | inputHasFocus = val }
 
 
+setListHasFocus val model =
+    { model | listHasFocus = val }
+
+
 subscriptions model =
     Sub.batch
         [ Browser.Events.onKeyDown <|
@@ -175,10 +182,10 @@ update message model =
     (case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnPrev ->
-            rollSelectionBy -1
+            rollSelectionFocusBy -1
 
         OnNext ->
-            rollSelectionBy 1
+            rollSelectionFocusBy 1
 
         TodoLIChange idx todo msg ->
             case msg of
@@ -190,14 +197,19 @@ update message model =
                     setFixedSelection idx >> pure
 
                 TodoLI.RootFocusInChanged hasFocus ->
-                    if hasFocus then
-                        setFixedSelection idx >> pure
+                    {- (if hasFocus then
+                           setFixedSelection idx
 
-                    else if SelectionList.isSelectionFixedAt idx model.selection then
-                        resetSelection >> pure
+                        else if SelectionList.isSelectionFixedAt idx model.selection then
+                           resetSelection
 
-                    else
-                        pure
+                        else
+                           identity
+                       )
+                           >>
+                    -}
+                    setListHasFocus hasFocus
+                        >> pure
 
                 TodoLI.PD ->
                     pure

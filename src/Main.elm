@@ -16,7 +16,7 @@ import Json.Encode as E exposing (Value)
 import Theme
 import TimeX exposing (Millis)
 import Todo
-import TodoList
+import TodoPage
 import UI
 import UpdateX exposing (..)
 
@@ -30,16 +30,16 @@ type alias Flags =
 
 
 type alias Model =
-    { todoList : TodoList.Model
+    { todoList : TodoPage.Model
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     pure
-        { todoList = TodoList.empty
+        { todoList = TodoPage.empty
         }
-        |> andThen (updateTodoList <| TodoList.LoadTS flags.todos)
+        |> andThen (updateTodoList <| TodoPage.LoadTS flags.todos)
 
 
 
@@ -48,7 +48,7 @@ init flags =
 
 type Msg
     = ---- INJECT MSG BELOW ----
-      TLMsg TodoList.Msg
+      TLMsg TodoPage.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -68,17 +68,17 @@ updateF message =
             andThen (updateTodoList msg)
 
 
-updateTodoList : TodoList.Msg -> Model -> ( Model, Cmd Msg )
+updateTodoList : TodoPage.Msg -> Model -> ( Model, Cmd Msg )
 updateTodoList msg model =
     let
         ( todoList, cmd ) =
-            TodoList.update msg model.todoList
+            TodoPage.update msg model.todoList
     in
     ( { model | todoList = todoList }, Cmd.map TLMsg cmd )
 
 
 subscriptions model =
-    Sub.batch [ TodoList.subscriptions model.todoList |> Sub.map TLMsg ]
+    Sub.batch [ TodoPage.subscriptions model.todoList |> Sub.map TLMsg ]
 
 
 
@@ -91,7 +91,7 @@ view model =
         [ inFront <|
             UI.layout
                 { appBar = UI.appBar { title = UI.title2 "ELM" "DONE2" }
-                , content = TodoList.view model.todoList |> eMap TLMsg
+                , content = TodoPage.view model.todoList |> eMap TLMsg
                 }
         ]
 
