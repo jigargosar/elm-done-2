@@ -101,6 +101,7 @@ type FormMsg
     = InputChanged String
     | InputFocusChanged Bool
     | Submit
+    | FormPD
 
 
 type Msg
@@ -176,6 +177,9 @@ update message model =
                     onNewTodoMsg (Todo.initBuilder model.inputText "") model
                         |> mapModel (setInputText "")
 
+                FormPD ->
+                    ( model, Cmd.none )
+
         NewTodo builder ->
             onNewTodoMsg builder model
 
@@ -218,19 +222,20 @@ viewInput model =
     ip
         [ br2
         , p2
-        , onLoseFocus <| FormChange <| InputFocusChanged False
-        , onFocus <| FormChange <| InputFocusChanged True
+        , onLoseFocus <| InputFocusChanged False
+        , onFocus <| InputFocusChanged True
         , onKeyDownPDBindAll
-            [ ( HotKey.arrowDown, ( NoOp, True ) )
-            , ( HotKey.arrowUp, ( NoOp, True ) )
-            , ( HotKey.enter, ( FormChange <| Submit, False ) )
+            [ ( HotKey.arrowDown, ( FormPD, True ) )
+            , ( HotKey.arrowUp, ( FormPD, True ) )
+            , ( HotKey.enter, ( Submit, False ) )
             ]
         ]
-        { onChange = FormChange << InputChanged
+        { onChange = InputChanged
         , text = model.inputText
         , placeholder = ipp [] (t "Add... / Search...")
         , label = lh "Task Title"
         }
+        |> E.map FormChange
 
 
 todoItemDomId id =
