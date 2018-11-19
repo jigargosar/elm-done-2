@@ -131,8 +131,8 @@ type Msg
     | PD
 
 
-view : { selectionHasFocus : Bool } -> Bool -> Item -> Element Msg
-view config selected item =
+view : { hasFocus : Bool, selected : Bool, item : Item } -> Element Msg
+view { hasFocus, selected, item } =
     let
         rootEl : List (Attribute Msg) -> List (Element Msg) -> Element Msg
         rootEl attrs =
@@ -156,7 +156,7 @@ view config selected item =
                 , bwr 3
                 , fh
                 , bc <|
-                    if selected && config.selectionHasFocus then
+                    if selected && hasFocus then
                         blue400
 
                     else if selected then

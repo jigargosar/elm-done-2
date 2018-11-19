@@ -311,18 +311,15 @@ viewInput model =
 viewTodoList : Model -> Element Msg
 viewTodoList model =
     let
-        config =
-            { selectionHasFocus = model.listHasFocus }
-
         viewItem idx selected item =
-            TodoLI.view config selected item
+            TodoLI.view { hasFocus = model.listHasFocus, selected = selected, item = item }
                 |> E.map (TodoLIChanged idx)
 
         viewItems =
-            Cursor.selectionMap viewItem (currentTodoList model) model.cursor
+            Cursor.selectionMap viewItem (currentTodoList model)
     in
     c [ fHA <| id <| todoListDomId, cx, fwx Theme.maxWidth ]
-        viewItems
+        (viewItems model.cursor)
 
 
 todoListDomId =
