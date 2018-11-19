@@ -45,7 +45,7 @@ isAtNothing cursor =
 rollBy : Int -> List a -> Cursor -> Cursor
 rollBy offset list =
     clampCursorIn list
-        >> Maybe.map (add offset >> safeModBy (List.length list))
+        >> Maybe.map (add offset >> safeModBy (L.length list))
 
 
 selected : List a -> Cursor -> Maybe a
@@ -59,8 +59,12 @@ indexOfSelectedIn =
 
 
 selectionMap fn list =
+    let
+        withSIdx sIdx =
+            L.indexedMap (\idx -> fn idx <| sIdx == idx) list
+    in
     clampCursorIn list
-        >> M.unwrap [] (\sIdx -> List.indexedMap (\idx -> fn idx <| sIdx == idx) list)
+        >> M.unwrap [] withSIdx
 
 
 clampCursorIn : List a -> Cursor -> Cursor
