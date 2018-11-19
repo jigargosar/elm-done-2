@@ -34,7 +34,6 @@ import SelectionList exposing (Selection, SelectionList)
 import Theme
 import Todo exposing (Todo, TodoStore)
 import TodoLI
-import TodoList
 import Tuple exposing (mapFirst, second)
 import UpdateX exposing (..)
 
@@ -49,7 +48,7 @@ type alias Model =
 
 
 currentTodoList model =
-    TodoList.init { query = model.inputText, todoStore = model.todoStore, selection = model.selection }
+    TodoLI.initList { query = model.inputText, todoStore = model.todoStore, selection = model.selection }
 
 
 rollSelectionFocusBy offset model =
@@ -62,7 +61,7 @@ rollSelectionFocusBy offset model =
         focusSelectedCmd =
             SelectionList.getSelectedItem todoList
                 |> M.unwrap Cmd.none
-                    (TodoList.getFocusSelectorFor
+                    (TodoLI.getFocusSelectorFor
                         >> (\domId -> Port.focusSelector ("#" ++ domId ++ " ." ++ TodoLI.xSelectionIndicator))
                     )
     in
@@ -260,7 +259,7 @@ viewTodoListChildren todoList =
     let
         viewChild idx isSelected todoLi =
             case todoLi of
-                TodoList.FuzzyTodoLI li ->
+                TodoLI.FuzzyTodoLI li ->
                     let
                         todo =
                             li.value
@@ -273,7 +272,7 @@ viewTodoListChildren todoList =
                         }
                         |> E.map (TodoLIChange idx todo)
 
-                TodoList.CreateTodoLI title ->
+                TodoLI.CreateTodoLI title ->
                     r
                         [ s3
                         , fw
