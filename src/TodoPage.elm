@@ -86,10 +86,6 @@ getFocusSelectedCmd model =
                 )
 
 
-
---    pure { model | selection = selection }
-
-
 type FormMsg
     = InputChanged String
     | InputFocusChanged Bool
