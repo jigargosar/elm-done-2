@@ -119,7 +119,6 @@ type Msg
     | FormChange FormMsg
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
-    | NoOp
 
 
 empty : Model
@@ -196,9 +195,6 @@ update message model =
 
         LoadTS value ->
             updateTS (\_ -> Todo.loadStore value) model
-
-        NoOp ->
-            pure model
 
 
 updateTS fn model =
