@@ -312,7 +312,7 @@ viewTodoList : Model -> Element Msg
 viewTodoList model =
     let
         viewItem idx selected item =
-            TodoLI.view { hasFocus = model.listHasFocus, selected = selected, item = item }
+            TodoLI.view { focused = model.listHasFocus, selected = selected, item = item }
                 |> E.map (TodoLIChanged idx)
 
         viewItems =
