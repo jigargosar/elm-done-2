@@ -127,14 +127,14 @@ type Msg
     | PD
 
 
-view :
+viewFuzzyTodoLI :
     { selected : Bool
     , todoId : String
     , done : Bool
     , title : String
     }
     -> Element Msg
-view vm =
+viewFuzzyTodoLI vm =
     let
         { todoId, selected, done, title } =
             vm
@@ -154,6 +154,30 @@ view vm =
             , displayTitle title
             ]
         ]
+
+
+view idx isSelected todoLi =
+    case todoLi of
+        FuzzyTodoLI li ->
+            let
+                todo =
+                    li.value
+            in
+            viewFuzzyTodoLI
+                { selected = isSelected
+                , todoId = todo.id
+                , done = todo.done
+                , title = todo.title
+                }
+
+        CreateTodoLI title ->
+            r
+                [ s3
+                , fw
+                , bwb 1
+                , bc <| blackA 0.1
+                ]
+                [ t "add task", t title ]
 
 
 xSelectionIndicator =

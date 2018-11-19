@@ -222,16 +222,7 @@ view model =
     c [ fw, clip, scrollbarY ]
         [ el [ p3, cx, fwx Theme.maxWidth ] <| viewInput model
         , el [ fw, clip, scrollbarY ] <|
-            c [ cx, fwx Theme.maxWidth ] <|
-                --                case maybeTodoListViewModel model of
-                --                    Nothing ->
-                --                        [ t "No Tasks Found" ]
-                --
-                --                    Just viewModel ->
-                --                        viewTodoList viewModel
-                viewTodoListChildren
-                <|
-                    currentTodoList model
+            viewTodoList model
         ]
 
 
@@ -255,32 +246,18 @@ viewInput model =
         |> E.map FormChange
 
 
-viewTodoListChildren todoList =
+viewTodoList : Model -> Element Msg
+viewTodoList model =
     let
-        viewChild idx isSelected todoLi =
-            case todoLi of
+        selectionView : Int -> Bool -> TodoLI.Item -> Element Msg
+        selectionView idx isSelected todoLI =
+            case todoLI of
                 TodoLI.FuzzyTodoLI li ->
-                    let
-                        todo =
-                            li.value
-                    in
-                    TodoLI.view
-                        { selected = isSelected
-                        , todoId = todo.id
-                        , done = todo.done
-                        , title = todo.title
-                        }
-                        |> E.map (TodoLIChange idx todo)
+                    TodoLI.view idx isSelected todoLI
+                        |> E.map (TodoLIChange idx li.value)
 
                 TodoLI.CreateTodoLI title ->
-                    r
-                        [ s3
-                        , fw
-                        , bwb 1
-                        , bc <| blackA 0.1
-                        ]
-                        [ t "add task", t title ]
-
-        --                        |> E.map CreateTodoLiChange
+                    TodoLI.view idx isSelected todoLI
+                        |> E.map (\_ -> CreateTodoLiChange)
     in
-    SelectionList.selectionMap viewChild todoList
+    c [ cx, fwx Theme.maxWidth ] (SelectionList.selectionMap selectionView (currentTodoList model))
