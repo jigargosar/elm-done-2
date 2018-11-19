@@ -149,26 +149,27 @@ view idx selected item =
                     ++ attrs
                 )
     in
-    E.map (Msg idx) <|
-        case item of
-            FuzzyTodoLI fuzzyTodo ->
-                let
-                    todo =
-                        fuzzyTodo.value
-                in
-                rootEl [ onClick RootClicked ]
-                    [ selectionIndicator selected
-                    , r [ fw ]
-                        [ doneCheckBox todo
-                        , displayTitle todo.title
-                        ]
+    (case item of
+        FuzzyTodoLI fuzzyTodo ->
+            let
+                todo =
+                    fuzzyTodo.value
+            in
+            rootEl [ onClick RootClicked ]
+                [ selectionIndicator selected
+                , r [ fw ]
+                    [ doneCheckBox todo
+                    , displayTitle todo.title
                     ]
+                ]
 
-            CreateTodoLI title ->
-                rootEl [ onClick RootClicked ]
-                    [ selectionIndicator selected
-                    , displayTitle " + add task"
-                    ]
+        CreateTodoLI title ->
+            rootEl [ onClick RootClicked ]
+                [ selectionIndicator selected
+                , displayTitle " + add task"
+                ]
+    )
+        |> E.map (Msg idx)
 
 
 xSelectionIndicator =
