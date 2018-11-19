@@ -1,4 +1,4 @@
-module SelectionList exposing (Selection, SelectionList, circleSelectionByOffset, empty, selectionMap, toList, toSelection, withList)
+module SelectionList exposing (Selection, SelectionList, empty, rollBy, selectionMap, toList, toSelection, withList)
 
 import Basics exposing ((|>))
 import BasicsX exposing (..)
@@ -54,7 +54,7 @@ cycleIdx offset list maybeIdx =
         |> clampSelectedIdx list
 
 
-circleSelectionByOffset offset (SelectionList list maybeSelectionIdx) =
+rollBy offset (SelectionList list maybeSelectionIdx) =
     SelectionList list (cycleIdx offset list maybeSelectionIdx)
 
 

@@ -121,10 +121,14 @@ updateSelectedIdxBy numFn model =
             )
 
 
-circleSelectionByOffset num model =
-    todoSelectionList model
-        |> SelectionList.circleSelectionByOffset num
-        |> SelectionList.toSelection
+rollSelectionBy offset model =
+    let
+        selection =
+            todoSelectionList model
+                |> SelectionList.rollBy offset
+                |> SelectionList.toSelection
+    in
+    pure { model | selection = selection }
 
 
 type FormMsg
@@ -177,10 +181,12 @@ update message model =
     case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnPrev ->
-            updateSelectedIdxBy ((+) -1) model
+            --            updateSelectedIdxBy ((+) -1) model
+            rollSelectionBy -1 model
 
         OnNext ->
-            updateSelectedIdxBy ((+) 1) model
+            --            updateSelectedIdxBy ((+) 1) model
+            rollSelectionBy 1 model
 
         UpdateTodo todo msg ->
             updateTS (Todo.update msg todo) model
