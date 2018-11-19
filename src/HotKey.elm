@@ -82,13 +82,13 @@ bindEach : List ( HotKey, KeyEvent -> msg ) -> Decoder msg
 bindEach mappings =
     EventX.keyEventDecoder
         |> D.andThen
-            (\ke ->
+            (\keyEvent ->
                 let
                     maybeHandler =
-                        mappings |> L.find (first >> matchesKeyEvent ke) |> M.map second
+                        mappings |> L.find (first >> matchesKeyEvent keyEvent) |> M.map second
                 in
                 maybeHandler
-                    |> M.map (callOn ke)
+                    |> M.map (callOn keyEvent)
                     |> unwrapMaybe (D.fail "No Handler found") D.succeed
             )
 
