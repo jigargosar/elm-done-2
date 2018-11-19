@@ -95,8 +95,7 @@ getScrollOrFocusSelectedCmd model =
     if model.inputHasFocus then
         let
             scrollIntoViewCmd =
-                currentTodoSelectionList model
-                    |> SelectionList.getSelectedItem
+                Cursor.selected (currentTodoList model) model.cursor
                     |> M.unwrap Cmd.none
                         (TodoLI.getSelectionIndicatorDomId
                             >> Dom.getElement
@@ -115,8 +114,7 @@ getScrollOrFocusSelectedCmd model =
 
 
 focusSelectedCmd model =
-    currentTodoSelectionList model
-        |> SelectionList.getSelectedItem
+    Cursor.selected (currentTodoList model) model.cursor
         |> M.unwrap Cmd.none
             (TodoLI.getSelectionIndicatorDomId
                 >> Port.focusId
