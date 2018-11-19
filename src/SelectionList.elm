@@ -54,7 +54,7 @@ toList (SelectionList list maybeIdx) =
 
 clampSelectedIdx : List a -> Selection -> Selection
 clampSelectedIdx list =
-    M.withDefault 0 >> clampIdx list
+    M.withDefault 0 >> clampIdxIn list
 
 
 cycleSelectedIdx : List a -> Selection -> Selection

@@ -44,3 +44,8 @@ rollBy offset list =
                 >> (+) offset
                 >> safeModBy (List.length list)
             )
+
+
+selected list =
+    M.andThen (clampIdxIn list)
+        >> M.map (flip L.getAt list)
