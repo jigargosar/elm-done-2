@@ -128,7 +128,6 @@ type Msg
 
 type ItemMsg
     = FuzzyChanged Todo FuzzyMsg
-    | CreateTodoClicked
 
 
 type FuzzyMsg
@@ -139,13 +138,13 @@ type FuzzyMsg
 
 
 view : Int -> Bool -> Item -> Element Msg
-view idx selected todoLi =
+view idx selected item =
     E.map (Msg idx) <|
-        case todoLi of
-            FuzzyTodoLI li ->
+        case item of
+            FuzzyTodoLI fuzzyTodo ->
                 let
                     todo =
-                        li.value
+                        fuzzyTodo.value
                 in
                 r
                     [ s1
@@ -170,7 +169,6 @@ view idx selected todoLi =
                     , fw
                     , bwb 1
                     , bc <| blackA 0.1
-                    , onClick CreateTodoClicked
                     ]
                     [ t "add task", t title ]
 

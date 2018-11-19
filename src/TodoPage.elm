@@ -83,8 +83,8 @@ type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
-    | TodoLIChange TodoLI.Msg
-    | FormChange FormMsg
+    | TodoLIChanged TodoLI.Msg
+    | FormChanged FormMsg
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
 
@@ -151,7 +151,7 @@ update message model =
         OnNext ->
             rollSelectionFocusBy 1
 
-        TodoLIChange msg ->
+        TodoLIChanged msg ->
             case msg of
                 TodoLI.Msg idx msg2 ->
                     case msg2 of
@@ -171,10 +171,7 @@ update message model =
                                 TodoLI.PD ->
                                     pure
 
-                        _ ->
-                            pure
-
-        FormChange msg ->
+        FormChanged msg ->
             case msg of
                 InputChanged value ->
                     setInputText value >> resetSelection >> pure
@@ -235,7 +232,7 @@ viewInput model =
         , placeholder = ipp [] (t "Add... / Search...")
         , label = lh "Task Title"
         }
-        |> E.map FormChange
+        |> E.map FormChanged
 
 
 viewTodoList : Model -> Element Msg
@@ -253,4 +250,4 @@ viewTodoList model =
     --                        |> E.map (\_ -> CreateTodoLiChange)
     --    in
     c [ cx, fwx Theme.maxWidth ] (SelectionList.selectionMap TodoLI.view (currentTodoList model))
-        |> E.map TodoLIChange
+        |> E.map TodoLIChanged
