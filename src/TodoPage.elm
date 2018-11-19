@@ -232,17 +232,13 @@ viewInput model =
 
 viewTodoList : Model -> Element Msg
 viewTodoList model =
-    --    let
-    --        selectionView : Int -> Bool -> TodoLI.Item -> Element Msg
-    --        selectionView idx isSelected todoLI =
-    --            case todoLI of
-    --                TodoLI.FuzzyTodoLI li ->
-    --                    TodoLI.view idx isSelected todoLI
-    --                        |> E.map (TodoLIChange idx li.value)
-    --
-    --                TodoLI.CreateTodoLI title ->
-    --                    TodoLI.view idx isSelected todoLI
-    --                        |> E.map (\_ -> CreateTodoLiChange)
-    --    in
-    c [ cx, fwx Theme.maxWidth ] (SelectionList.selectionMap TodoLI.view (currentTodoList model))
+    let
+        todoList =
+            currentTodoList model
+
+        viewItems =
+            SelectionList.selectionMap TodoLI.view todoList
+    in
+    c [ cx, fwx Theme.maxWidth ]
+        viewItems
         |> E.map TodoLIChanged
