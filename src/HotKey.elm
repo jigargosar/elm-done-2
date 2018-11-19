@@ -3,6 +3,7 @@ module HotKey exposing
     , SoftKey(..)
     , arrowDown
     , arrowUp
+    , bindEach
     , bindEachToMsg
     , decoder
     , enter
