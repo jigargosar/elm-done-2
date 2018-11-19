@@ -82,6 +82,6 @@ todoSelectionList { query, todoStore, selection } =
                 fuzzyTodoList |> L.map FuzzyTodoLI
 
             else
-                fuzzyTodoList |> L.map FuzzyTodoLI
+                fuzzyTodoList |> L.sortBy getScore |> L.map FuzzyTodoLI
     in
     SelectionList.withList liList selection
