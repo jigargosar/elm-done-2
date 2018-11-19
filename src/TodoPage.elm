@@ -51,14 +51,17 @@ type alias Model =
     }
 
 
-currentTodoList model =
+currentTodoSelectionList model =
     SelectionList.withList
-        (TodoLI.initList
-            { query = model.inputText
-            , todoStore = model.todoStore
-            }
-        )
+        (currentTodoList model)
         model.selection
+
+
+currentTodoList model =
+    TodoLI.initList
+        { query = model.inputText
+        , todoStore = model.todoStore
+        }
 
 
 rollSelectionFocusBy offset model =
@@ -67,7 +70,7 @@ rollSelectionFocusBy offset model =
             if model.listHasFocus || model.inputHasFocus then
                 { model
                     | selection =
-                        currentTodoList model
+                        currentTodoSelectionList model
                             |> SelectionList.rollBy offset
                             |> SelectionList.toSelection
                 }
@@ -91,7 +94,7 @@ getScrollOrFocusSelectedCmd model =
     if model.inputHasFocus then
         let
             scrollIntoViewCmd =
-                currentTodoList model
+                currentTodoSelectionList model
                     |> SelectionList.getSelectedItem
                     |> M.unwrap Cmd.none
                         (TodoLI.getSelectionIndicatorDomId
@@ -111,7 +114,7 @@ getScrollOrFocusSelectedCmd model =
 
 
 focusSelectedCmd model =
-    currentTodoList model
+    currentTodoSelectionList model
         |> SelectionList.getSelectedItem
         |> M.unwrap Cmd.none
             (TodoLI.getSelectionIndicatorDomId
@@ -263,7 +266,7 @@ updateTS fn model =
 performSelectedItemDefaultAction model =
     let
         maybeSelectedItem =
-            currentTodoList model
+            currentTodoSelectionList model
                 |> SelectionList.getSelectedItem
 
         performItemAction item =
@@ -319,8 +322,8 @@ viewInput model =
 viewTodoList : Model -> Element Msg
 viewTodoList model =
     let
-        todoList =
-            currentTodoList model
+        todoSelectionList =
+            currentTodoSelectionList model
 
         config =
             { selectionHasFocus = model.listHasFocus }
@@ -330,7 +333,7 @@ viewTodoList model =
                 |> E.map (TodoLIChanged idx)
 
         viewItems =
-            SelectionList.selectionMap viewItem todoList
+            SelectionList.selectionMap viewItem todoSelectionList
     in
     c [ fHA <| id <| todoListDomId, cx, fwx Theme.maxWidth ]
         viewItems
