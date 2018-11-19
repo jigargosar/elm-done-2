@@ -38,21 +38,24 @@ toList (SelectionList list maybeIdx) =
     list
 
 
-getSelectedIndexForList : List a -> Maybe Int -> Int
-getSelectedIndexForList list =
-    M.andThen (clampIdx list) >> M.withDefault 0
+clampSelectedIdx : List a -> Selection -> Selection
+clampSelectedIdx list =
+    M.withDefault 0 >> clampIdx list
 
 
-circleSelectionByOffset offset (SelectionList list maybeIdx) =
-    if List.isEmpty list then
-        SelectionList list maybeIdx
+cycleSelectedIdx : List a -> Selection -> Selection
+cycleSelectedIdx list =
+    M.map (safeModBy (List.length list))
 
-    else
-        let
-            sIdx =
-                getSelectedIndexForList list maybeIdx
-        in
-        SelectionList list maybeIdx
+
+cycleIdx offset list maybeIdx =
+    clampSelectedIdx list maybeIdx
+        |> M.map ((+) offset)
+        |> clampSelectedIdx list
+
+
+circleSelectionByOffset offset (SelectionList list maybeSelectionIdx) =
+    SelectionList list (cycleIdx offset list maybeSelectionIdx)
 
 
 toSelection (SelectionList list maybeIdx) =
