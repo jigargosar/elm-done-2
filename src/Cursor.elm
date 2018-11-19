@@ -1,4 +1,4 @@
-module Cursor exposing (Cursor, empty, initAt, isAt, isAtNothing, rollBy, selected)
+module Cursor exposing (Cursor, empty, indexOfSelectedIn, initAt, isAt, isAtNothing, rollBy, selected)
 
 import Basics exposing ((|>))
 import BasicsX exposing (..)
