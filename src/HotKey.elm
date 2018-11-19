@@ -16,6 +16,7 @@ import Html
 import Html.Events
 import Json.Decode as D exposing (Decoder)
 import Json.Encode as E
+import Tuple exposing (first, second)
 
 
 type SoftKey
@@ -69,6 +70,24 @@ bindEachToMsg mappings =
             (firstEq
                 >> findIn mappings
                 >> unwrapMaybe (D.fail "No Handler found") (Tuple.second >> D.succeed)
+            )
+
+
+bindEach : List ( HotKey, KeyEvent -> msg ) -> Decoder msg
+bindEach mappings =
+    EventX.keyEventDecoder
+        |> D.andThen
+            (\ke ->
+                let
+                    hk =
+                        fromKeyEvent ke
+
+                    maybeHandler =
+                        mappings |> find (first >> eq hk) |> Maybe.map second
+                in
+                maybeHandler
+                    |> Maybe.map (callOn ke)
+                    |> unwrapMaybe (D.fail "No Handler found") D.succeed
             )
 
 
