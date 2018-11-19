@@ -1,4 +1,4 @@
-module Selection exposing (Selection, SelectionList, empty, selectionMap, toList, withList)
+module SelectionList exposing (Selection, SelectionList, circleSelectionByOffset, empty, selectionMap, toList, toSelection, withList)
 
 
 type alias Selection =
@@ -31,3 +31,11 @@ selectionMap fn (SelectionList list maybeIdx) =
 
 toList (SelectionList list maybeIdx) =
     list
+
+
+circleSelectionByOffset offset (SelectionList list maybeIdx) =
+    SelectionList list maybeIdx
+
+
+toSelection (SelectionList list maybeIdx) =
+    maybeIdx

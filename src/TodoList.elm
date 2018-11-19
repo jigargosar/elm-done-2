@@ -30,7 +30,7 @@ import MaterialColorsUI exposing (..)
 import Maybe as M
 import Maybe.Extra as M
 import Port
-import Selection exposing (Selection, SelectionList)
+import SelectionList exposing (Selection, SelectionList)
 import Theme
 import Todo exposing (Todo, TodoStore)
 import UpdateX exposing (..)
@@ -78,7 +78,7 @@ todoSelectionList model =
 
         selectionList : SelectionList ( Fuzzy.Result, Todo )
         selectionList =
-            Selection.withList filteredList model.selection
+            SelectionList.withList filteredList model.selection
     in
     selectionList
 
@@ -121,6 +121,12 @@ updateSelectedIdxBy numFn model =
             )
 
 
+circleSelectionByOffset num model =
+    todoSelectionList model
+        |> SelectionList.circleSelectionByOffset num
+        |> SelectionList.toSelection
+
+
 type FormMsg
     = InputChanged String
     | InputFocusChanged Bool
@@ -148,7 +154,7 @@ empty =
     , todoStore = Todo.emptyStore
     , maybeIdx = Nothing
     , inputHasFocus = False
-    , selection = Selection.empty
+    , selection = SelectionList.empty
     }
 
 
@@ -277,7 +283,7 @@ viewTodoList2 selectionList =
             , onClickRoot = FocusId <| selectionIndicatorDomId todo.id
             }
     in
-    Selection.selectionMap createTodoViewModel selectionList |> List.map viewTodoListItem
+    SelectionList.selectionMap createTodoViewModel selectionList |> List.map viewTodoListItem
 
 
 viewTodoList ( maybeIdx, fuzzyTodos ) =
