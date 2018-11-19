@@ -1,4 +1,4 @@
-module Selection exposing (Selection, SelectionList, empty, withList)
+module Selection exposing (Selection, SelectionList, empty, selectionMap, toList, withList)
 
 
 type alias Selection =
@@ -15,3 +15,19 @@ empty =
 
 withList l s =
     SelectionList l s
+
+
+selectionMap fn (SelectionList list maybeIdx) =
+    if List.isEmpty list then
+        []
+
+    else
+        let
+            sIdx =
+                maybeIdx |> Maybe.withDefault 0
+        in
+        List.indexedMap (\idx -> fn idx <| sIdx == idx) list
+
+
+toList (SelectionList list maybeIdx) =
+    list

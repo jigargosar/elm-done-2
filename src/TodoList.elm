@@ -229,12 +229,15 @@ view model =
         [ el [ p3, cx, fwx Theme.maxWidth ] <| viewInput model
         , el [ fw, clip, scrollbarY ] <|
             c [ cx, fwx Theme.maxWidth ] <|
-                case maybeTodoListViewModel model of
-                    Nothing ->
-                        [ t "No Tasks Found" ]
-
-                    Just viewModel ->
-                        viewTodoList viewModel
+                --                case maybeTodoListViewModel model of
+                --                    Nothing ->
+                --                        [ t "No Tasks Found" ]
+                --
+                --                    Just viewModel ->
+                --                        viewTodoList viewModel
+                viewTodoList2
+                <|
+                    todoSelectionList model
         ]
 
 
@@ -259,6 +262,22 @@ viewInput model =
 
 todoItemDomId id =
     "todo--" ++ id
+
+
+viewTodoList2 selectionList =
+    let
+        createTodoViewModel idx isSelected ( matchResult, todo ) =
+            { selected = isSelected
+            , selectionIndicatorFocusMsg = SetSelectionIdx idx
+            , todoId = todo.id
+            , done = todo.done
+            , doneChangedMsg = UpdateTodo todo << Todo.SetDone
+            , noOpMsg = NoOp
+            , title = todo.title
+            , onClickRoot = FocusId <| selectionIndicatorDomId todo.id
+            }
+    in
+    Selection.selectionMap createTodoViewModel selectionList |> List.map viewTodoListItem
 
 
 viewTodoList ( maybeIdx, fuzzyTodos ) =
