@@ -1,4 +1,4 @@
-module EventX exposing (keyEventDecoder, onFocusIn, onFocusOut, onKeyDown, onKeyDownPD)
+module EventX exposing (KeyEvent, keyEventDecoder, onFocusIn, onFocusOut, onKeyDown, onKeyDownPD)
 
 import Html.Events as HE
 import Json.Decode as D exposing (Decoder)

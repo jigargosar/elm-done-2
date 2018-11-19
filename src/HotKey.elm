@@ -13,7 +13,7 @@ module HotKey exposing
     )
 
 import BasicsX exposing (..)
-import EventX
+import EventX exposing (KeyEvent)
 import Html
 import Html.Events
 import Json.Decode as D exposing (Decoder)
@@ -52,6 +52,7 @@ initHotKey shift_ alt_ ctrl_ meta_ key =
     )
 
 
+fromKeyEvent : KeyEvent -> HotKey
 fromKeyEvent { shiftKey, altKey, ctrlKey, metaKey, key } =
     ( singletonBool shiftKey Shift
         ++ singletonBool altKey Alt
