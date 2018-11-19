@@ -13,7 +13,6 @@ module SelectionList exposing
     , withList
     )
 
-import Basics exposing ((|>))
 import BasicsX exposing (..)
 import List as L
 import List.Extra as L
