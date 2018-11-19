@@ -104,13 +104,18 @@ type FormMsg
     | FormPD
 
 
+type ListMsg
+    = TodoRootClicked Int Todo
+    | UpdateTodo Todo Todo.Msg
+    | ListPD
+
+
 type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
-    | UpdateTodo Todo Todo.Msg
+    | ListChange ListMsg
     | FormChange FormMsg
-    | TodoRootClicked Int Todo
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
     | NoOp
@@ -159,11 +164,16 @@ update message model =
             --            updateSelectedIdxBy ((+) 1) model
             rollSelectionBy 1 model
 
-        UpdateTodo todo msg ->
-            updateTS (Todo.update msg todo) model
+        ListChange msg ->
+            case msg of
+                UpdateTodo todo modMsg ->
+                    updateTS (Todo.update modMsg todo) model
 
-        TodoRootClicked idx todo ->
-            pure <| setFixedSelection idx model
+                TodoRootClicked idx todo ->
+                    pure <| setFixedSelection idx model
+
+                ListPD ->
+                    ( model, Cmd.none )
 
         FormChange msg ->
             case msg of
@@ -249,12 +259,13 @@ viewTodoListChildren selectionList =
             , todoId = todo.id
             , done = todo.done
             , doneChangedMsg = UpdateTodo todo << Todo.SetDone
-            , noOpMsg = NoOp
+            , noOpMsg = ListPD
             , title = todo.title
             , onClickRoot = TodoRootClicked idx todo
             }
     in
-    SelectionList.selectionMap createTodoViewModel selectionList |> List.map viewTodoListItem
+    SelectionList.selectionMap createTodoViewModel selectionList
+        |> List.map (viewTodoListItem >> E.map ListChange)
 
 
 selectionIndicatorDomId todoId =
