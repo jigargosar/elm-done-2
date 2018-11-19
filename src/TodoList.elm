@@ -131,6 +131,14 @@ setInputText val model =
     { model | inputText = val }
 
 
+setFixedSelection val model =
+    { model | selection = SelectionList.fixedSelection val }
+
+
+resetSelection model =
+    { model | selection = SelectionList.emptySelection }
+
+
 subscriptions model =
     Sub.batch
         [ Browser.Events.onKeyDown <|
@@ -157,7 +165,7 @@ update message model =
             updateTS (Todo.update msg todo) model
 
         SetFixedSelection idx ->
-            ( { model | selection = SelectionList.fixedSelection idx }, Cmd.none )
+            pure <| setFixedSelection idx model
 
         SelectTodo todo ->
             ( model, Cmd.none )
@@ -171,7 +179,7 @@ update message model =
         FormChange msg ->
             case msg of
                 InputChanged value ->
-                    pure <| setInputText value model
+                    pure <| (setInputText value model |> resetSelection)
 
                 InputFocusChanged hasFocus ->
                     pure <| { model | inputHasFocus = hasFocus }
