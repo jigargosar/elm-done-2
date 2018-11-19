@@ -3,7 +3,7 @@ module HotKey exposing
     , SoftKey(..)
     , arrowDown
     , arrowUp
-    , bindAll
+    , bindEachToMsg
     , decoder
     , enter
     , esc
@@ -62,8 +62,8 @@ decoder =
     D.map fromKeyEvent EventX.keyEventDecoder
 
 
-bindAll : List ( HotKey, msg ) -> Decoder msg
-bindAll mappings =
+bindEachToMsg : List ( HotKey, msg ) -> Decoder msg
+bindEachToMsg mappings =
     decoder
         |> D.andThen
             (firstEq

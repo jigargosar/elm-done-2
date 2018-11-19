@@ -18,7 +18,7 @@ import Element.Font as Font
 import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
 import Fuzzy
-import HotKey
+import HotKey as HK
 import Html.Attributes exposing (class, id, tabindex)
 import Html.Events
 import Icons
@@ -130,9 +130,9 @@ setListHasFocus val model =
 subscriptions model =
     Sub.batch
         [ Browser.Events.onKeyDown <|
-            HotKey.bindAll
-                [ ( HotKey.arrowDown, OnNext )
-                , ( HotKey.arrowUp, OnPrev )
+            HK.bindEachToMsg
+                [ ( HK.arrowDown, OnNext )
+                , ( HK.arrowUp, OnPrev )
                 ]
         ]
 
@@ -220,11 +220,12 @@ viewInput model =
         , p2
         , onLoseFocus <| InputFocusChanged False
         , onFocus <| InputFocusChanged True
-        , onKeyDownPDBindAll
-            [ ( HotKey.arrowDown, ( FormPD, True ) )
-            , ( HotKey.arrowUp, ( FormPD, True ) )
-            , ( HotKey.enter, ( Submit, False ) )
-            ]
+        , onKeyDownPD <|
+            HK.bindEachToMsg
+                [ ( HK.arrowDown, ( FormPD, True ) )
+                , ( HK.arrowUp, ( FormPD, True ) )
+                , ( HK.enter, ( Submit, False ) )
+                ]
         ]
         { onChange = InputChanged
         , text = model.inputText

@@ -37,9 +37,7 @@ module El exposing
     , la
     , lh
     , onKeyDown
-    , onKeyDownBindAll
     , onKeyDownPD
-    , onKeyDownPDBindAll
     , p
     , p1
     , p2
@@ -349,11 +347,3 @@ onKeyDown =
 
 onKeyDownPD =
     EventX.onKeyDownPD >> fHA
-
-
-onKeyDownPDBindAll =
-    onKeyDownPD << HotKey.bindAll
-
-
-onKeyDownBindAll =
-    onKeyDown << HotKey.bindAll

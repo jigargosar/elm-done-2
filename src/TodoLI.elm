@@ -21,7 +21,7 @@ import Element.Events as EE exposing (onClick)
 import Element.Input as EI
 import EventX
 import Fuzzy
-import HotKey
+import HotKey as HK
 import Html.Attributes exposing (class)
 import Icons
 import List as L
@@ -191,10 +191,11 @@ selectionIndicator { selectionHasFocus } selected =
 
             else
                 a0
-        , onKeyDownPDBindAll
-            [ ( HotKey.arrowDown, ( PD, True ) )
-            , ( HotKey.arrowUp, ( PD, True ) )
-            ]
+        , onKeyDownPD <|
+            HK.bindEachToMsg
+                [ ( HK.arrowDown, ( PD, True ) )
+                , ( HK.arrowUp, ( PD, True ) )
+                ]
         ]
         (t "")
 
@@ -211,9 +212,10 @@ doneCheckBox todo =
         , fc grey500
         , focused [ Border.glow blue200 3, fc grey800 ]
         , mouseOver [ Border.glow blueGrey300 1, fc grey800 ]
-        , onKeyDownPDBindAll
-            [ ( HotKey.space, ( PD, True ) )
-            ]
+        , onKeyDownPD <|
+            HK.bindEachToMsg
+                [ ( HK.space, ( PD, True ) )
+                ]
         ]
         { label = lh "done"
         , icon =
