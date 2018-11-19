@@ -1,4 +1,4 @@
-module Cursor exposing (Cursor, empty, initAt, isAt, isAtNothing, rollBy)
+module Cursor exposing (Cursor, empty, initAt, isAt, isAtNothing, rollBy, selected)
 
 import Basics exposing ((|>))
 import BasicsX exposing (..)
@@ -46,6 +46,7 @@ rollBy offset list =
             )
 
 
+selected : List a -> Cursor -> Maybe a
 selected list =
     M.andThen (clampIdxIn list)
-        >> M.map (flip L.getAt list)
+        >> M.andThen (flip L.getAt list)
