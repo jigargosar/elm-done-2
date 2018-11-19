@@ -8,6 +8,7 @@ module TodoPage exposing
     )
 
 import BasicsX exposing (..)
+import Browser.Dom as Dom
 import Browser.Events
 import El exposing (..)
 import Element as E exposing (Element, clip, el, focused, fromRgb, fromRgb255, mouseOver, rgb, rgba, scrollbarY)
@@ -31,6 +32,7 @@ import Maybe as M
 import Maybe.Extra as M
 import Port
 import SelectionList exposing (Selection, SelectionList)
+import Task
 import Theme
 import Todo exposing (Todo, TodoStore)
 import TodoLI
@@ -70,18 +72,36 @@ rollSelectionFocusBy offset model =
                 model
     in
     pure updatedModel
-        |> effect getFocusSelectedCmd
+        |> effect getScrollOrFocusSelectedCmd
 
 
-getFocusSelectedCmd model =
+debugNoOp x =
+    let
+        _ =
+            Debug.log "debugNoOp" debugNoOp
+    in
+    NoOp
+
+
+getScrollOrFocusSelectedCmd model =
     if model.inputHasFocus then
-        Cmd.none
+        let
+            scrollIntoViewCmd =
+                currentTodoList model
+                    |> SelectionList.getSelectedItem
+                    |> M.unwrap Cmd.none
+                        (TodoLI.getSelectionIndicatorDomId
+                            >> Dom.getViewportOf
+                            >> Task.attempt debugNoOp
+                        )
+        in
+        scrollIntoViewCmd
 
     else
-        forceFocusSelectedCmd model
+        focusSelectedCmd model
 
 
-forceFocusSelectedCmd model =
+focusSelectedCmd model =
     currentTodoList model
         |> SelectionList.getSelectedItem
         |> M.unwrap Cmd.none
@@ -105,6 +125,7 @@ type Msg
     | FormChanged FormMsg
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
+    | NoOp
 
 
 empty : Model
@@ -216,6 +237,9 @@ update message model =
 
         LoadTS value ->
             updateTS (\_ -> Todo.loadStore value)
+
+        NoOp ->
+            pure
     )
     <|
         model
@@ -235,7 +259,7 @@ performSelectedItemDefaultAction model =
         performItemAction item =
             (case item of
                 TodoLI.FuzzyTodoLI todo ->
-                    pure >> addCmd (forceFocusSelectedCmd model)
+                    pure >> addCmd (focusSelectedCmd model)
 
                 TodoLI.CreateTodoLI title ->
                     onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
