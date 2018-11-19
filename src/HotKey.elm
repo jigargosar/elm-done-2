@@ -52,14 +52,27 @@ initHotKey shift_ alt_ ctrl_ meta_ key =
     )
 
 
+fromKeyEvent { shiftKey, altKey, ctrlKey, metaKey, key } =
+    ( singletonBool shiftKey Shift
+        ++ singletonBool altKey Alt
+        ++ singletonBool ctrlKey Ctrl
+        ++ singletonBool metaKey Meta
+    , key
+    )
+
+
 decoder : Decoder HotKey
 decoder =
-    D.map5 initHotKey
-        (D.field "shiftKey" D.bool)
-        (D.field "altKey" D.bool)
-        (D.field "ctrlKey" D.bool)
-        (D.field "metaKey" D.bool)
-        (D.field "key" D.string)
+    D.map fromKeyEvent EventX.keyEventDecoder
+
+
+
+--    D.map5 initHotKey
+--        (D.field "shiftKey" D.bool)
+--        (D.field "altKey" D.bool)
+--        (D.field "ctrlKey" D.bool)
+--        (D.field "metaKey" D.bool)
+--        (D.field "key" D.string)
 
 
 mapDecoder : (Event -> msg) -> Decoder msg
