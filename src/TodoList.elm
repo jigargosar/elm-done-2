@@ -43,6 +43,7 @@ type alias Model =
     , todoStore : TodoStore
     , inputHasFocus : Bool
     , selection : Selection
+    , listHasFocus : Bool
     }
 
 
@@ -127,6 +128,7 @@ empty =
     , todoStore = Todo.emptyStore
     , inputHasFocus = False
     , selection = SelectionList.emptySelection
+    , listHasFocus = False
     }
 
 
@@ -148,6 +150,10 @@ setFixedSelection val =
 
 resetSelection =
     setSelection <| SelectionList.emptySelection
+
+
+setInputHasFocus val model =
+    { model | inputHasFocus = val }
 
 
 subscriptions model =
@@ -202,7 +208,7 @@ update message model =
                     setInputText value >> resetSelection >> pure
 
                 InputFocusChanged hasFocus ->
-                    pure << (\_ -> { model | inputHasFocus = hasFocus })
+                    pure << setInputHasFocus hasFocus
 
                 Submit ->
                     onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
