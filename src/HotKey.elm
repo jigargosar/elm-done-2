@@ -62,6 +62,7 @@ fromKeyEvent { shiftKey, altKey, ctrlKey, metaKey, key } =
     )
 
 
+matchesKeyEvent : KeyEvent -> HotKey -> Bool
 matchesKeyEvent ke =
     eq (fromKeyEvent ke)
 
