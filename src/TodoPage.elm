@@ -165,17 +165,6 @@ update message model =
                                     setFixedSelection idx >> pure
 
                                 TodoLI.RootFocusInChanged hasFocus ->
-                                    {- (if hasFocus then
-                                           setFixedSelection idx
-
-                                        else if SelectionList.isSelectionFixedAt idx model.selection then
-                                           resetSelection
-
-                                        else
-                                           identity
-                                       )
-                                           >>
-                                    -}
                                     setListHasFocus hasFocus
                                         >> pure
 
