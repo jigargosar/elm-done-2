@@ -82,13 +82,16 @@ esc =
     ( [], "Escape" )
 
 
+arrowDown : HotKey
 arrowDown =
     ( [], "ArrowDown" )
 
 
+arrowUp : HotKey
 arrowUp =
     ( [], "ArrowUp" )
 
 
+space : HotKey
 space =
     ( [], " " )
