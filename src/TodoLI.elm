@@ -164,7 +164,7 @@ view idx selected item =
                 ]
 
         CreateTodoLI title ->
-            rootEl [ onClick RootClicked ]
+            rootEl [ onClick Create ]
                 [ selectionIndicator selected
                 , displayTitle " + add task"
                 ]
