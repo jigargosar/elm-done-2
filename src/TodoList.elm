@@ -178,7 +178,7 @@ update message model =
                         if hasFocus then
                             setFixedSelection idx model
 
-                        else if SelectionList.fixedSelection idx == model.selection then
+                        else if SelectionList.isSelectionFixedAt idx model.selection then
                             resetSelection model
 
                         else
