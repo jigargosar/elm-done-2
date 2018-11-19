@@ -1,4 +1,4 @@
-module TodoList exposing (Item(..), TodoList, init)
+module TodoList exposing (Item(..), TodoList, getFocusSelectorFor, init)
 
 import BasicsX exposing (..)
 import El exposing (..)
@@ -18,6 +18,7 @@ import Maybe as M
 import Maybe.Extra as M
 import SelectionList exposing (Selection, SelectionList)
 import Todo exposing (Todo, TodoStore)
+import TodoLI
 
 
 type alias FuzzyValue a =
@@ -93,3 +94,16 @@ init { query, todoStore, selection } =
                     |> (::) (CreateTodoLI query)
     in
     selection |> SelectionList.withList items
+
+
+itemDomId suffix =
+    "todo-li--" ++ suffix
+
+
+getFocusSelectorFor item =
+    case item of
+        FuzzyTodoLI { value } ->
+            "#" ++ itemDomId value.id ++ " ." ++ TodoLI.xSelectionIndicator
+
+        CreateTodoLI title ->
+            "#" ++ itemDomId "create-todo-action" ++ TodoLI.xSelectionIndicator

@@ -48,61 +48,25 @@ type alias Model =
     }
 
 
-filterWithFuzzyResult : String -> List Todo -> List ( Fuzzy.Result, Todo )
-filterWithFuzzyResult query =
-    let
-        boil =
-            String.toLower
-
-        fuzzMatcher todo =
-            Fuzzy.match [] [] (boil query) (boil <| todo.title)
-                |> justWhen (.score >> flip (<) 1000)
-
-        filterMapFn todo =
-            fuzzMatcher todo
-                |> Maybe.map (\res -> ( res, todo ))
-
-        sort =
-            L.sortBy (Tuple.first >> .score)
-    in
-    L.filterMap filterMapFn
-        >> unlessBool (isBlank query) sort
-
-
-todoSelectionList : Model -> SelectionList ( Fuzzy.Result, Todo )
-todoSelectionList model =
-    let
-        filteredList =
-            Todo.all model.todoStore
-                |> filterWithFuzzyResult model.inputText
-
-        selectionList : SelectionList ( Fuzzy.Result, Todo )
-        selectionList =
-            SelectionList.withList filteredList model.selection
-    in
-    selectionList
+currentTodoList model =
+    TodoList.init { query = model.inputText, todoStore = model.todoStore, selection = model.selection }
 
 
 rollSelectionFocusBy offset model =
     let
-        selectionList =
-            todoSelectionList model
+        todoList =
+            currentTodoList model
                 |> SelectionList.rollBy offset
-
-        selection =
-            selectionList |> SelectionList.toSelection
 
         focusSelectedCmd : Cmd Msg
         focusSelectedCmd =
-            SelectionList.getSelectedItem selectionList
+            SelectionList.getSelectedItem todoList
                 |> M.unwrap Cmd.none
-                    (second
-                        >> .id
-                        >> todoItemDomId
+                    (TodoList.getFocusSelectorFor
                         >> (\domId -> Port.focusSelector ("#" ++ domId ++ " ." ++ TodoLI.xSelectionIndicator))
                     )
     in
-    ( { model | selection = selection }, focusSelectedCmd )
+    ( { model | selection = todoList |> SelectionList.toSelection }, focusSelectedCmd )
 
 
 
@@ -268,7 +232,7 @@ view model =
                 --                        viewTodoList viewModel
                 viewTodoListChildren
                 <|
-                    TodoList.init { query = model.inputText, todoStore = model.todoStore, selection = model.selection }
+                    currentTodoList model
         ]
 
 
@@ -290,10 +254,6 @@ viewInput model =
         , label = lh "Task Title"
         }
         |> E.map FormChange
-
-
-todoItemDomId id =
-    "todo-li--" ++ id
 
 
 viewTodoListChildren todoList =
