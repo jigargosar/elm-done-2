@@ -19,7 +19,7 @@ import Element.Input as Input exposing (Placeholder)
 import Element.Region as Region
 import Fuzzy
 import HotKey
-import Html.Attributes exposing (id, tabindex)
+import Html.Attributes exposing (class, id, tabindex)
 import Html.Events
 import Icons
 import Json.Decode as D exposing (Decoder)
@@ -92,7 +92,12 @@ rollSelectionBy offset model =
         focusSelectedCmd : Cmd Msg
         focusSelectedCmd =
             SelectionList.getSelectedItem selectionList
-                |> M.unwrap Cmd.none (second >> .id >> selectionIndicatorDomId >> Port.focusId)
+                |> M.unwrap Cmd.none
+                    (second
+                        >> .id
+                        >> todoItemDomId
+                        >> (\domId -> Port.focusSelector ("#" ++ domId ++ " ." ++ xSelectionIndicator))
+                    )
     in
     ( { model | selection = selection }, focusSelectedCmd )
 
@@ -249,7 +254,7 @@ viewInput model =
 
 
 todoItemDomId id =
-    "todo--" ++ id
+    "todo-li--" ++ id
 
 
 viewTodoListChildren selectionList =
@@ -297,9 +302,13 @@ viewTodoListItem vm =
         ]
 
 
+xSelectionIndicator =
+    "x-selection-indicator"
+
+
 selectionIndicator selected vm =
     el
-        [ fHA <| id <| selectionIndicatorDomId vm.todoId
+        [ fHA <| class "x-selection-indicator"
         , ti_1
         , bwr 3
         , fh
