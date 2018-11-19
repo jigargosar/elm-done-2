@@ -68,10 +68,6 @@ toFuzzyTodoList query =
     L.map filterFn
 
 
-
---        >> unlessBool (isBlank query) sort
-
-
 type alias TodoList =
     SelectionList Item
 
