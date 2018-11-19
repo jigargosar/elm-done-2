@@ -134,12 +134,20 @@ setInputText val model =
     { model | inputText = val }
 
 
-setFixedSelection val model =
-    { model | selection = SelectionList.fixedSelection val }
+resetInputText =
+    setInputText ""
 
 
-resetSelection model =
-    { model | selection = SelectionList.emptySelection }
+setSelection val model =
+    { model | selection = val }
+
+
+setFixedSelection val =
+    setSelection <| SelectionList.fixedSelection val
+
+
+resetSelection =
+    setSelection <| SelectionList.emptySelection
 
 
 subscriptions model =
@@ -152,62 +160,65 @@ subscriptions model =
         ]
 
 
+defaultContextId =
+    ""
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
-    case message of
+    (case message of
         ---- INJECT UPDATE CASE BELOW ----
         OnPrev ->
-            --            updateSelectedIdxBy ((+) -1) model
-            rollSelectionBy -1 model
+            rollSelectionBy -1
 
         OnNext ->
-            --            updateSelectedIdxBy ((+) 1) model
-            rollSelectionBy 1 model
+            rollSelectionBy 1
 
         TodoLIChange idx todo msg ->
-            callOn model <|
-                case msg of
-                    TodoLI.Update modMsg ->
-                        updateTS (Todo.update modMsg todo)
-                            >> mapFirst (setFixedSelection idx)
+            case msg of
+                TodoLI.Update modMsg ->
+                    updateTS (Todo.update modMsg todo)
+                        >> mapFirst (setFixedSelection idx)
 
-                    TodoLI.RootClicked ->
+                TodoLI.RootClicked ->
+                    setFixedSelection idx >> pure
+
+                TodoLI.RootFocusInChanged hasFocus ->
+                    if hasFocus then
                         setFixedSelection idx >> pure
 
-                    TodoLI.RootFocusInChanged hasFocus ->
-                        if hasFocus then
-                            setFixedSelection idx
-                                >> pure
+                    else if SelectionList.isSelectionFixedAt idx model.selection then
+                        resetSelection >> pure
 
-                        else if SelectionList.isSelectionFixedAt idx model.selection then
-                            resetSelection >> pure
-
-                        else
-                            pure
-
-                    TodoLI.PD ->
+                    else
                         pure
+
+                TodoLI.PD ->
+                    pure
 
         FormChange msg ->
             case msg of
                 InputChanged value ->
-                    pure <| (setInputText value model |> resetSelection)
+                    (setInputText value >> resetSelection) >> pure
 
                 InputFocusChanged hasFocus ->
-                    pure <| { model | inputHasFocus = hasFocus }
+                    pure << (\_ -> { model | inputHasFocus = hasFocus })
 
                 Submit ->
-                    onNewTodoMsg (Todo.initBuilder model.inputText "") model
-                        |> mapModel (setInputText "")
+                    onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
+                        >> mapModel resetInputText
 
                 FormPD ->
-                    ( model, Cmd.none )
+                    pure
 
         NewTodo builder ->
-            onNewTodoMsg builder model
+            onNewTodoMsg builder
 
         LoadTS value ->
-            updateTS (\_ -> Todo.loadStore value) model
+            updateTS (\_ -> Todo.loadStore value)
+    )
+    <|
+        model
 
 
 updateTS fn model =
