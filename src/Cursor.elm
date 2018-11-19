@@ -1,4 +1,14 @@
-module Cursor exposing (Cursor, empty, indexOfSelectedIn, initAt, isAt, isAtNothing, rollBy, selected)
+module Cursor exposing
+    ( Cursor
+    , empty
+    , indexOfSelectedIn
+    , initAt
+    , isAt
+    , isAtNothing
+    , rollBy
+    , selected
+    , selectionMap
+    )
 
 import Basics exposing ((|>))
 import BasicsX exposing (..)
@@ -54,3 +64,15 @@ selected list =
 
 indexOfSelectedIn list =
     M.andThen (clampIdxIn list)
+
+
+selectionMap fn list cursor =
+    if List.isEmpty list then
+        []
+
+    else
+        let
+            sIdx =
+                cursor |> M.withDefault 0
+        in
+        List.indexedMap (\idx -> fn idx <| sIdx == idx) list
