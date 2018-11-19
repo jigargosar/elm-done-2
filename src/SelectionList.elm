@@ -51,7 +51,7 @@ cycleSelectedIdx list =
 cycleIdx offset list maybeIdx =
     clampSelectedIdx list maybeIdx
         |> M.map ((+) offset)
-        |> clampSelectedIdx list
+        |> cycleSelectedIdx list
 
 
 rollBy offset (SelectionList list maybeSelectionIdx) =
