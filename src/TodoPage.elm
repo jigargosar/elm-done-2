@@ -192,8 +192,7 @@ update message model =
                     pure << setInputHasFocus hasFocus
 
                 Submit ->
-                    onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
-                        >> mapModel resetInputText
+                    performSelectedItemDefaultAction
 
                 FormPD ->
                     pure
@@ -211,6 +210,27 @@ update message model =
 updateTS fn model =
     fn model.todoStore
         |> Tuple.mapFirst (\ts -> { model | todoStore = ts })
+
+
+performSelectedItemDefaultAction model =
+    let
+        maybeSelectedItem =
+            currentTodoList model
+                |> SelectionList.getSelectedItem
+
+        performItemAction item =
+            (case item of
+                TodoLI.FuzzyTodoLI todo ->
+                    pure >> addCmd (Port.focusSelector (TodoLI.getFocusSelectorForItem item))
+
+                TodoLI.CreateTodoLI title ->
+                    onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
+                        >> mapModel resetInputText
+            )
+            <|
+                model
+    in
+    maybeSelectedItem |> M.unwrap (pure model) performItemAction
 
 
 onNewTodoMsg : Todo.TodoBuilder -> Model -> ( Model, Cmd Msg )
