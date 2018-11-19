@@ -50,3 +50,7 @@ selected : List a -> Cursor -> Maybe a
 selected list =
     M.andThen (clampIdxIn list)
         >> M.andThen (flip L.getAt list)
+
+
+indexOfSelectedIn list =
+    M.andThen (clampIdxIn list)
