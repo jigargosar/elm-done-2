@@ -78,12 +78,16 @@ getFocusSelectedCmd model =
         Cmd.none
 
     else
-        currentTodoList model
-            |> SelectionList.getSelectedItem
-            |> M.unwrap Cmd.none
-                (TodoLI.getSelectionIndicatorDomId
-                    >> Port.focusId
-                )
+        forceFocusSelectedCmd model
+
+
+forceFocusSelectedCmd model =
+    currentTodoList model
+        |> SelectionList.getSelectedItem
+        |> M.unwrap Cmd.none
+            (TodoLI.getSelectionIndicatorDomId
+                >> Port.focusId
+            )
 
 
 type FormMsg
@@ -231,7 +235,7 @@ performSelectedItemDefaultAction model =
         performItemAction item =
             (case item of
                 TodoLI.FuzzyTodoLI todo ->
-                    pure >> addCmd (Port.focusId (TodoLI.getSelectionIndicatorDomId item))
+                    pure >> addCmd (forceFocusSelectedCmd model)
 
                 TodoLI.CreateTodoLI title ->
                     onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
