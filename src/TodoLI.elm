@@ -1,8 +1,7 @@
 module TodoLI exposing
     ( FuzzyTodo
     , Item(..)
-    , ItemMsg(..)
-    , Msg
+    , Msg(..)
     , displayTitle
     , doneCheckBox
     , getSelectionIndicatorDomId
@@ -124,11 +123,7 @@ getSelectionIndicatorDomId item =
     itemDomId ++ "--" ++ xSelectionIndicator
 
 
-type alias Msg =
-    { idx : Int, itemMsg : ItemMsg }
-
-
-type ItemMsg
+type Msg
     = Update Todo Todo.Msg
     | RootClicked
     | Create
@@ -136,10 +131,10 @@ type ItemMsg
     | PD
 
 
-view : { selectionHasFocus : Bool } -> Int -> Bool -> Item -> Element Msg
-view config idx selected item =
+view : { selectionHasFocus : Bool } -> Bool -> Item -> Element Msg
+view config selected item =
     let
-        rootEl : List (Attribute ItemMsg) -> List (Element ItemMsg) -> Element ItemMsg
+        rootEl : List (Attribute Msg) -> List (Element Msg) -> Element Msg
         rootEl attrs =
             r <|
                 ([ fHA <| id <| getItemDomId item
@@ -199,7 +194,6 @@ view config idx selected item =
                         ]
     in
     rootView
-        |> E.map (Msg idx)
 
 
 xSelectionIndicator =

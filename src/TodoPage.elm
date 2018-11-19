@@ -130,7 +130,7 @@ type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
-    | TodoLIChanged TodoLI.Msg
+    | TodoLIChanged Int TodoLI.Msg
     | FormChanged FormMsg
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -200,8 +200,8 @@ update message model =
         OnNext ->
             rollSelectionFocusBy 1
 
-        TodoLIChanged { idx, itemMsg } ->
-            case itemMsg of
+        TodoLIChanged idx msg ->
+            case msg of
                 TodoLI.Update todo modMsg ->
                     updateTS (Todo.update modMsg todo)
                         >> mapFirst (setFixedSelection idx)
@@ -326,8 +326,8 @@ viewTodoList model =
             { selectionHasFocus = model.listHasFocus }
 
         viewItem idx selected item =
-            TodoLI.view config idx selected item
-                |> E.map TodoLIChanged
+            TodoLI.view config selected item
+                |> E.map (TodoLIChanged idx)
 
         viewItems =
             SelectionList.selectionMap viewItem todoList
