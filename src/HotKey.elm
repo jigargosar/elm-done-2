@@ -4,16 +4,11 @@ module HotKey exposing
     , arrowDown
     , arrowUp
     , bindAll
-    , bindEnter
-    , bindEsc
     , decoder
     , enter
     , esc
     , initEvent
     , mapDecoder
-    , onEnterDown
-    , onEscDown
-    , singletonBool
     , space
     )
 
@@ -101,28 +96,3 @@ arrowUp =
 
 space =
     ( [], " " )
-
-
-bind : HotKey -> msg -> Decoder msg
-bind hotkey tag =
-    bindAll [ ( hotkey, tag ) ]
-
-
-bindEnter : msg -> Decoder msg
-bindEnter =
-    bind enter
-
-
-bindEsc : msg -> Decoder msg
-bindEsc =
-    bind esc
-
-
-onEscDown : msg -> Html.Attribute msg
-onEscDown =
-    EventX.onKeyDown << bindEsc
-
-
-onEnterDown : msg -> Html.Attribute msg
-onEnterDown =
-    EventX.onKeyDown << bindEnter
