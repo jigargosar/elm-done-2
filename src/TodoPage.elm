@@ -32,11 +32,10 @@ import MaterialColorsUI exposing (..)
 import Maybe as M
 import Maybe.Extra as M
 import Port
-import SelectionList exposing (Selection, SelectionList)
 import Task
 import Theme
 import Todo exposing (Todo, TodoStore)
-import TodoLI
+import TodoLI exposing (Item)
 import Tuple exposing (mapFirst, second)
 import UpdateX exposing (..)
 
@@ -45,16 +44,9 @@ type alias Model =
     { inputText : String
     , todoStore : TodoStore
     , inputHasFocus : Bool
-    , selection : Selection
     , cursor : Cursor
     , listHasFocus : Bool
     }
-
-
-currentTodoSelectionList model =
-    SelectionList.withList
-        (currentTodoList model)
-        model.selection
 
 
 currentTodoList model =
@@ -69,11 +61,7 @@ rollSelectionFocusBy offset model =
         updatedModel =
             if model.listHasFocus || model.inputHasFocus then
                 { model
-                    | selection =
-                        currentTodoSelectionList model
-                            |> SelectionList.rollBy offset
-                            |> SelectionList.toSelection
-                    , cursor = Cursor.rollBy offset (currentTodoList model) model.cursor
+                    | cursor = Cursor.rollBy offset (currentTodoList model) model.cursor
                 }
 
             else
@@ -95,7 +83,7 @@ getScrollOrFocusSelectedCmd model =
     if model.inputHasFocus then
         let
             scrollIntoViewCmd =
-                Cursor.selected (currentTodoList model) model.cursor
+                getMaybeSelectedItem model
                     |> M.unwrap Cmd.none
                         (TodoLI.getSelectionIndicatorDomId
                             >> Dom.getElement
@@ -113,9 +101,14 @@ getScrollOrFocusSelectedCmd model =
             ]
 
 
-focusSelectedCmd model =
+getMaybeSelectedItem : Model -> Maybe Item
+getMaybeSelectedItem model =
     Cursor.selected (currentTodoList model) model.cursor
-        |> M.unwrap Cmd.none
+
+
+focusSelectedCmd =
+    getMaybeSelectedItem
+        >> M.unwrap Cmd.none
             (TodoLI.getSelectionIndicatorDomId
                 >> Port.focusId
             )
@@ -144,7 +137,6 @@ empty =
     { inputText = ""
     , todoStore = Todo.emptyStore
     , inputHasFocus = False
-    , selection = SelectionList.emptySelection
     , cursor = Cursor.empty
     , listHasFocus = False
     }
@@ -158,8 +150,9 @@ resetInputText =
     setInputText ""
 
 
+setCursorSelection : Cursor -> Model -> Model
 setCursorSelection val model =
-    { model | selection = val, cursor = val }
+    { model | cursor = val }
 
 
 setSelectionCursorAt =
@@ -262,12 +255,9 @@ updateTS fn model =
         |> Tuple.mapFirst (\ts -> { model | todoStore = ts })
 
 
+performSelectedItemDefaultAction : Model -> ( Model, Cmd Msg )
 performSelectedItemDefaultAction model =
     let
-        maybeSelectedItem =
-            currentTodoSelectionList model
-                |> SelectionList.getSelectedItem
-
         performItemAction item =
             (case item of
                 TodoLI.FuzzyTodoLI todo ->
@@ -280,7 +270,7 @@ performSelectedItemDefaultAction model =
             <|
                 model
     in
-    maybeSelectedItem |> M.unwrap (pure model) performItemAction
+    getMaybeSelectedItem model |> M.unwrap (pure model) performItemAction
 
 
 onNewTodoMsg : Todo.TodoBuilder -> Model -> ( Model, Cmd Msg )
@@ -321,9 +311,6 @@ viewInput model =
 viewTodoList : Model -> Element Msg
 viewTodoList model =
     let
-        todoSelectionList =
-            currentTodoSelectionList model
-
         config =
             { selectionHasFocus = model.listHasFocus }
 
@@ -332,7 +319,7 @@ viewTodoList model =
                 |> E.map (TodoLIChanged idx)
 
         viewItems =
-            SelectionList.selectionMap viewItem todoSelectionList
+            Cursor.selectionMap viewItem (currentTodoList model) model.cursor
     in
     c [ fHA <| id <| todoListDomId, cx, fwx Theme.maxWidth ]
         viewItems
