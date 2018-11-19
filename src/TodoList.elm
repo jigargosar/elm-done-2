@@ -47,6 +47,10 @@ type Item
     | CreateTodoLI String
 
 
+
+--    | InputField String
+
+
 toFuzzyTodoList : String -> List Todo -> List FuzzyTodo
 toFuzzyTodoList query =
     let
