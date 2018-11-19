@@ -3,6 +3,7 @@ module BasicsX exposing
     , Millis
     , Pred
     , PredList
+    , add
     , allPass
     , applyMaybe
     , applyMaybeFn2
@@ -45,6 +46,10 @@ module BasicsX exposing
 
 import List as L
 import List.Extra as L
+
+
+add =
+    (+)
 
 
 eq =

@@ -45,8 +45,7 @@ isAtNothing cursor =
 rollBy : Int -> List a -> Cursor -> Cursor
 rollBy offset list =
     clampCursorIn list
-        >> Maybe.map
-            ((+) offset >> safeModBy (List.length list))
+        >> Maybe.map (add offset >> safeModBy (List.length list))
 
 
 selected : List a -> Cursor -> Maybe a
