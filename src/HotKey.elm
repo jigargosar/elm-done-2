@@ -7,8 +7,6 @@ module HotKey exposing
     , decoder
     , enter
     , esc
-    , initHotKey
-    , mapDecoder
     , space
     )
 
@@ -35,29 +33,21 @@ type alias HotKey =
     ( List SoftKey, String )
 
 
-singletonBool bool value =
+appendWhen bool value list =
     if bool then
-        [ value ]
+        list ++ [ value ]
 
     else
-        []
-
-
-initHotKey shift_ alt_ ctrl_ meta_ key =
-    ( singletonBool shift_ Shift
-        ++ singletonBool alt_ Alt
-        ++ singletonBool ctrl_ Ctrl
-        ++ singletonBool meta_ Meta
-    , key
-    )
+        list
 
 
 fromKeyEvent : KeyEvent -> HotKey
 fromKeyEvent { shiftKey, altKey, ctrlKey, metaKey, key } =
-    ( singletonBool shiftKey Shift
-        ++ singletonBool altKey Alt
-        ++ singletonBool ctrlKey Ctrl
-        ++ singletonBool metaKey Meta
+    ( []
+        |> appendWhen shiftKey Shift
+        |> appendWhen altKey Alt
+        |> appendWhen ctrlKey Ctrl
+        |> appendWhen metaKey Meta
     , key
     )
 
@@ -70,20 +60,6 @@ matchesKeyEvent ke =
 decoder : Decoder HotKey
 decoder =
     D.map fromKeyEvent EventX.keyEventDecoder
-
-
-
---    D.map5 initHotKey
---        (D.field "shiftKey" D.bool)
---        (D.field "altKey" D.bool)
---        (D.field "ctrlKey" D.bool)
---        (D.field "metaKey" D.bool)
---        (D.field "key" D.string)
-
-
-mapDecoder : (HotKey -> msg) -> Decoder msg
-mapDecoder tagger =
-    D.map tagger decoder
 
 
 bindAll : List ( HotKey, msg ) -> Decoder msg
