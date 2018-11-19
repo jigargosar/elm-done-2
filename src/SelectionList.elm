@@ -1,7 +1,9 @@
-module SelectionList exposing (Selection, SelectionList, empty, rollBy, selectionMap, toList, toSelection, withList)
+module SelectionList exposing (Selection, SelectionList, empty, getSelectedItem, rollBy, selectionMap, toList, toSelection, withList)
 
 import Basics exposing ((|>))
 import BasicsX exposing (..)
+import List as L
+import List.Extra as L
 import Maybe as M
 import Maybe.Extra as M
 
@@ -60,3 +62,8 @@ rollBy offset (SelectionList list maybeSelectionIdx) =
 
 toSelection (SelectionList list maybeIdx) =
     maybeIdx
+
+
+getSelectedItem : SelectionList a -> Maybe a
+getSelectedItem (SelectionList list maybeSelectionIdx) =
+    clampSelectedIdx list maybeSelectionIdx |> Maybe.andThen (\idx -> L.getAt idx list)

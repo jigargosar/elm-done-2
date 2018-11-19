@@ -33,6 +33,7 @@ import Port
 import SelectionList exposing (Selection, SelectionList)
 import Theme
 import Todo exposing (Todo, TodoStore)
+import Tuple exposing (second)
 import UpdateX exposing (..)
 
 
@@ -81,12 +82,19 @@ todoSelectionList model =
 
 rollSelectionBy offset model =
     let
-        selection =
+        selectionList =
             todoSelectionList model
                 |> SelectionList.rollBy offset
-                |> SelectionList.toSelection
+
+        selection =
+            selectionList |> SelectionList.toSelection
+
+        focusSelectedCmd : Cmd Msg
+        focusSelectedCmd =
+            SelectionList.getSelectedItem selectionList
+                |> M.unwrap Cmd.none (second >> .id >> selectionIndicatorDomId >> Port.focusId)
     in
-    pure { model | selection = selection }
+    ( { model | selection = selection }, focusSelectedCmd )
 
 
 type FormMsg
