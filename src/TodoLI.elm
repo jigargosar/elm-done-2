@@ -15,7 +15,7 @@ module TodoLI exposing
 
 import BasicsX exposing (..)
 import El exposing (..)
-import Element as E exposing (Element, el, focused, mouseOver)
+import Element as E exposing (Attribute, Element, el, focused, mouseOver)
 import Element.Border as Border
 import Element.Events as EE exposing (onClick)
 import Element.Input as EI
@@ -128,6 +128,7 @@ type alias Msg =
 type ItemMsg
     = Update Todo Todo.Msg
     | RootClicked
+    | Create
     | RootFocusInChanged Bool
     | PD
 
@@ -135,16 +136,18 @@ type ItemMsg
 view : Int -> Bool -> Item -> Element Msg
 view idx selected item =
     let
-        rootEl =
-            r
-                [ s1
-                , fw
-                , bwb 1
-                , bc <| blackA 0.1
-                , onClick RootClicked
-                , fHA <| EventX.onFocusIn <| RootFocusInChanged True
-                , fHA <| EventX.onFocusOut <| RootFocusInChanged False
-                ]
+        rootEl : List (Attribute ItemMsg) -> List (Element ItemMsg) -> Element ItemMsg
+        rootEl attrs =
+            r <|
+                ([ s1
+                 , fw
+                 , bwb 1
+                 , bc <| blackA 0.1
+                 , fHA <| EventX.onFocusIn <| RootFocusInChanged True
+                 , fHA <| EventX.onFocusOut <| RootFocusInChanged False
+                 ]
+                    ++ attrs
+                )
     in
     E.map (Msg idx) <|
         case item of
@@ -153,7 +156,7 @@ view idx selected item =
                     todo =
                         fuzzyTodo.value
                 in
-                rootEl
+                rootEl [ onClick RootClicked ]
                     [ selectionIndicator selected
                     , r [ fw ]
                         [ doneCheckBox todo
@@ -162,7 +165,7 @@ view idx selected item =
                     ]
 
             CreateTodoLI title ->
-                rootEl
+                rootEl [ onClick RootClicked ]
                     [ selectionIndicator selected
                     , displayTitle " + add task"
                     ]

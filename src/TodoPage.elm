@@ -163,6 +163,10 @@ update message model =
                 TodoLI.RootFocusInChanged hasFocus ->
                     setListHasFocus hasFocus >> pure
 
+                TodoLI.Create ->
+                    onNewTodoMsg (Todo.initBuilder model.inputText defaultContextId)
+                        >> mapModel resetInputText
+
                 TodoLI.PD ->
                     pure
 
