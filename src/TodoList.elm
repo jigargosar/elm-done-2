@@ -105,8 +105,8 @@ type FormMsg
 
 
 type ListMsg
-    = TodoRootClicked Int Todo
-    | UpdateTodo Todo Todo.Msg
+    = TodoRootClicked
+    | UpdateTodo Todo.Msg
     | ListPD
 
 
@@ -114,7 +114,7 @@ type Msg
     = ---- INJECT MSG BELOW ----
       OnPrev
     | OnNext
-    | ListChange ListMsg
+    | ListChange Int Todo ListMsg
     | FormChange FormMsg
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -164,12 +164,12 @@ update message model =
             --            updateSelectedIdxBy ((+) 1) model
             rollSelectionBy 1 model
 
-        ListChange msg ->
+        ListChange idx todo msg ->
             case msg of
-                UpdateTodo todo modMsg ->
+                UpdateTodo modMsg ->
                     updateTS (Todo.update modMsg todo) model
 
-                TodoRootClicked idx todo ->
+                TodoRootClicked ->
                     pure <| setFixedSelection idx model
 
                 ListPD ->
@@ -254,18 +254,19 @@ todoItemDomId id =
 
 viewTodoListChildren selectionList =
     let
-        createTodoViewModel idx isSelected ( matchResult, todo ) =
-            { selected = isSelected
-            , todoId = todo.id
-            , done = todo.done
-            , doneChangedMsg = UpdateTodo todo << Todo.SetDone
-            , noOpMsg = ListPD
-            , title = todo.title
-            , onClickRoot = TodoRootClicked idx todo
-            }
+        viewChild idx isSelected ( matchResult, todo ) =
+            viewTodoListItem
+                { selected = isSelected
+                , todoId = todo.id
+                , done = todo.done
+                , doneChangedMsg = UpdateTodo << Todo.SetDone
+                , noOpMsg = ListPD
+                , title = todo.title
+                , onClickRoot = TodoRootClicked
+                }
+                |> E.map (ListChange idx todo)
     in
-    SelectionList.selectionMap createTodoViewModel selectionList
-        |> List.map (viewTodoListItem >> E.map ListChange)
+    SelectionList.selectionMap viewChild selectionList
 
 
 selectionIndicatorDomId todoId =
