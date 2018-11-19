@@ -1,7 +1,8 @@
 module EventX exposing (onFocusIn, onFocusOut, onKeyDown, onKeyDownPD)
 
 import Html.Events as HE
-import Json.Decode as D
+import Json.Decode as D exposing (Decoder)
+import Json.Decode.Pipeline exposing (required)
 import Json.Encode as E
 
 
@@ -26,9 +27,23 @@ type alias KeyEvent =
     , altKey : Bool
     , ctrlKey : Bool
     , metaKey : Bool
-    , key : String
     , defaultPrevented : Bool
     , repeat : Bool
+    , key : String
     , type_ : String
     , code : String
     }
+
+
+keyEventDecoder : Decoder KeyEvent
+keyEventDecoder =
+    D.succeed KeyEvent
+        |> required "shiftKey" D.bool
+        |> required "altKey" D.bool
+        |> required "ctrlKey" D.bool
+        |> required "metaKey" D.bool
+        |> required "defaultPrevented" D.bool
+        |> required "repeat" D.bool
+        |> required "key" D.string
+        |> required "type" D.string
+        |> required "code" D.string
