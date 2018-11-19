@@ -109,7 +109,8 @@ type Msg
     | UpdateTodo Todo Todo.Msg
     | FormChange FormMsg
     | SelectTodo Todo
-    | SetFixedSelection Int
+    | SetSelectionFixed Int
+    | ResetSelection
     | TodoRootClicked Todo
     | FocusId String
     | Submit
@@ -164,8 +165,11 @@ update message model =
         UpdateTodo todo msg ->
             updateTS (Todo.update msg todo) model
 
-        SetFixedSelection idx ->
+        SetSelectionFixed idx ->
             pure <| setFixedSelection idx model
+
+        ResetSelection ->
+            pure <| resetSelection model
 
         SelectTodo todo ->
             ( model, Cmd.none )
@@ -253,7 +257,8 @@ viewTodoListChildren selectionList =
     let
         createTodoViewModel idx isSelected ( matchResult, todo ) =
             { selected = isSelected
-            , selectionIndicatorFocusMsg = SetFixedSelection idx
+            , selectionIndicatorFocusMsg = SetSelectionFixed idx
+            , selectionIndicatorBlurMsg = ResetSelection
             , todoId = todo.id
             , done = todo.done
             , doneChangedMsg = UpdateTodo todo << Todo.SetDone
@@ -272,6 +277,7 @@ selectionIndicatorDomId todoId =
 viewTodoListItem :
     { selected : Bool
     , selectionIndicatorFocusMsg : msg
+    , selectionIndicatorBlurMsg : msg
     , todoId : String
     , done : Bool
     , doneChangedMsg : Bool -> msg
