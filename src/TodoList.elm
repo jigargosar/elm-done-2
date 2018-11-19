@@ -264,8 +264,6 @@ viewTodoListChildren selectionList =
             , doneChangedMsg = UpdateTodo todo << Todo.SetDone
             , noOpMsg = NoOp
             , title = todo.title
-
-            --            , onClickRoot = FocusId <| selectionIndicatorDomId todo.id
             , onClickRoot = SetSelectionFixed idx
             }
     in
