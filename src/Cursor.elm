@@ -44,35 +44,27 @@ isAtNothing cursor =
 
 rollBy : Int -> List a -> Cursor -> Cursor
 rollBy offset list =
-    if L.isEmpty list then
-        always Nothing
-        --        identity
-
-    else
-        M.map
-            (clamp 0 (L.length list - 1)
-                >> (+) offset
-                >> safeModBy (List.length list)
-            )
+    clampCursorIn list
+        >> Maybe.map
+            ((+) offset >> safeModBy (List.length list))
 
 
 selected : List a -> Cursor -> Maybe a
 selected list =
-    M.andThen (clampIdxIn list)
+    clampCursorIn list
         >> M.andThen (flip L.getAt list)
 
 
-indexOfSelectedIn list =
-    M.andThen (clampIdxIn list)
+indexOfSelectedIn : List a -> Cursor -> Maybe Int
+indexOfSelectedIn =
+    clampCursorIn
 
 
-selectionMap fn list cursor =
-    if List.isEmpty list then
-        []
+selectionMap fn list =
+    clampCursorIn list
+        >> M.unwrap [] (\sIdx -> List.indexedMap (\idx -> fn idx <| sIdx == idx) list)
 
-    else
-        let
-            sIdx =
-                cursor |> M.withDefault 0
-        in
-        List.indexedMap (\idx -> fn idx <| sIdx == idx) list
+
+clampCursorIn : List a -> Cursor -> Cursor
+clampCursorIn list =
+    M.withDefault 0 >> clampIdxIn list
