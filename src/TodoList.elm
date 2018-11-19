@@ -108,10 +108,7 @@ type Msg
     | OnNext
     | UpdateTodo Todo Todo.Msg
     | FormChange FormMsg
-    | SelectTodo Todo
-    | SetSelectionFixed Int
-    | ResetSelection
-    | TodoRootClicked Todo
+    | TodoRootClicked Int Todo
     | Submit
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
@@ -164,17 +161,8 @@ update message model =
         UpdateTodo todo msg ->
             updateTS (Todo.update msg todo) model
 
-        SetSelectionFixed idx ->
+        TodoRootClicked idx todo ->
             pure <| setFixedSelection idx model
-
-        ResetSelection ->
-            pure <| resetSelection model
-
-        SelectTodo todo ->
-            ( model, Cmd.none )
-
-        TodoRootClicked todo ->
-            ( model, Cmd.none )
 
         FormChange msg ->
             case msg of
@@ -253,14 +241,12 @@ viewTodoListChildren selectionList =
     let
         createTodoViewModel idx isSelected ( matchResult, todo ) =
             { selected = isSelected
-            , selectionIndicatorFocusMsg = SetSelectionFixed idx
-            , selectionIndicatorBlurMsg = ResetSelection
             , todoId = todo.id
             , done = todo.done
             , doneChangedMsg = UpdateTodo todo << Todo.SetDone
             , noOpMsg = NoOp
             , title = todo.title
-            , onClickRoot = SetSelectionFixed idx
+            , onClickRoot = TodoRootClicked idx todo
             }
     in
     SelectionList.selectionMap createTodoViewModel selectionList |> List.map viewTodoListItem
@@ -272,8 +258,6 @@ selectionIndicatorDomId todoId =
 
 viewTodoListItem :
     { selected : Bool
-    , selectionIndicatorFocusMsg : msg
-    , selectionIndicatorBlurMsg : msg
     , todoId : String
     , done : Bool
     , doneChangedMsg : Bool -> msg
@@ -303,9 +287,6 @@ selectionIndicator selected vm =
         , bwr 3
         , fh
         , bcIf selected blue400
-
-        --        , focused [ bc blue400 ]
-        --        , onFocus vm.selectionIndicatorFocusMsg
         , onKeyDownPDBindAll
             [ ( HotKey.arrowDown, ( vm.noOpMsg, True ) )
             , ( HotKey.arrowUp, ( vm.noOpMsg, True ) )
