@@ -1,4 +1,4 @@
-module Cursor exposing (Cursor, at, atNothing, isAt, isAtNothing, rollBy)
+module Cursor exposing (Cursor, empty, initAt, isAt, isAtNothing, rollBy)
 
 import Basics exposing ((|>))
 import BasicsX exposing (..)
@@ -12,24 +12,24 @@ type alias Cursor =
     Maybe Int
 
 
-atNothing : Cursor
-atNothing =
+empty : Cursor
+empty =
     Nothing
 
 
-at : Int -> Cursor
-at idx =
+initAt : Int -> Cursor
+initAt idx =
     Just idx
 
 
 isAt : Int -> Cursor -> Bool
 isAt idx cursor =
-    at idx == cursor
+    initAt idx == cursor
 
 
 isAtNothing : Cursor -> Bool
 isAtNothing cursor =
-    cursor == atNothing
+    cursor == empty
 
 
 rollBy : Int -> List a -> Cursor -> Cursor
