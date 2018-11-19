@@ -23,6 +23,7 @@ module El exposing
     , fc
     , fcWhite
     , fh
+    , fhn
     , fl
     , fromH
     , fw
@@ -158,6 +159,10 @@ fwx x =
 
 fh =
     height fill
+
+
+fhn n =
+    minimum n fill |> height
 
 
 s =

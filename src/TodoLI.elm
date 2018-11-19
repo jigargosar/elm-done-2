@@ -152,6 +152,7 @@ view config idx selected item =
                 ([ fHA <| id <| getItemDomId item
                  , s1
                  , fw
+                 , fh
                  , bwb 1
                  , bc <| blackA 0.1
                  , fHA <| EventX.onFocusIn <| RootFocusInChanged True
@@ -159,27 +160,29 @@ view config idx selected item =
                  ]
                     ++ attrs
                 )
-    in
-    (case item of
-        FuzzyTodoLI fuzzyTodo ->
-            let
-                todo =
-                    fuzzyTodo.value
-            in
-            rootEl [ onClick RootClicked ]
-                [ selectionIndicator config selected
-                , r [ fw ]
-                    [ doneCheckBox todo
-                    , displayTitle todo.title
-                    ]
-                ]
 
-        CreateTodoLI title ->
-            rootEl [ onClick Create ]
-                [ selectionIndicator config selected
-                , displayTitle " + add task"
-                ]
-    )
+        rootView =
+            case item of
+                FuzzyTodoLI fuzzyTodo ->
+                    let
+                        todo =
+                            fuzzyTodo.value
+                    in
+                    rootEl [ onClick RootClicked ]
+                        [ selectionIndicator config selected
+                        , r [ fw ]
+                            [ doneCheckBox todo
+                            , displayTitle todo.title
+                            ]
+                        ]
+
+                CreateTodoLI title ->
+                    rootEl [ onClick Create ]
+                        [ selectionIndicator config selected
+                        , displayTitle " + add task"
+                        ]
+    in
+    rootView
         |> E.map (Msg idx)
 
 
@@ -212,7 +215,7 @@ selectionIndicator { selectionHasFocus } selected =
 
 
 displayTitle title =
-    el [ fw, p3 ] (t title)
+    el [ fw, p3, ti_1 ] (t title)
 
 
 doneCheckBox todo =
