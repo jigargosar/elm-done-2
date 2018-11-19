@@ -100,6 +100,7 @@ rollSelectionBy offset model =
 type FormMsg
     = InputChanged String
     | InputFocusChanged Bool
+    | Submit
 
 
 type Msg
@@ -109,7 +110,6 @@ type Msg
     | UpdateTodo Todo Todo.Msg
     | FormChange FormMsg
     | TodoRootClicked Int Todo
-    | Submit
     | NewTodo Todo.TodoBuilder
     | LoadTS Value
     | NoOp
@@ -172,9 +172,9 @@ update message model =
                 InputFocusChanged hasFocus ->
                     pure <| { model | inputHasFocus = hasFocus }
 
-        Submit ->
-            onNewTodoMsg (Todo.initBuilder model.inputText "") model
-                |> mapModel (setInputText "")
+                Submit ->
+                    onNewTodoMsg (Todo.initBuilder model.inputText "") model
+                        |> mapModel (setInputText "")
 
         NewTodo builder ->
             onNewTodoMsg builder model
@@ -223,7 +223,7 @@ viewInput model =
         , onKeyDownPDBindAll
             [ ( HotKey.arrowDown, ( NoOp, True ) )
             , ( HotKey.arrowUp, ( NoOp, True ) )
-            , ( HotKey.enter, ( Submit, False ) )
+            , ( HotKey.enter, ( FormChange <| Submit, False ) )
             ]
         ]
         { onChange = FormChange << InputChanged
