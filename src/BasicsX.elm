@@ -30,6 +30,7 @@ module BasicsX exposing
     , partitionList2
     , propEq
     , replaceHead
+    , rollIdx
     , safeModBy
     , swap
     , ter
@@ -257,9 +258,19 @@ atClampedIdx list idx =
         L.getAt clampedIdx list
 
 
+clampIdx : List a -> Int -> Maybe Int
 clampIdx list idx =
     if L.isEmpty list then
         Nothing
 
     else
         Just <| clamp 0 (L.length list - 1) idx
+
+
+rollIdx : List a -> Int -> Maybe Int
+rollIdx list idx =
+    if L.isEmpty list then
+        Nothing
+
+    else
+        Just <| safeModBy (List.length list) idx
