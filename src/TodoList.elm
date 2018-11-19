@@ -265,10 +265,7 @@ viewTodoListChildren selectionList =
                 { selected = isSelected
                 , todoId = todo.id
                 , done = todo.done
-                , doneChangedMsg = UpdateTodo << Todo.SetDone
-                , noOpMsg = ListPD
                 , title = todo.title
-                , onClickRoot = TodoRootClicked
                 }
                 |> E.map (ListChange idx todo)
     in
@@ -283,21 +280,18 @@ viewTodoListItem :
     { selected : Bool
     , todoId : String
     , done : Bool
-    , doneChangedMsg : Bool -> msg
-    , noOpMsg : msg
     , title : String
-    , onClickRoot : msg
     }
-    -> Element msg
+    -> Element ListMsg
 viewTodoListItem vm =
     let
-        { todoId, selected, done, doneChangedMsg, title, noOpMsg } =
+        { todoId, selected, done, title } =
             vm
     in
-    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick vm.onClickRoot ]
+    r [ s1, fw, bwb 1, bc <| blackA 0.1, onClick TodoRootClicked ]
         [ selectionIndicator selected vm
         , r [ fw ]
-            [ doneCheckBox done doneChangedMsg noOpMsg
+            [ doneCheckBox done
             , displayTitle title
             ]
         ]
@@ -315,8 +309,8 @@ selectionIndicator selected vm =
         , fh
         , bcIf selected blue400
         , onKeyDownPDBindAll
-            [ ( HotKey.arrowDown, ( vm.noOpMsg, True ) )
-            , ( HotKey.arrowUp, ( vm.noOpMsg, True ) )
+            [ ( HotKey.arrowDown, ( ListPD, True ) )
+            , ( HotKey.arrowUp, ( ListPD, True ) )
             ]
         ]
         (t "")
@@ -326,7 +320,7 @@ displayTitle title =
     el [ fw, p3 ] (t title)
 
 
-doneCheckBox done doneChangedMsg noOpMsg =
+doneCheckBox done =
     Input.checkbox
         [ p1
         , sw
@@ -335,7 +329,7 @@ doneCheckBox done doneChangedMsg noOpMsg =
         , focused [ Border.glow blue200 3, fc grey800 ]
         , mouseOver [ Border.glow blueGrey300 1, fc grey800 ]
         , onKeyDownPDBindAll
-            [ ( HotKey.space, ( noOpMsg, True ) )
+            [ ( HotKey.space, ( ListPD, True ) )
             ]
         ]
         { label = lh "done"
@@ -345,5 +339,5 @@ doneCheckBox done doneChangedMsg noOpMsg =
                     [ ter checked Icons.checkCircleOutline Icons.circleOutline
                     ]
         , checked = done
-        , onChange = doneChangedMsg
+        , onChange = UpdateTodo << Todo.SetDone
         }
